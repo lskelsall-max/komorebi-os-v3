@@ -139,16 +139,15 @@
 <div class="tab-content active" id="tab-daily">
   <div class="section" style="margin-top:18px;">
     <div class="section-label"><span class="icon">🌅</span><span class="title">Morning</span><div class="line"></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — 20 min, no sunglasses</div><div class="item-detail">Within 30 min of waking. Beach walk, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 20 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — 10 min, no sunglasses</div><div class="item-detail">Within 30 min of waking. Beach walk, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Smoothie + supplements</div><div class="item-detail">Protein, greens, creatine, Slow-Mag. Caffeine hard stop at 11am.</div><span class="item-tag tag-green">⏱ 10 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Meditation</div><div class="item-detail">12 min daily beats 60 min weekly.</div><span class="item-tag tag-time">⏱ 12 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Journal — 10Qs + freewrite</div><div class="item-detail">10-step questionnaire then freewrite. End with mantra: <em>"I am relentless, disciplined and focused."</em></div><span class="item-tag tag-time">⏱ 15 min</span></div></div>
     <div id="podcastEmbed" style="margin:0 0 7px;padding:0 14px;"></div>
   </div>
   <div class="section">
     <div class="section-label"><span class="icon">🏋️</span><span class="title">Movement</span><div class="line"></div></div>
     <div class="item" onclick="toggle(this)" data-id="m6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Exercise — per schedule</div><div class="item-detail">Check Whoop first. Red → Z2 only. Green → follow the plan.</div><span class="item-tag tag-amber">⏱ 60 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m7"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Cold — shower or pool</div><div class="item-detail">Min 2 min cold. Ice bath days: 3–5 min at 10–15°C.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Meditation — post-workout</div><div class="item-detail">12 min daily beats 60 min weekly.</div><span class="item-tag tag-time">⏱ 12 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="g1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">GTG — 3 rounds</div><div class="item-detail">Push-ups, bird dogs, SL DLs, hip bridge iso, hand/wrist + affirmations. Space through the day.</div><span class="item-tag tag-green">3 × 5 min</span></div></div>
   </div>
   <div class="section">
@@ -274,6 +273,7 @@
   </div>
   <div class="note-card"><div class="note-title">How to score</div><p>Whoop metrics use actual values. Perceived scores: 1–3 poor · 4–7 average · 8–10 good. Log every morning.</p></div>
   <div style="margin-top:12px;" id="markersContainer"></div>
+  <div style="text-align:center;padding:12px 14px 0;"><button onclick="saveAllMarkers()" style="background:var(--gold);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:10px 28px;border-radius:20px;cursor:pointer;">Save markers</button></div>
   <div class="markers-summary" id="markersSummary" style="display:none;"><div class="ms-title">Today's snapshot</div><div class="ms-grid" id="msGrid"></div></div>
   <div style="height:20px;"></div>
 </div>
@@ -391,12 +391,8 @@ function switchTab(name,btn){
 
 // --- Markers: Whoop actual values + perceived 1-10 ---
 const MARKERS=[
-  {id:'mk1',label:'Recovery',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
-  {id:'mk2',label:'Sleep',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[70,85]},
-  {id:'mk3',label:'HRV',type:'number',unit:'ms',placeholder:'e.g. 55',min:0,max:300,thresholds:[45,60]},
-  {id:'mk4',label:'RHR',type:'number',unit:'bpm',placeholder:'e.g. 52',min:30,max:120,thresholds:[60,55],invert:true},
-  {id:'mk5',label:'Day Strain',type:'number',unit:'',placeholder:'0–21',min:0,max:21,thresholds:[8,14]},
-  {id:'mk6',label:'Stress',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
+  {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
+  {id:'mk6',label:'High Stress (Whoop)',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
   {id:'mk7',label:'Perceived Stress',type:'dots',invert:true},
   {id:'mk8',label:'Mood / Energy',type:'dots'},
 ];
@@ -430,6 +426,7 @@ function renderMarkers(){
       row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span>
         <div style="display:flex;align-items:center;gap:6px;">
           <input type="number" value="${val}" placeholder="${m.placeholder}" min="${m.min}" max="${m.max}"
+            data-mid="${m.id}"
             style="width:70px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;text-align:center;outline:none;"
             onchange="saveMarker('${m.id}','${ds}',this.value)">
           <span style="font-size:10px;color:var(--muted);">${m.unit}</span>
@@ -457,24 +454,32 @@ function renderMarkers(){
 
 function saveMarker(id,ds,val){
   try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}
+  updateMarkerSummary(ds);
+}
+function saveAllMarkers(){
+  const ds=mds(markerDate);
+  document.querySelectorAll('#markersContainer input[type="number"]').forEach(inp=>{
+    const id=inp.getAttribute('data-mid');
+    if(id&&inp.value) try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}
+  });
   renderMarkers();
+  const btn=event.target;btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save markers';},1500);
 }
 
 function updateMarkerSummary(ds){
   const vals={};
   MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
   const recovery=vals.mk1?parseFloat(vals.mk1):'';
-  const sleep=vals.mk2?parseFloat(vals.mk2):'';
-  const hrv=vals.mk3?parseFloat(vals.mk3):'';
+  const highStress=vals.mk6?parseFloat(vals.mk6):'';
   const stress=vals.mk7?parseInt(vals.mk7):0;
   const mood=vals.mk8?parseInt(vals.mk8):0;
-  const hasData=recovery!==''||sleep!==''||hrv!==''||stress||mood;
+  const hasData=recovery!==''||highStress!==''||stress||mood;
   if(!hasData){document.getElementById('markersSummary').style.display='none';return;}
   document.getElementById('markersSummary').style.display='block';
   document.getElementById('msGrid').innerHTML=`
     <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=80?'🟢 Go':recovery>=60?'🟡 Moderate':'🔴 Rest'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">Sleep</div><div class="ms-val">${sleep!==''?sleep+'%':'—'}</div><div class="ms-sub">${sleep!==''?(sleep>=85?'🟢 Optimal':sleep>=70?'🟡 Adequate':'🔴 Poor'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">HRV</div><div class="ms-val">${hrv!==''?hrv+' ms':'—'}</div><div class="ms-sub">${hrv!==''?(hrv>=60?'🟢 Strong':hrv>=45?'🟡 Normal':'🔴 Low'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">High Stress</div><div class="ms-val">${highStress!==''?highStress+' min':'—'}</div><div class="ms-sub">${highStress!==''?(highStress<=30?'🟢 Low':highStress<=60?'🟡 Moderate':'🔴 High'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Stress (felt)</div><div class="ms-val">${stress||'—'}</div><div class="ms-sub">${stress?(stress<=3?'🔴 High':stress<=6?'🟡 Moderate':'🟢 Low'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>`;
 }
 
