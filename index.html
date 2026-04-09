@@ -124,6 +124,12 @@
   <button class="tab-btn" onclick="switchTab('weekly',this)">Weekly</button>
 </div>
 
+<!-- CONFORMITY -->
+<div style="padding:16px 14px 0;">
+  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">7-day conformity</div>
+  <div id="weeklyConformity" style="display:flex;gap:4px;"></div>
+</div>
+
 <!-- DAILY -->
 <div class="tab-content active" id="tab-daily">
   <div class="section" style="margin-top:18px;">
@@ -133,9 +139,7 @@
     <div class="item" onclick="toggle(this)" data-id="m3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Journal — single priority + mantra</div><div class="item-detail">One priority, one non-negotiable, main distraction. <em>"I am relentless, disciplined and focused."</em></div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">GTG round 1 — 6am</div><div class="item-detail">Push-ups, bird dogs, SL DLs, hip bridge iso, hand/wrist + affirmations.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Mental model — 5 min podcast or read</div><div class="item-detail">One idea at breakfast or school drop-off.</div><span class="item-tag tag-time">⏱ 5 min</span></div></div>
-    <div style="margin:0 0 7px;padding:0 0;">
-      <iframe style="border-radius:10px;width:100%;border:none;" src="https://open.spotify.com/embed/show/1f0qi12saeBEJmtnjOSszg?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
+    <div id="podcastEmbed" style="margin:0 0 7px;padding:0 0;"></div>
   </div>
   <div class="section">
     <div class="section-label"><span class="icon">🏋️</span><span class="title">Movement</span><div class="line"></div></div>
@@ -153,10 +157,10 @@
   <div class="section">
     <div class="section-label"><span class="icon">🌙</span><span class="title">Evening</span><div class="line"></div></div>
     <div class="item" onclick="toggle(this)" data-id="e1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Last meal before 6pm</div><span class="item-tag tag-amber">6pm cutoff</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Screens off by 8pm</div><span class="item-tag tag-time">8pm</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Screens off by 7:30pm</div><span class="item-tag tag-time">7:30pm</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="e3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Pennebaker journal — 5 min</div><div class="item-detail">Name the stressor. No editing, no solving.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="e4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Family time — phone away</div><span class="item-tag tag-amber">⏱ 30 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Lights out by 10:30</div><div class="item-detail">Read fiction first. 20 min.</div><span class="item-tag tag-green">10:30</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">In bed 8:30 — asleep by 9:30</div><div class="item-detail">Read fiction first. 30–60 min.</div><span class="item-tag tag-green">9:30pm</span></div></div>
   </div>
   <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
 </div>
@@ -271,7 +275,7 @@
     <div class="markers-date-label" id="markersDateLabel"></div>
     <button class="nav-btn" onclick="changeMarkerDate(1)">›</button>
   </div>
-  <div class="note-card"><div class="note-title">How to score</div><p>1–3 = poor · 4–6 = average · 7–10 = good. Log every morning. The weekly trend is the signal — not any single day.</p></div>
+  <div class="note-card"><div class="note-title">How to score</div><p>Whoop metrics use actual values. Perceived scores: 1–3 poor · 4–7 average · 8–10 good. Log every morning.</p></div>
   <div style="margin-top:12px;" id="markersContainer"></div>
   <div class="markers-summary" id="markersSummary" style="display:none;"><div class="ms-title">Today's snapshot</div><div class="ms-grid" id="msGrid"></div></div>
   <div style="height:20px;"></div>
@@ -304,69 +308,179 @@
 <script>
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-function todayKey(){const d=new Date();return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
-function itemKey(id){return `sp2_${todayKey()}_${id}`;}
-function weekKey(id){const d=new Date();const s=new Date(d);s.setDate(d.getDate()-d.getDay());return `sp2_week_${s.getFullYear()}_${s.getMonth()}_${s.getDate()}_${id}`;}
-function markerKey(id,ds){return `sp2_marker_${ds}_${id}`;}
-function toggle(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}updateProgress();}
+
+// --- Keys ---
+function dateKey(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
+function todayKey(){return dateKey(new Date());}
+function itemKey(id){return `kos_${todayKey()}_${id}`;}
+function weekKey(id){const d=new Date();const s=new Date(d);s.setDate(d.getDate()-d.getDay());return `kos_week_${s.getFullYear()}_${s.getMonth()}_${s.getDate()}_${id}`;}
+function markerKey(id,ds){return `kos_marker_${ds}_${id}`;}
+function conformKey(ds){return `kos_conform_${ds}`;}
+
+// --- Daily toggle + conformity save ---
+function toggle(el){
+  const id=el.dataset.id;
+  const done=el.classList.toggle('done');
+  try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}
+  updateProgress();
+  saveConformity();
+}
 function toggleWeek(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(weekKey(id),done?'1':'0');}catch(e){}}
+
 function restoreState(){
   document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{try{if(localStorage.getItem(itemKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
   document.querySelectorAll('#tab-weekly .item[data-id]').forEach(el=>{try{if(localStorage.getItem(weekKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
   updateProgress();
 }
-function updateProgress(){const all=document.querySelectorAll('#tab-daily .item[data-id]');const done=document.querySelectorAll('#tab-daily .item[data-id].done');const pct=all.length?Math.round((done.length/all.length)*100):0;document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressCount').textContent=done.length+' / '+all.length;}
-function resetDay(){document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{el.classList.remove('done');try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}});updateProgress();}
+
+function updateProgress(){
+  const all=document.querySelectorAll('#tab-daily .item[data-id]');
+  const done=document.querySelectorAll('#tab-daily .item[data-id].done');
+  const pct=all.length?Math.round((done.length/all.length)*100):0;
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressCount').textContent=done.length+' / '+all.length;
+}
+
+// --- Conformity: save daily score to localStorage ---
+function saveConformity(){
+  const all=document.querySelectorAll('#tab-daily .item[data-id]');
+  const done=document.querySelectorAll('#tab-daily .item[data-id].done');
+  const pct=all.length?Math.round((done.length/all.length)*100):0;
+  try{localStorage.setItem(conformKey(todayKey()),pct);}catch(e){}
+  renderWeeklyConformity();
+}
+
+// --- Weekly conformity chart ---
+function renderWeeklyConformity(){
+  const el=document.getElementById('weeklyConformity');
+  if(!el) return;
+  const today=new Date();
+  let html='';
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const dk=dateKey(d);
+    const pct=parseInt(localStorage.getItem(conformKey(dk)))||0;
+    const isToday=i===0;
+    const dayLabel=DAYS[d.getDay()];
+    const barColor=pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
+    const opacity=pct===0&&!isToday?'0.3':'1';
+    html+=`<div style="flex:1;text-align:center;opacity:${opacity}">
+      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;padding:0 2px;">
+        <div style="width:100%;max-width:28px;height:${Math.max(pct,2)}%;background:${barColor};border-radius:4px 4px 0 0;transition:height 0.3s;"></div>
+      </div>
+      <div style="font-size:9px;color:${isToday?'var(--gold)':'var(--muted)'};margin-top:4px;letter-spacing:1px;font-weight:${isToday?'500':'300'}">${dayLabel}</div>
+      <div style="font-size:10px;color:${isToday?'var(--text)':'var(--muted)'};margin-top:1px;">${pct>0?pct+'%':'—'}</div>
+    </div>`;
+  }
+  el.innerHTML=html;
+}
+
+function resetDay(){
+  document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{
+    el.classList.remove('done');
+    try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}
+  });
+  updateProgress();saveConformity();
+}
+
 function toggleDay(id){document.getElementById(id).classList.toggle('collapsed');}
-function switchTab(name,btn){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');if(btn)btn.classList.add('active');}
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(name==='markers') renderMarkers();
+}
+
+// --- Markers: Whoop actual values + perceived 1-10 ---
 const MARKERS=[
-  {id:'mk1',label:'Perceived Stress Level',invert:true},
-  {id:'mk2',label:'Perceived Sleep Score'},
-  {id:'mk3',label:'Sleep Performance (Whoop)'},
-  {id:'mk4',label:'HRV (Whoop)'},
-  {id:'mk5',label:'RHR (Whoop)',invert:true},
-  {id:'mk6',label:'Non-activity Stress (Whoop)',invert:true},
-  {id:'mk7',label:'Perceived Attractiveness'},
-  {id:'mk8',label:'Mood / Energy Score'},
+  {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[33,66]},
+  {id:'mk2',label:'Sleep Performance (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[70,85]},
+  {id:'mk3',label:'HRV (Whoop)',type:'number',unit:'ms',placeholder:'e.g. 45',min:0,max:300,thresholds:[40,70]},
+  {id:'mk4',label:'RHR (Whoop)',type:'number',unit:'bpm',placeholder:'e.g. 52',min:30,max:120,thresholds:[60,50],invert:true},
+  {id:'mk5',label:'Day Strain (Whoop)',type:'number',unit:'',placeholder:'0–21',min:0,max:21,thresholds:[8,14]},
+  {id:'mk6',label:'Stress (Whoop)',type:'number',unit:'hrs',placeholder:'non-activity hours',min:0,max:24,thresholds:[2,1],invert:true},
+  {id:'mk7',label:'Perceived Stress',type:'dots',invert:true},
+  {id:'mk8',label:'Mood / Energy',type:'dots'},
 ];
+
 let markerDate=new Date();
 function mds(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
 function mdl(d){return DAYS[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()];}
 function changeMarkerDate(delta){markerDate=new Date(markerDate);markerDate.setDate(markerDate.getDate()+delta);renderMarkers();}
+
 function renderMarkers(){
   const ds=mds(markerDate);
   document.getElementById('markersDateLabel').textContent=mdl(markerDate);
   const c=document.getElementById('markersContainer');c.innerHTML='';
   MARKERS.forEach((m,i)=>{
-    const saved=(()=>{try{return parseInt(localStorage.getItem(markerKey(m.id,ds)))||0;}catch(e){return 0;}})();
+    const saved=(()=>{try{return localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){return '';}})();
     const row=document.createElement('div');row.className='marker-row';
-    row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div class="marker-score" id="ms_${m.id}"></div>`;
-    c.appendChild(row);
-    const sd=row.querySelector(`#ms_${m.id}`);
-    for(let v=1;v<=10;v++){
-      const btn=document.createElement('button');
-      btn.className='score-dot'+(saved===v?` selected-${v}`:'');
-      btn.textContent=v;
-      const val=v;const mid=m.id;
-      btn.onclick=function(){try{localStorage.setItem(markerKey(mid,ds),val);}catch(e){}renderMarkers();};
-      sd.appendChild(btn);
+
+    if(m.type==='number'){
+      // Numeric input for Whoop metrics
+      const val=saved?parseFloat(saved):'';
+      let statusColor='var(--muted)';let statusIcon='';
+      if(val!==''){
+        if(m.invert){
+          statusColor=val<=m.thresholds[1]?'var(--green)':val<=m.thresholds[0]?'var(--amber)':'var(--red)';
+          statusIcon=val<=m.thresholds[1]?'🟢':val<=m.thresholds[0]?'🟡':'🔴';
+        } else {
+          statusColor=val>=m.thresholds[1]?'var(--green)':val>=m.thresholds[0]?'var(--amber)':'var(--red)';
+          statusIcon=val>=m.thresholds[1]?'🟢':val>=m.thresholds[0]?'🟡':'🔴';
+        }
+      }
+      row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <input type="number" value="${val}" placeholder="${m.placeholder}" min="${m.min}" max="${m.max}"
+            style="width:70px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;text-align:center;outline:none;"
+            onchange="saveMarker('${m.id}','${ds}',this.value)">
+          <span style="font-size:10px;color:var(--muted);">${m.unit}</span>
+          <span style="font-size:12px;">${statusIcon}</span>
+        </div>`;
+    } else {
+      // 1-10 dot selector for perceived metrics
+      const savedNum=saved?parseInt(saved):0;
+      row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div class="marker-score" id="ms_${m.id}"></div>`;
+      c.appendChild(row);
+      const sd=row.querySelector(`#ms_${m.id}`);
+      for(let v=1;v<=10;v++){
+        const btn=document.createElement('button');
+        btn.className='score-dot'+(savedNum===v?` selected-${v}`:'');
+        btn.textContent=v;
+        btn.onclick=function(){try{localStorage.setItem(markerKey(m.id,ds),v);}catch(e){}renderMarkers();};
+        sd.appendChild(btn);
+      }
+      return;
     }
+    c.appendChild(row);
   });
   updateMarkerSummary(ds);
 }
-function updateMarkerSummary(ds){
-  const scores=MARKERS.map(m=>{try{return parseInt(localStorage.getItem(markerKey(m.id,ds)))||0;}catch(e){return 0;}});
-  const logged=scores.filter(s=>s>0);
-  if(!logged.length){document.getElementById('markersSummary').style.display='none';return;}
-  document.getElementById('markersSummary').style.display='block';
-  const avg=(logged.reduce((a,b)=>a+b,0)/logged.length).toFixed(1);
-  const hrv=scores[3]||0;const stress=scores[0]||0;const mood=scores[7]||0;
-  document.getElementById('msGrid').innerHTML=`
-    <div class="ms-item"><div class="ms-label">Avg Score</div><div class="ms-val">${avg}</div><div class="ms-sub">${logged.length}/8 logged</div></div>
-    <div class="ms-item"><div class="ms-label">Stress (inv)</div><div class="ms-val">${stress||'—'}</div><div class="ms-sub">${stress?stress<=3?'🔴 High':stress<=6?'🟡 Moderate':'🟢 Low':''}</div></div>
-    <div class="ms-item"><div class="ms-label">HRV Whoop</div><div class="ms-val">${hrv||'—'}</div><div class="ms-sub">${hrv?hrv<=3?'🔴 Rest only':hrv<=6?'🟡 Light only':'🟢 Train hard':''}</div></div>
-    <div class="ms-item"><div class="ms-label">Mood/Energy</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?mood<=3?'🔴 Low':mood<=6?'🟡 OK':'🟢 Strong':''}</div></div>`;
+
+function saveMarker(id,ds,val){
+  try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}
+  renderMarkers();
 }
+
+function updateMarkerSummary(ds){
+  const vals={};
+  MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
+  const recovery=vals.mk1?parseFloat(vals.mk1):'';
+  const sleep=vals.mk2?parseFloat(vals.mk2):'';
+  const hrv=vals.mk3?parseFloat(vals.mk3):'';
+  const stress=vals.mk7?parseInt(vals.mk7):0;
+  const mood=vals.mk8?parseInt(vals.mk8):0;
+  const hasData=recovery!==''||sleep!==''||hrv!==''||stress||mood;
+  if(!hasData){document.getElementById('markersSummary').style.display='none';return;}
+  document.getElementById('markersSummary').style.display='block';
+  document.getElementById('msGrid').innerHTML=`
+    <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=66?'🟢 Go':recovery>=33?'🟡 Moderate':'🔴 Rest'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Sleep</div><div class="ms-val">${sleep!==''?sleep+'%':'—'}</div><div class="ms-sub">${sleep!==''?(sleep>=85?'🟢 Optimal':sleep>=70?'🟡 Adequate':'🔴 Poor'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">HRV</div><div class="ms-val">${hrv!==''?hrv+' ms':'—'}</div><div class="ms-sub">${hrv!==''?(hrv>=70?'🟢 Strong':hrv>=40?'🟡 Normal':'🔴 Low'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>`;
+}
+
 function initDate(){
   const d=new Date();
   document.getElementById('dayName').textContent=DAYS[d.getDay()];
@@ -375,7 +489,21 @@ function initDate(){
   const tb=document.getElementById(dayMap[d.getDay()]);
   if(tb){tb.classList.remove('collapsed');tb.classList.add('today-block');}
 }
-initDate();restoreState();renderMarkers();
+// --- Podcast rotation (daily) ---
+const PODCASTS=[
+  {id:'1f0qi12saeBEJmtnjOSszg',name:'Mental Models Daily'},
+  {id:'4MIL28YFvPsVA04lmKqSsN',name:'The Knowledge Project'},
+  {id:'79CkJF3UJTHFV8Dse3Otu0',name:'Invest Like the Best'},
+  {id:'2IqXAVFR4e0Bmyjsdc8QzF',name:'Naval'},
+];
+function loadPodcast(){
+  const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  const p=PODCASTS[dayOfYear%PODCASTS.length];
+  const el=document.getElementById('podcastEmbed');
+  if(el) el.innerHTML=`<iframe style="border-radius:10px;width:100%;border:none;" src="https://open.spotify.com/embed/show/${p.id}?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+}
+
+initDate();restoreState();renderMarkers();renderWeeklyConformity();loadPodcast();
 </script>
 </body>
 </html>
