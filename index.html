@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Komorebi OS</title>
+<meta name="description" content="Daily operating system — stress protocol, movement, recovery, and markers." />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;--surface: #161616;--surface2: #1e1e1e;--border: #2a2a2a;
+    --gold: #c9a84c;--gold-dim: #8a6e2f;--text: #e8e4dc;--muted: #6e6a62;
+    --green: #4caf7d;--red: #e05252;--amber: #d4844a;--blue: #5b9cf6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;padding-bottom:80px;}
+  .header{padding:40px 20px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;}
+  .header h1{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;color:var(--text);}
+  .header .subtitle{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+  .date-display{text-align:right;}
+  .date-display .day{font-family:'Playfair Display',serif;font-size:20px;color:var(--gold);}
+  .date-display .date-str{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .progress-bar-wrap{margin-top:14px;background:var(--border);border-radius:2px;height:2px;overflow:hidden;}
+  .progress-bar{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:2px;transition:width 0.5s ease;}
+  .progress-text{display:flex;justify-content:space-between;margin-top:5px;}
+  .progress-text span{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .progress-text .count{color:var(--gold);}
+  .tab-nav{display:flex;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:118px;z-index:99;overflow-x:auto;}
+  .tab-nav::-webkit-scrollbar{display:none;}
+  .tab-btn{flex:1;min-width:60px;padding:12px 6px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;}
+  .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+  .section{padding:0 14px;margin-top:20px;}
+  .section-label{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding:0 2px;}
+  .section-label .icon{font-size:13px;}
+  .section-label .title{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);font-weight:500;white-space:nowrap;}
+  .section-label .line{flex:1;height:1px;background:var(--border);}
+  .item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--surface);border-radius:10px;margin-bottom:7px;cursor:pointer;transition:all 0.2s ease;border:1px solid transparent;user-select:none;}
+  .item:active{transform:scale(0.98);}
+  .item.done{background:var(--surface2);border-color:var(--border);opacity:0.55;}
+  .item.done .item-title{text-decoration:line-through;color:var(--muted);}
+  .checkbox{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;margin-top:2px;}
+  .item.done .checkbox{background:var(--green);border-color:var(--green);}
+  .checkbox-tick{display:none;color:#fff;font-size:10px;}
+  .item.done .checkbox-tick{display:block;}
+  .item-content{flex:1;min-width:0;}
+  .item-title{font-size:13px;font-weight:400;color:var(--text);line-height:1.4;transition:color 0.2s;}
+  .item-detail{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5;}
+  .item-tag{display:inline-block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 6px;border-radius:3px;margin-top:5px;font-weight:500;}
+  .tag-time{background:rgba(201,168,76,0.12);color:var(--gold);}
+  .tag-green{background:rgba(76,175,125,0.12);color:var(--green);}
+  .tag-amber{background:rgba(212,132,74,0.12);color:var(--amber);}
+  .tag-blue{background:rgba(91,156,246,0.12);color:var(--blue);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  .note-card{margin:0 14px 8px;padding:12px 14px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;}
+  .note-card p{font-size:11px;color:var(--gold);line-height:1.6;font-style:italic;}
+  .note-card .note-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:5px;font-style:normal;}
+  .reset-wrap{padding:20px 14px 8px;text-align:center;}
+  .reset-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:9px 22px;border-radius:20px;cursor:pointer;}
+  .day-block{margin:0 14px 12px;border-radius:12px;overflow:hidden;border:1px solid var(--border);}
+  .day-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--surface);cursor:pointer;}
+  .day-header .day-name{font-family:'Playfair Display',serif;font-size:16px;color:var(--text);}
+  .day-header .day-meta{text-align:right;}
+  .day-header .day-load{font-size:9px;letter-spacing:2px;text-transform:uppercase;}
+  .day-header .day-time{font-size:10px;color:var(--muted);margin-top:2px;}
+  .load-high{color:var(--red);}
+  .load-med{color:var(--amber);}
+  .load-low{color:var(--green);}
+  .day-items{background:var(--surface2);}
+  .day-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:1px solid var(--border);}
+  .day-item .di-icon{font-size:14px;width:22px;text-align:center;flex-shrink:0;}
+  .day-item .di-name{font-size:12px;color:var(--text);flex:1;}
+  .day-item .di-dur{font-size:10px;color:var(--muted);white-space:nowrap;}
+  .day-block.collapsed .day-items{display:none;}
+  .chevron{font-size:10px;color:var(--muted);transition:transform 0.2s;}
+  .day-block:not(.collapsed) .chevron{transform:rotate(180deg);}
+  .today-block{border-color:var(--gold-dim);}
+  .today-block .day-header{background:rgba(201,168,76,0.06);}
+  .markers-date-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 14px 8px;}
+  .nav-btn{background:none;border:1px solid var(--border);color:var(--muted);font-size:16px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .markers-date-label{font-family:'Playfair Display',serif;font-size:15px;color:var(--text);}
+  .marker-row{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--surface);border-radius:10px;margin:0 14px 7px;flex-wrap:wrap;}
+  .marker-num{font-size:10px;color:var(--muted);width:14px;flex-shrink:0;}
+  .marker-name{font-size:12px;color:var(--text);flex:1;min-width:120px;}
+  .marker-score{display:flex;gap:3px;flex-wrap:wrap;}
+  .score-dot{width:24px;height:24px;border-radius:6px;background:var(--border);border:none;cursor:pointer;font-size:10px;color:var(--muted);font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+  .score-dot.selected-1,.score-dot.selected-2,.score-dot.selected-3{background:var(--red);color:#fff;}
+  .score-dot.selected-4,.score-dot.selected-5,.score-dot.selected-6,.score-dot.selected-7{background:var(--amber);color:#fff;}
+  .score-dot.selected-8,.score-dot.selected-9,.score-dot.selected-10{background:var(--green);color:#fff;}
+  .markers-summary{margin:8px 14px 0;padding:14px;background:var(--surface);border-radius:10px;border:1px solid var(--border);}
+  .markers-summary .ms-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .ms-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .ms-item{background:var(--surface2);border-radius:8px;padding:10px 12px;}
+  .ms-item .ms-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .ms-item .ms-val{font-size:20px;font-family:'Playfair Display',serif;color:var(--gold);margin-top:2px;}
+  .ms-item .ms-sub{font-size:9px;color:var(--muted);margin-top:1px;}
+  .weekly-totals{margin:16px 14px 0;}
+  .wt-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0 2px;}
+  .wt-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .wt-label{font-size:11px;color:var(--text);width:110px;flex-shrink:0;}
+  .wt-bar-wrap{flex:1;background:var(--border);border-radius:2px;height:4px;}
+  .wt-bar{height:100%;border-radius:2px;background:var(--gold);transition:width 0.4s ease;}
+  .wt-val{font-size:10px;color:var(--muted);width:50px;text-align:right;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v3</div></div>
+    <div class="date-display"><div class="day" id="dayName"></div><div class="date-str" id="dateStr"></div></div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-text"><span>Daily checklist</span><span class="count" id="progressCount">0 / 0</span></div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('daily',this)">Daily</button>
+  <button class="tab-btn" onclick="switchTab('schedule',this)">Schedule</button>
+  <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
+  <button class="tab-btn" onclick="switchTab('weekly',this)">Weekly</button>
+</div>
+
+<!-- DAILY -->
+<div class="tab-content active" id="tab-daily">
+  <div class="section" style="margin-top:18px;">
+    <div class="section-label"><span class="icon">🌅</span><span class="title">Morning Stack</span><div class="line"></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — outdoors, no sunglasses</div><div class="item-detail">Within 30 min of waking. Sets cortisol awakening response. Beach walk with Ralphie, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 20 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Supersmoothie + supplements</div><div class="item-detail">Protein, greens, psyllium, creatine, Slow-Mag. First Americano. Hard stop on caffeine at 11am.</div><span class="item-tag tag-green">⏱ 10 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Structured journalling — 10-step questionnaire</div><div class="item-detail">Single priority, one non-negotiable, main distraction. End with mantra: <em>"I am relentless, disciplined and focused…"</em></div><span class="item-tag tag-time">⏱ 20 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Posture reset — wall or roller</div><div class="item-detail">5 min wall sit (hips, mid-back, skull). Or supine on hard roller, right-side psoas focus. Before screens.</div><span class="item-tag tag-green">⏱ 5–10 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">One-bite mental model</div><div class="item-detail">One idea at breakfast or school drop-off. Farnam Street, Munger speech, Substack, or today's podcast.</div><span class="item-tag tag-time">⏱ 5–10 min</span></div></div>
+    <div style="margin:0 0 7px;padding:0 0;">
+      <iframe style="border-radius:10px;width:100%;border:none;" src="https://open.spotify.com/embed/show/1f0qi12saeBEJmtnjOSszg?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-label"><span class="icon">🏋️</span><span class="title">Movement + Recovery</span><div class="line"></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Exercise — per today's schedule</div><div class="item-detail">Check Whoop HRV first. Red → Z2 only. Green → follow the day's plan (see Schedule tab).</div><span class="item-tag tag-amber">⏱ 60 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m7"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Cold shower or pool — end cold</div><div class="item-detail">Minimum 2 min fully cold. Ice bath days: 3–5 min at 10–15°C. Target 11 min cold total per week.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Meditation — FitMind, post-workout</div><div class="item-detail">Immediately post-exercise as cooldown anchor. Non-negotiable daily. 12 min daily beats 60 min weekly.</div><span class="item-tag tag-time">⏱ 20 min</span></div></div>
+  </div>
+  <div class="section">
+    <div class="section-label"><span class="icon">🌙</span><span class="title">Evening Anchors</span><div class="line"></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Last meal before 4–5pm</div><div class="item-detail">Stable blood sugar = stable cortisol floor. Blood sugar crashes amplify perceived stress directly.</div><span class="item-tag tag-amber">Cortisol floor</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Screens off / blue-light blockers by 8pm</div><div class="item-detail">Single biggest upstream lever on HRV. If screens required, glasses on. Phone face-down by 8:30.</div><span class="item-tag tag-time">8pm hard</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Evening journal — Pennebaker 5 min</div><div class="item-detail">3–4 sentences on any stressor today. No editing, no problem-solving. Just name it and feel it.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Fully present with Hector &amp; Bella — then Susie</div><div class="item-detail">Phone away. Floor play or story (30 min). Then one real exchange with Susie — not logistics. This counts as your second weekly social connection slot.</div><span class="item-tag tag-amber">⏱ 45 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="e5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sleep by 10:30pm — read fiction first</div><div class="item-detail">Physical book, non-work. 20–30 min. Consistent wake time matters more than bedtime.</div><span class="item-tag tag-green">10:30 target</span></div></div>
+  </div>
+  <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="tab-content" id="tab-schedule">
+  <div class="weekly-totals" style="margin-bottom:0;padding-bottom:0;">
+    <div style="padding:16px 14px 6px;">
+      <div class="wt-title">Weekly targets</div>
+      <div class="wt-row"><span class="wt-label">Sauna (3× · 60min)</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:100%"></div></div><span class="wt-val">180 min</span></div>
+      <div class="wt-row"><span class="wt-label">Ice bath (3× · 10min)</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:37%"></div></div><span class="wt-val">30 min</span></div>
+      <div class="wt-row"><span class="wt-label">Z2 Cardio</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:83%"></div></div><span class="wt-val">150 min</span></div>
+      <div class="wt-row"><span class="wt-label">Z4 Intervals</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:9%"></div></div><span class="wt-val">16 min</span></div>
+      <div class="wt-row"><span class="wt-label">Nature</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:50%"></div></div><span class="wt-val">90 min</span></div>
+      <div class="wt-row"><span class="wt-label">Pennebaker</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:22%"></div></div><span class="wt-val">40 min</span></div>
+      <div class="wt-row"><span class="wt-label">Social</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:33%"></div></div><span class="wt-val">60 min</span></div>
+      <div class="wt-row"><span class="wt-label">Massage/aesthetic</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:33%"></div></div><span class="wt-val">60 min</span></div>
+      <div style="padding:8px 2px 4px;font-size:10px;color:var(--gold);letter-spacing:1px;">Total weekly protocol: ~9 hrs</div>
+    </div>
+  </div>
+  <div style="padding:6px 14px 8px;">
+    <div class="note-card" style="margin:0;">
+      <div class="note-title">Front-loading logic</div>
+      <p>Mon–Wed carry the heavy load. Thu–Fri medium intensity. Sat–Sun nature, social, and reset. Surf lesson = nature + Z2 + cold — ticks three boxes at once.</p>
+    </div>
+  </div>
+
+  <div class="day-block" id="block-mon">
+    <div class="day-header" onclick="toggleDay('block-mon')"><div><div class="day-name">Monday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Z4 + Ice bath + Pennebaker</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">⚡</span><span class="di-name">Z4 intervals — 4×4 min hard, 3 min rest</span><span class="di-dur">28 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 warmup/cooldown swim</span><span class="di-dur">20 min</span></div>
+      <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath — 10–15°C post-sauna</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker deep write — current stressor</span><span class="di-dur">20 min</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-tue">
+    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social (crew)</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature window — barefoot beach or park</span><span class="di-dur">30 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Cold shower</span><span class="di-dur">5 min</span></div>
+      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social — call Henry / Frank / Charlie / crew</span><span class="di-dur">30 min</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-wed">
+    <div class="day-header" onclick="toggleDay('block-wed')"><div><div class="day-name">Wednesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Z4 + Ice bath + Pennebaker 2</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">⚡</span><span class="di-name">Z4 intervals — 4×4 min hard</span><span class="di-dur">28 min</span></div>
+      <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength circuit — Hollywood muscle map</span><span class="di-dur">30 min</span></div>
+      <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath — 10 min</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 2 — same stressor, deepen</span><span class="di-dur">20 min</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-thu">
+    <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Active recovery + Z2 + Nature</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~1.75 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 — ruck (1× max/week) or swim</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature walk — barefoot if possible</span><span class="di-dur">30 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Cold shower</span><span class="di-dur">5 min</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-fri">
+    <div class="day-header" onclick="toggleDay('block-fri')"><div><div class="day-name">Friday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Aesthetic + Social eve</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">💆</span><span class="di-name">Buccal massage / Nina / Dr. Erasmus</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social evening — one of the crew</span><span class="di-dur">open</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-sat">
+    <div class="day-header" onclick="toggleDay('block-sat')"><div><div class="day-name">Saturday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Surf / Golf + Family nature + Pennebaker 3</div></div><div class="day-meta"><div class="day-load load-low">LOW</div><div class="day-time">~2 hrs protocol</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack (lighter)</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🏄</span><span class="di-name">Surf lesson / golf / climb — ticks nature + Z2 + cold</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Family outing — beach or mountain, phone away</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 3 — close the loop</span><span class="di-dur">20 min</span></div>
+    </div>
+  </div>
+
+  <div class="day-block collapsed" id="block-sun">
+    <div class="day-header" onclick="toggleDay('block-sun')"><div><div class="day-name">Sunday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Rest + Weekly review + Family</div></div><div class="day-meta"><div class="day-load load-low">REST</div><div class="day-time">~1 hr protocol</div><div class="chevron">▼</div></div></div>
+    <div class="day-items">
+      <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Sunshine + smoothie + posture only</span><span class="di-dur">40 min</span></div>
+      <div class="day-item"><span class="di-icon">📊</span><span class="di-name">Whoop 7-day HRV review — calibrate next week</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Weekly review — wins, stressors, one change</span><span class="di-dur">20 min</span></div>
+      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Full family morning — no phones, no agenda</span><span class="di-dur">AM</span></div>
+      <div class="day-item"><span class="di-icon">🗓️</span><span class="di-name">Schedule next week's social slots now</span><span class="di-dur">5 min</span></div>
+    </div>
+  </div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- MARKERS -->
+<div class="tab-content" id="tab-markers">
+  <div class="markers-date-nav">
+    <button class="nav-btn" onclick="changeMarkerDate(-1)">‹</button>
+    <div class="markers-date-label" id="markersDateLabel"></div>
+    <button class="nav-btn" onclick="changeMarkerDate(1)">›</button>
+  </div>
+  <div class="note-card"><div class="note-title">How to score</div><p>1–3 = poor · 4–6 = average · 7–10 = good. Log every morning. The weekly trend is the signal — not any single day.</p></div>
+  <div style="margin-top:12px;" id="markersContainer"></div>
+  <div class="markers-summary" id="markersSummary" style="display:none;"><div class="ms-title">Today's snapshot</div><div class="ms-grid" id="msGrid"></div></div>
+  <div style="height:20px;"></div>
+</div>
+
+<!-- WEEKLY -->
+<div class="tab-content" id="tab-weekly">
+  <div class="section" style="margin-top:18px;">
+    <div class="section-label"><span class="icon">🔥</span><span class="title">Recovery Anchors</span><div class="line"></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sauna ×3 — Mon, Wed, Fri</div><div class="item-detail">80°C+, 60 min each. Post-workout ideal. Hydrate before. Progress target: 4× for full Laukkanen longevity alignment.</div><span class="item-tag tag-amber">3× · 180 min</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Ice bath ×3 — Mon, Wed, Sat</div><div class="item-detail">10–15°C, 10 min each = 30 min total. Søberg 11 min/week target met. Not immediately pre-sleep.</div><span class="item-tag tag-green">3× · 30 min</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Z2 cardio — 150 min total</div><div class="item-detail">Tue 50 + Thu 50 + Fri 50. Nasal breathing, conversational pace. Surf lesson counts on Sat. Max 1× ruck/week.</div><span class="item-tag tag-time">3× · 50 min</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Z4 intervals — Mon + Wed</div><div class="item-detail">4×4 min hard each session = 16 min Z4 total. Skip if HRV red.</div><span class="item-tag tag-amber">2× · 8 min each</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Nature — 90 min total</div><div class="item-detail">Tue 30 + Thu 30 + Sat 30. Surf lesson on Sat clears this entirely. Barefoot on sand counts double.</div><span class="item-tag tag-green">3× · 30 min</span></div></div>
+  </div>
+  <div class="section">
+    <div class="section-label"><span class="icon">✍️</span><span class="title">Deep Processing</span><div class="line"></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Pennebaker — Mon, Wed, Sat</div><div class="item-detail">20 min each, same stressor all 3 days. Unedited emotional processing. No problem-solving — just feel it.</div><span class="item-tag tag-time">3× · 20 min</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w7"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Weekly review — Sunday 20 min</div><div class="item-detail">Whoop 7-day HRV trend. One win. One stressor. One protocol change. Rebuilds perceived agency.</div><span class="item-tag tag-green">Sun · 20 min</span></div></div>
+  </div>
+  <div class="section">
+    <div class="section-label"><span class="icon">🤝</span><span class="title">Social + Family + Aesthetic</span><div class="line"></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Social connection — 2× scheduled</div><div class="item-detail">Slot 1: Tue or Fri with inner circle (Henry/Frank/Charlie/crew). Slot 2: Susie — real conversation, not logistics. Schedule Monday morning.</div><span class="item-tag tag-amber">2× scheduled</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w9"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Family outing — out of house, phone-free</div><div class="item-detail">Sat or Sun. Beach, mountain, surf with Hector. Active engaged time counts as social connection. Passive co-presence (TV) does not.</div><span class="item-tag tag-blue">Sat/Sun</span></div></div>
+    <div class="item" onclick="toggleWeek(this)" data-id="w10"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Massage or aesthetic — 60 min</div><div class="item-detail">Friday slot. Buccal massage (Nina), microneedling, or Dr. Erasmus. Book in advance — don't leave open.</div><span class="item-tag tag-blue">Fri · 60 min</span></div></div>
+  </div>
+  <div style="height:24px;"></div>
+</div>
+
+<script>
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function todayKey(){const d=new Date();return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
+function itemKey(id){return `sp2_${todayKey()}_${id}`;}
+function weekKey(id){const d=new Date();const s=new Date(d);s.setDate(d.getDate()-d.getDay());return `sp2_week_${s.getFullYear()}_${s.getMonth()}_${s.getDate()}_${id}`;}
+function markerKey(id,ds){return `sp2_marker_${ds}_${id}`;}
+function toggle(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}updateProgress();}
+function toggleWeek(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(weekKey(id),done?'1':'0');}catch(e){}}
+function restoreState(){
+  document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{try{if(localStorage.getItem(itemKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
+  document.querySelectorAll('#tab-weekly .item[data-id]').forEach(el=>{try{if(localStorage.getItem(weekKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
+  updateProgress();
+}
+function updateProgress(){const all=document.querySelectorAll('#tab-daily .item[data-id]');const done=document.querySelectorAll('#tab-daily .item[data-id].done');const pct=all.length?Math.round((done.length/all.length)*100):0;document.getElementById('progressBar').style.width=pct+'%';document.getElementById('progressCount').textContent=done.length+' / '+all.length;}
+function resetDay(){document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{el.classList.remove('done');try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}});updateProgress();}
+function toggleDay(id){document.getElementById(id).classList.toggle('collapsed');}
+function switchTab(name,btn){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');if(btn)btn.classList.add('active');}
+const MARKERS=[
+  {id:'mk1',label:'Perceived Stress Level',invert:true},
+  {id:'mk2',label:'Perceived Sleep Score'},
+  {id:'mk3',label:'Sleep Performance (Whoop)'},
+  {id:'mk4',label:'HRV (Whoop)'},
+  {id:'mk5',label:'RHR (Whoop)',invert:true},
+  {id:'mk6',label:'Non-activity Stress (Whoop)',invert:true},
+  {id:'mk7',label:'Perceived Attractiveness'},
+  {id:'mk8',label:'Mood / Energy Score'},
+];
+let markerDate=new Date();
+function mds(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
+function mdl(d){return DAYS[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()];}
+function changeMarkerDate(delta){markerDate=new Date(markerDate);markerDate.setDate(markerDate.getDate()+delta);renderMarkers();}
+function renderMarkers(){
+  const ds=mds(markerDate);
+  document.getElementById('markersDateLabel').textContent=mdl(markerDate);
+  const c=document.getElementById('markersContainer');c.innerHTML='';
+  MARKERS.forEach((m,i)=>{
+    const saved=(()=>{try{return parseInt(localStorage.getItem(markerKey(m.id,ds)))||0;}catch(e){return 0;}})();
+    const row=document.createElement('div');row.className='marker-row';
+    row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div class="marker-score" id="ms_${m.id}"></div>`;
+    c.appendChild(row);
+    const sd=row.querySelector(`#ms_${m.id}`);
+    for(let v=1;v<=10;v++){
+      const btn=document.createElement('button');
+      btn.className='score-dot'+(saved===v?` selected-${v}`:'');
+      btn.textContent=v;
+      const val=v;const mid=m.id;
+      btn.onclick=function(){try{localStorage.setItem(markerKey(mid,ds),val);}catch(e){}renderMarkers();};
+      sd.appendChild(btn);
+    }
+  });
+  updateMarkerSummary(ds);
+}
+function updateMarkerSummary(ds){
+  const scores=MARKERS.map(m=>{try{return parseInt(localStorage.getItem(markerKey(m.id,ds)))||0;}catch(e){return 0;}});
+  const logged=scores.filter(s=>s>0);
+  if(!logged.length){document.getElementById('markersSummary').style.display='none';return;}
+  document.getElementById('markersSummary').style.display='block';
+  const avg=(logged.reduce((a,b)=>a+b,0)/logged.length).toFixed(1);
+  const hrv=scores[3]||0;const stress=scores[0]||0;const mood=scores[7]||0;
+  document.getElementById('msGrid').innerHTML=`
+    <div class="ms-item"><div class="ms-label">Avg Score</div><div class="ms-val">${avg}</div><div class="ms-sub">${logged.length}/8 logged</div></div>
+    <div class="ms-item"><div class="ms-label">Stress (inv)</div><div class="ms-val">${stress||'—'}</div><div class="ms-sub">${stress?stress<=3?'🔴 High':stress<=6?'🟡 Moderate':'🟢 Low':''}</div></div>
+    <div class="ms-item"><div class="ms-label">HRV Whoop</div><div class="ms-val">${hrv||'—'}</div><div class="ms-sub">${hrv?hrv<=3?'🔴 Rest only':hrv<=6?'🟡 Light only':'🟢 Train hard':''}</div></div>
+    <div class="ms-item"><div class="ms-label">Mood/Energy</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?mood<=3?'🔴 Low':mood<=6?'🟡 OK':'🟢 Strong':''}</div></div>`;
+}
+function initDate(){
+  const d=new Date();
+  document.getElementById('dayName').textContent=DAYS[d.getDay()];
+  document.getElementById('dateStr').textContent=d.getDate()+' '+MONTHS[d.getMonth()];
+  const dayMap=['block-sun','block-mon','block-tue','block-wed','block-thu','block-fri','block-sat'];
+  const tb=document.getElementById(dayMap[d.getDay()]);
+  if(tb){tb.classList.remove('collapsed');tb.classList.add('today-block');}
+}
+initDate();restoreState();renderMarkers();
+</script>
+</body>
+</html>

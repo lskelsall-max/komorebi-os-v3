@@ -1,0 +1,9 @@
+{
+  "name": "Komorebi OS",
+  "short_name": "KomorebiOS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
+  "description": "Daily operating system — stress protocol, movement, recovery, and markers."
+}
