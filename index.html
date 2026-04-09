@@ -541,27 +541,22 @@ function loadPodcast(){
 function loadWeather(){
   const el=document.getElementById('weather');
   if(!el) return;
+  function fetchWeather(lat,lon,label){
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`)
+      .then(r=>r.json()).then(d=>{
+        const t=Math.round(d.current.temperature_2m);
+        const w=Math.round(d.current.wind_speed_10m);
+        const code=d.current.weather_code;
+        const icon=code<=1?'☀️':code<=3?'⛅':code<=48?'🌫️':code<=67?'🌧️':code<=77?'❄️':'⛈️';
+        el.textContent=`${icon} ${t}°C · ${w}km/h${label?' · '+label:''}`;
+      }).catch(()=>{el.textContent='';});
+  }
+  // Always load Cape Town immediately, then upgrade with geolocation if available
+  fetchWeather(-33.93,18.42,'CT');
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
-      const lat=pos.coords.latitude.toFixed(2);
-      const lon=pos.coords.longitude.toFixed(2);
-      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`)
-        .then(r=>r.json()).then(d=>{
-          const t=Math.round(d.current.temperature_2m);
-          const w=d.current.wind_speed_10m;
-          const code=d.current.weather_code;
-          const icon=code<=1?'☀️':code<=3?'⛅':code<=48?'🌫️':code<=67?'🌧️':code<=77?'❄️':'⛈️';
-          el.textContent=`${icon} ${t}°C · ${w} km/h`;
-        }).catch(()=>{el.textContent='';});
-    },()=>{
-      // Fallback: Cape Town
-      fetch('https://api.open-meteo.com/v1/forecast?latitude=-33.93&longitude=18.42&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto')
-        .then(r=>r.json()).then(d=>{
-          const t=Math.round(d.current.temperature_2m);
-          const icon=d.current.weather_code<=1?'☀️':d.current.weather_code<=3?'⛅':'🌧️';
-          el.textContent=`${icon} ${t}°C Cape Town`;
-        }).catch(()=>{});
-    });
+      fetchWeather(pos.coords.latitude.toFixed(2),pos.coords.longitude.toFixed(2),'');
+    },()=>{},{timeout:5000});
   }
 }
 
