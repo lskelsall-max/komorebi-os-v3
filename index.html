@@ -16,6 +16,11 @@
     --gold: #c9a84c;--gold-dim: #8a6e2f;--text: #e8e4dc;--muted: #6e6a62;
     --green: #4caf7d;--red: #e05252;--amber: #d4844a;--blue: #5b9cf6;
   }
+  /* Day mode: 06–18h */
+  .theme-day { --bg: #ffffff;--surface: #f5f5f3;--surface2: #ebebea;--border: #e0dfdc;--text: #1a1a1a;--muted: #888580;--gold: #a8872e;--gold-dim: #7a6320; }
+  /* Evening mode: 18–21h */
+  .theme-evening { --bg: #d8d6d2;--surface: #cccac6;--surface2: #c0beb9;--border: #b5b3ae;--text: #2a2a28;--muted: #6e6c68;--gold: #a8872e;--gold-dim: #7a6320; }
+  /* Night mode: 21h+ (default dark — dissatisfaction) */
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;padding-bottom:80px;}
   .header{padding:40px 20px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;}
@@ -494,14 +499,12 @@ function initDate(){
 // --- Podcast rotation (daily) ---
 const PODCASTS=[
   {id:'1f0qi12saeBEJmtnjOSszg',name:'Mental Models Daily'},
-  {id:'4MIL28YFvPsVA04lmKqSsN',name:'The Knowledge Project'},
-  {id:'79CkJF3UJTHFV8Dse3Otu0',name:'Invest Like the Best'},
+  {id:'1VyK52NSZHaDKeMJzT4TSM',name:'The Knowledge Project'},
+  {id:'22fi0RqfoBACCuQDv97wFO',name:'Invest Like the Best'},
   {id:'2IqXAVFR4e0Bmyjsdc8QzF',name:'Naval'},
-  {id:'4JKz2QMhQbEQOgJlyNnHsJ',name:'Founders'},
   {id:'5bC65RDvs3oxnLyqqvkUYX',name:'Acquired'},
-  {id:'0ECbkhPMKIuCOb3UGOtn3g',name:'The Resilient Mind'},
-  {id:'1uDbH8bGSxap0jhB5QROVV',name:'Life Wisdom'},
 ];
+// TODO: Add Founders, Resilient Mind, Life Wisdom when Spotify IDs confirmed
 function loadPodcast(){
   const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
   const p=PODCASTS[dayOfYear%PODCASTS.length];
@@ -537,7 +540,17 @@ function loadWeather(){
   }
 }
 
-initDate();restoreState();renderMarkers();renderWeeklyConformity();loadPodcast();loadWeather();
+// --- Time-based theme ---
+function setTheme(){
+  const h=new Date().getHours();
+  document.body.classList.remove('theme-day','theme-evening');
+  if(h>=6&&h<18) document.body.classList.add('theme-day');
+  else if(h>=18&&h<21) document.body.classList.add('theme-evening');
+  // 21+ = default dark (night/dissatisfaction)
+}
+
+initDate();restoreState();renderMarkers();renderWeeklyConformity();loadPodcast();setTheme();
+setInterval(setTheme,60000); // re-check every minuteloadWeather();
 </script>
 </body>
 </html>
