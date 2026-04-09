@@ -399,12 +399,12 @@ function switchTab(name,btn){
 
 // --- Markers: Whoop actual values + perceived 1-10 ---
 const MARKERS=[
-  {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[33,66]},
-  {id:'mk2',label:'Sleep Performance (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[70,85]},
-  {id:'mk3',label:'HRV (Whoop)',type:'number',unit:'ms',placeholder:'e.g. 45',min:0,max:300,thresholds:[40,70]},
-  {id:'mk4',label:'RHR (Whoop)',type:'number',unit:'bpm',placeholder:'e.g. 52',min:30,max:120,thresholds:[60,50],invert:true},
-  {id:'mk5',label:'Day Strain (Whoop)',type:'number',unit:'',placeholder:'0–21',min:0,max:21,thresholds:[8,14]},
-  {id:'mk6',label:'Stress (Whoop)',type:'number',unit:'hrs',placeholder:'non-activity hours',min:0,max:24,thresholds:[2,1],invert:true},
+  {id:'mk1',label:'Recovery',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
+  {id:'mk2',label:'Sleep',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[70,85]},
+  {id:'mk3',label:'HRV',type:'number',unit:'ms',placeholder:'e.g. 55',min:0,max:300,thresholds:[45,60]},
+  {id:'mk4',label:'RHR',type:'number',unit:'bpm',placeholder:'e.g. 52',min:30,max:120,thresholds:[60,55],invert:true},
+  {id:'mk5',label:'Day Strain',type:'number',unit:'',placeholder:'0–21',min:0,max:21,thresholds:[8,14]},
+  {id:'mk6',label:'Stress',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
   {id:'mk7',label:'Perceived Stress',type:'dots',invert:true},
   {id:'mk8',label:'Mood / Energy',type:'dots'},
 ];
@@ -480,9 +480,9 @@ function updateMarkerSummary(ds){
   if(!hasData){document.getElementById('markersSummary').style.display='none';return;}
   document.getElementById('markersSummary').style.display='block';
   document.getElementById('msGrid').innerHTML=`
-    <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=66?'🟢 Go':recovery>=33?'🟡 Moderate':'🔴 Rest'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=80?'🟢 Go':recovery>=60?'🟡 Moderate':'🔴 Rest'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Sleep</div><div class="ms-val">${sleep!==''?sleep+'%':'—'}</div><div class="ms-sub">${sleep!==''?(sleep>=85?'🟢 Optimal':sleep>=70?'🟡 Adequate':'🔴 Poor'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">HRV</div><div class="ms-val">${hrv!==''?hrv+' ms':'—'}</div><div class="ms-sub">${hrv!==''?(hrv>=70?'🟢 Strong':hrv>=40?'🟡 Normal':'🔴 Low'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">HRV</div><div class="ms-val">${hrv!==''?hrv+' ms':'—'}</div><div class="ms-sub">${hrv!==''?(hrv>=60?'🟢 Strong':hrv>=45?'🟡 Normal':'🔴 Low'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>`;
 }
 
