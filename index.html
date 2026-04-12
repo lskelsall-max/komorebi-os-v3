@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Komorebi OS</title>
-<meta name="description" content="Daily operating system — stress protocol, movement, recovery, and markers." />
+<meta name="description" content="Daily operating system — protocol, strength, recovery, and markers." />
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #000000;--surface: #111111;--surface2: #1a1a1a;--border: rgba(255,255,255,0.08);
@@ -19,7 +19,6 @@
     --green: #1DB954;--red: #f4364c;--amber: #f59b42;--blue: #4c8bf5;
     --radius: 12px;
   }
-  /* Subtle time-based tints */
   .theme-day { --bg: #0a0a0a;--surface: #141414;--surface2: #1c1c1c; }
   .theme-evening { --bg: #050508;--surface: #0e0e12;--surface2: #161619;--accent: #f59b42; }
   .theme-night { --bg: #000000;--surface: #0a0a0a;--surface2: #111;--accent: #f4364c;--muted: rgba(255,255,255,0.3); }
@@ -27,8 +26,8 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
   body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;font-weight:400;min-height:100vh;min-height:100dvh;padding-bottom:env(safe-area-inset-bottom,20px);transition:background 0.8s ease,color 0.8s ease;}
 
-  /* HEADER — Spotify-style compact */
-  .header{padding:56px 20px 14px;position:sticky;top:0;background:var(--bg);z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(0,0,0,0.85);}
+  /* HEADER */
+  .header{padding:56px 20px 14px;position:sticky;top:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:100;}
   .header-top{display:flex;justify-content:space-between;align-items:center;}
   .header h1{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.02em;}
   .header .subtitle{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px;font-weight:400;}
@@ -41,7 +40,7 @@
   .progress-text span{font-size:11px;color:var(--muted);font-weight:500;}
   .progress-text .count{color:var(--accent);font-weight:600;}
 
-  /* TABS — pill style like Spotify */
+  /* TABS */
   .tab-nav{display:flex;gap:8px;padding:12px 20px;background:var(--bg);position:sticky;top:106px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .tab-nav::-webkit-scrollbar{display:none;}
   .tab-btn{padding:8px 16px;background:var(--surface2);border:none;color:var(--muted);font-family:'Inter',sans-serif;font-size:12px;font-weight:500;border-radius:20px;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
@@ -54,7 +53,7 @@
   .section-label .title{font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);font-weight:600;}
   .section-label .line{flex:1;height:1px;background:var(--border);}
 
-  /* ITEMS — Apple-style large touch targets */
+  /* ITEMS */
   .item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);border:1px solid var(--border);user-select:none;min-height:56px;}
   .item:active{transform:scale(0.97);background:var(--surface2);}
   .item.done{opacity:0.4;}
@@ -75,12 +74,10 @@
   .tab-content{display:none;}
   .tab-content.active{display:block;}
 
-  /* NOTE CARDS */
   .note-card{margin:0 20px 8px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
   .note-card p{font-size:12px;color:var(--muted);line-height:1.6;}
   .note-card .note-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px;font-weight:600;}
 
-  /* RESET */
   .reset-wrap{padding:24px 20px 8px;text-align:center;}
   .reset-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;padding:10px 24px;border-radius:20px;cursor:pointer;transition:all 0.2s;}
   .reset-btn:active{background:var(--surface2);}
@@ -128,7 +125,7 @@
   .ms-item .ms-val{font-size:24px;font-weight:700;color:var(--accent);margin-top:4px;}
   .ms-item .ms-sub{font-size:10px;color:var(--muted);margin-top:2px;}
 
-  /* WEEKLY */
+  /* WEEKLY TOTALS */
   .weekly-totals{margin:16px 20px 0;}
   .wt-title{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600;}
   .wt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
@@ -136,12 +133,66 @@
   .wt-bar-wrap{flex:1;background:var(--surface2);border-radius:4px;height:5px;}
   .wt-bar{height:100%;border-radius:4px;background:var(--accent);transition:width 0.4s ease;}
   .wt-val{font-size:11px;color:var(--muted);width:50px;text-align:right;font-weight:500;}
+
+  /* STRENGTH */
+  .str-tabs{display:flex;gap:6px;padding:0 20px;margin:16px 0 12px;}
+  .str-tab{flex:1;padding:12px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;text-align:center;transition:all 0.2s;}
+  .str-tab.active{border-color:var(--accent);}
+  .str-tab .st-day{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+  .str-tab .st-name{font-size:14px;font-weight:600;color:var(--text2);margin-top:2px;}
+  .str-tab .st-type{font-size:10px;color:var(--muted);margin-top:1px;}
+  .str-tab.active .st-name{color:var(--accent);}
+  .str-rules{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px;margin-bottom:16px;}
+  .str-rule{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:var(--surface);border:1px solid var(--border);color:var(--gold);font-family:'DM Mono',monospace;font-weight:500;}
+  .ex-card{margin:0 20px 10px;border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+  .ex-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--surface);cursor:pointer;}
+  .ex-id{font-size:10px;font-family:'DM Mono',monospace;font-weight:500;color:var(--gold);margin-right:10px;}
+  .ex-name{font-size:14px;font-weight:500;color:var(--text2);flex:1;}
+  .ex-load-tag{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;}
+  .ex-superset{font-size:9px;padding:2px 6px;background:rgba(155,142,196,0.15);color:#9B8EC4;border-radius:4px;margin-left:8px;letter-spacing:0.5px;}
+  .ex-body{display:none;background:var(--surface2);padding:16px;border-top:1px solid var(--border);}
+  .ex-card.open .ex-body{display:block;}
+  .ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+  .ex-stat{background:var(--surface);border-radius:8px;padding:8px 10px;text-align:center;}
+  .ex-stat-label{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;}
+  .ex-stat-val{font-size:16px;font-weight:600;color:var(--text2);margin-top:2px;font-family:'DM Mono',monospace;}
+  .ex-cues{margin-bottom:14px;}
+  .ex-cue{font-size:12px;color:var(--muted);line-height:1.6;padding:3px 0 3px 16px;position:relative;}
+  .ex-cue::before{content:'→';position:absolute;left:0;color:var(--gold);}
+  .ex-sets{display:flex;gap:6px;margin-bottom:14px;}
+  .set-box{width:36px;height:36px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;transition:all 0.15s;}
+  .set-box.done{background:var(--accent);color:#000;border-color:var(--accent);}
+  .set-box:active{transform:scale(0.9);}
+  .ex-rest-btn{width:100%;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;text-align:center;transition:all 0.2s;position:relative;overflow:hidden;}
+  .ex-rest-btn:active{background:var(--surface2);}
+  .ex-rest-fill{position:absolute;left:0;top:0;height:100%;background:var(--accent-dim);transition:width 0.1s linear;}
+  .ex-subs{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+  .ex-subs-title{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  .ex-sub{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:4px;}
+  .ex-sub strong{color:var(--text2);font-weight:500;}
+
+  /* COMMITMENTS */
+  .commit-row{display:flex;align-items:center;gap:14px;padding:16px;background:var(--surface);border-radius:var(--radius);margin:0 20px 8px;border:1px solid var(--border);}
+  .commit-info{flex:1;min-width:0;}
+  .commit-name{font-size:15px;font-weight:500;color:var(--text2);}
+  .commit-detail{font-size:11px;color:var(--muted);margin-top:2px;}
+  .commit-dots{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap;}
+  .commit-dot{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all 0.2s;}
+  .commit-dot:active{transform:scale(0.9);}
+  .commit-dot.done{background:var(--accent);border-color:var(--accent);color:#000;}
+  .commit-dot.done::after{content:'✓';font-size:10px;}
+  .commit-count{text-align:right;flex-shrink:0;}
+  .commit-count .cc-num{font-size:28px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;line-height:1;}
+  .commit-count .cc-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+  .commit-notes{margin:12px 20px 0;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+  .commit-notes textarea{width:100%;background:transparent;border:none;color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;resize:none;outline:none;min-height:60px;line-height:1.6;}
+  .commit-notes textarea::placeholder{color:var(--muted);}
 </style>
 </head>
 <body>
 <div class="header">
   <div class="header-top">
-    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v3</div></div>
+    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v4</div></div>
     <div class="date-display">
       <div class="day" id="dayName"></div>
       <div class="date-str" id="dateStr"></div>
@@ -154,9 +205,10 @@
 
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('daily',this)">Daily</button>
+  <button class="tab-btn" onclick="switchTab('strength',this)">Strength</button>
+  <button class="tab-btn" onclick="switchTab('commitments',this)">Commitments</button>
   <button class="tab-btn" onclick="switchTab('schedule',this)">Schedule</button>
   <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
-  <button class="tab-btn" onclick="switchTab('weekly',this)">Weekly</button>
 </div>
 
 <!-- CONFORMITY -->
@@ -191,6 +243,28 @@
   <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
 </div>
 
+<!-- STRENGTH -->
+<div class="tab-content" id="tab-strength">
+  <div class="str-tabs" id="strTabs"></div>
+  <div class="str-rules" id="strRules"></div>
+  <div id="strWarmup"></div>
+  <div id="strExercises"></div>
+  <div id="strCooldown"></div>
+</div>
+
+<!-- COMMITMENTS -->
+<div class="tab-content" id="tab-commitments">
+  <div class="section" style="margin-top:18px;">
+    <div class="section-label"><span class="icon">🎯</span><span class="title">10-Week Commitments</span><div class="line"></div></div>
+  </div>
+  <div id="commitContainer"></div>
+  <div class="commit-notes">
+    <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Session notes</div>
+    <textarea id="commitNotes" placeholder="Observations, reactions, next steps..." oninput="saveCommitNotes()"></textarea>
+  </div>
+  <div style="height:24px;"></div>
+</div>
+
 <!-- SCHEDULE -->
 <div class="tab-content" id="tab-schedule">
   <div class="weekly-totals" style="margin-bottom:0;padding-bottom:0;">
@@ -200,95 +274,80 @@
       <div class="wt-row"><span class="wt-label">Ice bath (3× · 10min)</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:37%"></div></div><span class="wt-val">30 min</span></div>
       <div class="wt-row"><span class="wt-label">Z2 Cardio</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:83%"></div></div><span class="wt-val">150 min</span></div>
       <div class="wt-row"><span class="wt-label">Z4 Intervals</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:9%"></div></div><span class="wt-val">16 min</span></div>
+      <div class="wt-row"><span class="wt-label">Strength (3×/wk)</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:100%"></div></div><span class="wt-val">135 min</span></div>
       <div class="wt-row"><span class="wt-label">Nature</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:50%"></div></div><span class="wt-val">90 min</span></div>
       <div class="wt-row"><span class="wt-label">Pennebaker</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:22%"></div></div><span class="wt-val">40 min</span></div>
-      <div class="wt-row"><span class="wt-label">Social</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:33%"></div></div><span class="wt-val">60 min</span></div>
-      <div class="wt-row"><span class="wt-label">Massage/aesthetic</span><div class="wt-bar-wrap"><div class="wt-bar" style="width:33%"></div></div><span class="wt-val">60 min</span></div>
-      <div style="padding:8px 2px 4px;font-size:10px;color:var(--gold);letter-spacing:1px;">Total weekly protocol: ~9 hrs</div>
-    </div>
-  </div>
-  <div style="padding:6px 14px 8px;">
-    <div class="note-card" style="margin:0;">
-      <div class="note-title">Front-loading logic</div>
-      <p>Mon–Wed carry the heavy load. Thu–Fri medium intensity. Sat–Sun nature, social, and reset. Surf lesson = nature + Z2 + cold — ticks three boxes at once.</p>
+      <div style="padding:8px 2px 4px;font-size:10px;color:var(--gold);letter-spacing:1px;">Total weekly protocol: ~11 hrs</div>
     </div>
   </div>
 
   <div class="day-block" id="block-mon">
-    <div class="day-header" onclick="toggleDay('block-mon')"><div><div class="day-name">Monday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Z4 + Ice bath + Pennebaker</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-mon')"><div><div class="day-name">Monday — <span style="color:var(--gold);font-size:12px">Session A · Push</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">⚡</span><span class="di-name">Z4 intervals — 4×4 min hard, 3 min rest</span><span class="di-dur">28 min</span></div>
-      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 warmup/cooldown swim</span><span class="di-dur">20 min</span></div>
+      <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session A — Push</span><span class="di-dur">45 min</span></div>
+      <div class="day-item"><span class="di-icon">⚡</span><span class="di-name">Z4 intervals — 4×4 min hard</span><span class="di-dur">28 min</span></div>
       <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
-      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath — 10–15°C post-sauna</span><span class="di-dur">10 min</span></div>
-      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker deep write — current stressor</span><span class="di-dur">20 min</span></div>
+      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath — 10–15°C</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker — current stressor</span><span class="di-dur">20 min</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-tue">
-    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social (crew)</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
-      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature window — barefoot beach or park</span><span class="di-dur">30 min</span></div>
-      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Cold shower</span><span class="di-dur">5 min</span></div>
-      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social — call Henry / Frank / Charlie / crew</span><span class="di-dur">30 min</span></div>
+      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature — barefoot beach or park</span><span class="di-dur">30 min</span></div>
+      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social — Henry / Frank / Charlie</span><span class="di-dur">30 min</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-wed">
-    <div class="day-header" onclick="toggleDay('block-wed')"><div><div class="day-name">Wednesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Z4 + Ice bath + Pennebaker 2</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-wed')"><div><div class="day-name">Wednesday — <span style="color:var(--blue);font-size:12px">Session B · Pull</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker 2</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session B — Pull</span><span class="di-dur">45 min</span></div>
       <div class="day-item"><span class="di-icon">⚡</span><span class="di-name">Z4 intervals — 4×4 min hard</span><span class="di-dur">28 min</span></div>
-      <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength circuit — Hollywood muscle map</span><span class="di-dur">30 min</span></div>
       <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath — 10 min</span><span class="di-dur">10 min</span></div>
-      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 2 — same stressor, deepen</span><span class="di-dur">20 min</span></div>
+      <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 2 — same stressor</span><span class="di-dur">20 min</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-thu">
     <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Active recovery + Z2 + Nature</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~1.75 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 — ruck (1× max/week) or swim</span><span class="di-dur">50 min</span></div>
-      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature walk — barefoot if possible</span><span class="di-dur">30 min</span></div>
-      <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Cold shower</span><span class="di-dur">5 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 — ruck or swim</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature walk</span><span class="di-dur">30 min</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-fri">
-    <div class="day-header" onclick="toggleDay('block-fri')"><div><div class="day-name">Friday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Sauna + Aesthetic + Social eve</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-fri')"><div><div class="day-name">Friday — <span style="color:var(--amber);font-size:12px">Session C · Hinge</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Aesthetic + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session C — Hinge + Lower</span><span class="di-dur">45 min</span></div>
+      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio</span><span class="di-dur">50 min</span></div>
       <div class="day-item"><span class="di-icon">🔥</span><span class="di-name">Sauna — 80°C+</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">💆</span><span class="di-name">Buccal massage / Nina / Dr. Erasmus</span><span class="di-dur">60 min</span></div>
-      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social evening — one of the crew</span><span class="di-dur">open</span></div>
+      <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social evening</span><span class="di-dur">open</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-sat">
-    <div class="day-header" onclick="toggleDay('block-sat')"><div><div class="day-name">Saturday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Surf / Golf + Family nature + Pennebaker 3</div></div><div class="day-meta"><div class="day-load load-low">LOW</div><div class="day-time">~2 hrs protocol</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-sat')"><div><div class="day-name">Saturday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Surf / Golf + Family + Pennebaker 3</div></div><div class="day-meta"><div class="day-load load-low">LOW</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack (lighter)</span><span class="di-dur">60 min</span></div>
-      <div class="day-item"><span class="di-icon">🏄</span><span class="di-name">Surf lesson / golf / climb — ticks nature + Z2 + cold</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Family outing — beach or mountain, phone away</span><span class="di-dur">60 min</span></div>
+      <div class="day-item"><span class="di-icon">🏄</span><span class="di-name">Surf / golf / climb</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Family outing — phone away</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath</span><span class="di-dur">10 min</span></div>
       <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 3 — close the loop</span><span class="di-dur">20 min</span></div>
     </div>
   </div>
-
   <div class="day-block collapsed" id="block-sun">
-    <div class="day-header" onclick="toggleDay('block-sun')"><div><div class="day-name">Sunday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Rest + Weekly review + Family</div></div><div class="day-meta"><div class="day-load load-low">REST</div><div class="day-time">~1 hr protocol</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-sun')"><div><div class="day-name">Sunday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Rest + Weekly review + Family</div></div><div class="day-meta"><div class="day-load load-low">REST</div><div class="day-time">~1 hr</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Sunshine + smoothie + posture only</span><span class="di-dur">40 min</span></div>
-      <div class="day-item"><span class="di-icon">📊</span><span class="di-name">Whoop 7-day HRV review — calibrate next week</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">📊</span><span class="di-name">Whoop 7-day HRV review</span><span class="di-dur">10 min</span></div>
       <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Weekly review — wins, stressors, one change</span><span class="di-dur">20 min</span></div>
-      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Full family morning — no phones, no agenda</span><span class="di-dur">AM</span></div>
-      <div class="day-item"><span class="di-icon">🗓️</span><span class="di-name">Schedule next week's social slots now</span><span class="di-dur">5 min</span></div>
+      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Full family morning — no phones</span><span class="di-dur">AM</span></div>
     </div>
   </div>
   <div style="height:20px;"></div>
@@ -303,40 +362,16 @@
   </div>
   <div class="note-card"><div class="note-title">How to score</div><p>Whoop metrics use actual values. Perceived scores: 1–3 poor · 4–7 average · 8–10 good. Log every morning.</p></div>
   <div style="margin-top:12px;" id="markersContainer"></div>
-  <div style="text-align:center;padding:12px 14px 0;"><button onclick="saveAllMarkers()" style="background:var(--gold);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:10px 28px;border-radius:20px;cursor:pointer;">Save markers</button></div>
+  <div style="text-align:center;padding:12px 14px 0;"><button onclick="saveAllMarkers()" style="background:var(--gold);color:var(--bg);border:none;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:10px 28px;border-radius:20px;cursor:pointer;">Save markers</button></div>
   <div class="markers-summary" id="markersSummary" style="display:none;"><div class="ms-title">Today's snapshot</div><div class="ms-grid" id="msGrid"></div></div>
   <div style="height:20px;"></div>
-</div>
-
-<!-- WEEKLY -->
-<div class="tab-content" id="tab-weekly">
-  <div class="section" style="margin-top:18px;">
-    <div class="section-label"><span class="icon">🔥</span><span class="title">Recovery Anchors</span><div class="line"></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sauna ×3 — Mon, Wed, Fri</div><div class="item-detail">80°C+, 60 min each. Post-workout ideal. Hydrate before. Progress target: 4× for full Laukkanen longevity alignment.</div><span class="item-tag tag-amber">3× · 180 min</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Ice bath ×3 — Mon, Wed, Sat</div><div class="item-detail">10–15°C, 10 min each = 30 min total. Søberg 11 min/week target met. Not immediately pre-sleep.</div><span class="item-tag tag-green">3× · 30 min</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Z2 cardio — 150 min total</div><div class="item-detail">Tue 50 + Thu 50 + Fri 50. Nasal breathing, conversational pace. Surf lesson counts on Sat. Max 1× ruck/week.</div><span class="item-tag tag-time">3× · 50 min</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Z4 intervals — Mon + Wed</div><div class="item-detail">4×4 min hard each session = 16 min Z4 total. Skip if HRV red.</div><span class="item-tag tag-amber">2× · 8 min each</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Nature — 90 min total</div><div class="item-detail">Tue 30 + Thu 30 + Sat 30. Surf lesson on Sat clears this entirely. Barefoot on sand counts double.</div><span class="item-tag tag-green">3× · 30 min</span></div></div>
-  </div>
-  <div class="section">
-    <div class="section-label"><span class="icon">✍️</span><span class="title">Deep Processing</span><div class="line"></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Pennebaker — Mon, Wed, Sat</div><div class="item-detail">20 min each, same stressor all 3 days. Unedited emotional processing. No problem-solving — just feel it.</div><span class="item-tag tag-time">3× · 20 min</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w7"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Weekly review — Sunday 20 min</div><div class="item-detail">Whoop 7-day HRV trend. One win. One stressor. One protocol change. Rebuilds perceived agency.</div><span class="item-tag tag-green">Sun · 20 min</span></div></div>
-  </div>
-  <div class="section">
-    <div class="section-label"><span class="icon">🤝</span><span class="title">Social + Family + Aesthetic</span><div class="line"></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Social connection — 2× scheduled</div><div class="item-detail">Slot 1: Tue or Fri with inner circle (Henry/Frank/Charlie/crew). Slot 2: Susie — real conversation, not logistics. Schedule Monday morning.</div><span class="item-tag tag-amber">2× scheduled</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w9"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Family outing — out of house, phone-free</div><div class="item-detail">Sat or Sun. Beach, mountain, surf with Hector. Active engaged time counts as social connection. Passive co-presence (TV) does not.</div><span class="item-tag tag-blue">Sat/Sun</span></div></div>
-    <div class="item" onclick="toggleWeek(this)" data-id="w10"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Massage or aesthetic — 60 min</div><div class="item-detail">Friday slot. Buccal massage (Nina), microneedling, or Dr. Erasmus. Book in advance — don't leave open.</div><span class="item-tag tag-blue">Fri · 60 min</span></div></div>
-  </div>
-  <div style="height:24px;"></div>
 </div>
 
 <script>
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-// --- Keys ---
+// ── Keys ──
 function dateKey(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
 function todayKey(){return dateKey(new Date());}
 function itemKey(id){return `kos_${todayKey()}_${id}`;}
@@ -344,22 +379,13 @@ function weekKey(id){const d=new Date();const s=new Date(d);s.setDate(d.getDate(
 function markerKey(id,ds){return `kos_marker_${ds}_${id}`;}
 function conformKey(ds){return `kos_conform_${ds}`;}
 
-// --- Daily toggle + conformity save ---
-function toggle(el){
-  const id=el.dataset.id;
-  const done=el.classList.toggle('done');
-  try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}
-  updateProgress();
-  saveConformity();
-}
+// ── Daily toggle ──
+function toggle(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}updateProgress();saveConformity();}
 function toggleWeek(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(weekKey(id),done?'1':'0');}catch(e){}}
-
 function restoreState(){
   document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{try{if(localStorage.getItem(itemKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
-  document.querySelectorAll('#tab-weekly .item[data-id]').forEach(el=>{try{if(localStorage.getItem(weekKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
   updateProgress();
 }
-
 function updateProgress(){
   const all=document.querySelectorAll('#tab-daily .item[data-id]');
   const done=document.querySelectorAll('#tab-daily .item[data-id].done');
@@ -367,8 +393,6 @@ function updateProgress(){
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressCount').textContent=done.length+' / '+all.length;
 }
-
-// --- Conformity: save daily score to localStorage ---
 function saveConformity(){
   const all=document.querySelectorAll('#tab-daily .item[data-id]');
   const done=document.querySelectorAll('#tab-daily .item[data-id].done');
@@ -376,40 +400,20 @@ function saveConformity(){
   try{localStorage.setItem(conformKey(todayKey()),pct);}catch(e){}
   renderWeeklyConformity();
 }
-
-// --- Weekly conformity chart ---
 function renderWeeklyConformity(){
-  const el=document.getElementById('weeklyConformity');
-  if(!el) return;
-  const today=new Date();
-  let html='';
+  const el=document.getElementById('weeklyConformity');if(!el)return;
+  const today=new Date();let html='';
   for(let i=6;i>=0;i--){
     const d=new Date(today);d.setDate(today.getDate()-i);
-    const dk=dateKey(d);
-    const pct=parseInt(localStorage.getItem(conformKey(dk)))||0;
-    const isToday=i===0;
-    const dayLabel=DAYS[d.getDay()];
+    const dk=dateKey(d);const pct=parseInt(localStorage.getItem(conformKey(dk)))||0;
+    const isToday=i===0;const dayLabel=DAYS[d.getDay()];
     const barColor=pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
     const opacity=pct===0&&!isToday?'0.3':'1';
-    html+=`<div style="flex:1;text-align:center;opacity:${opacity}">
-      <div style="height:80px;display:flex;align-items:flex-end;justify-content:center;padding:0 2px;">
-        <div style="width:100%;max-width:28px;height:${Math.max(pct,2)}%;background:${barColor};border-radius:4px 4px 0 0;transition:height 0.3s;"></div>
-      </div>
-      <div style="font-size:9px;color:${isToday?'var(--gold)':'var(--muted)'};margin-top:4px;letter-spacing:1px;font-weight:${isToday?'500':'300'}">${dayLabel}</div>
-      <div style="font-size:10px;color:${isToday?'var(--text)':'var(--muted)'};margin-top:1px;">${pct>0?pct+'%':'—'}</div>
-    </div>`;
+    html+=`<div style="flex:1;text-align:center;opacity:${opacity}"><div style="height:80px;display:flex;align-items:flex-end;justify-content:center;padding:0 2px;"><div style="width:100%;max-width:28px;height:${Math.max(pct,2)}%;background:${barColor};border-radius:4px 4px 0 0;transition:height 0.3s;"></div></div><div style="font-size:9px;color:${isToday?'var(--gold)':'var(--muted)'};margin-top:4px;letter-spacing:1px;font-weight:${isToday?'500':'300'}">${dayLabel}</div><div style="font-size:10px;color:${isToday?'var(--text)':'var(--muted)'};margin-top:1px;">${pct>0?pct+'%':'—'}</div></div>`;
   }
   el.innerHTML=html;
 }
-
-function resetDay(){
-  document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{
-    el.classList.remove('done');
-    try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}
-  });
-  updateProgress();saveConformity();
-}
-
+function resetDay(){document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{el.classList.remove('done');try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}});updateProgress();saveConformity();}
 function toggleDay(id){document.getElementById(id).classList.toggle('collapsed');}
 function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
@@ -417,94 +421,49 @@ function switchTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
   if(name==='markers') renderMarkers();
+  if(name==='strength') renderStrength();
+  if(name==='commitments') renderCommitments();
 }
 
-// --- Markers: Whoop actual values + perceived 1-10 ---
+// ── Markers ──
 const MARKERS=[
   {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
   {id:'mk6',label:'High Stress (Whoop)',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
   {id:'mk7',label:'Perceived Stress',type:'dots',invert:true},
   {id:'mk8',label:'Mood / Energy',type:'dots'},
 ];
-
 let markerDate=new Date();
 function mds(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
 function mdl(d){return DAYS[d.getDay()]+' '+d.getDate()+' '+MONTHS[d.getMonth()];}
 function changeMarkerDate(delta){markerDate=new Date(markerDate);markerDate.setDate(markerDate.getDate()+delta);renderMarkers();}
-
 function renderMarkers(){
-  const ds=mds(markerDate);
-  document.getElementById('markersDateLabel').textContent=mdl(markerDate);
+  const ds=mds(markerDate);document.getElementById('markersDateLabel').textContent=mdl(markerDate);
   const c=document.getElementById('markersContainer');c.innerHTML='';
   MARKERS.forEach((m,i)=>{
     const saved=(()=>{try{return localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){return '';}})();
     const row=document.createElement('div');row.className='marker-row';
-
     if(m.type==='number'){
-      // Numeric input for Whoop metrics
-      const val=saved?parseFloat(saved):'';
-      let statusColor='var(--muted)';let statusIcon='';
-      if(val!==''){
-        if(m.invert){
-          statusColor=val<=m.thresholds[1]?'var(--green)':val<=m.thresholds[0]?'var(--amber)':'var(--red)';
-          statusIcon=val<=m.thresholds[1]?'🟢':val<=m.thresholds[0]?'🟡':'🔴';
-        } else {
-          statusColor=val>=m.thresholds[1]?'var(--green)':val>=m.thresholds[0]?'var(--amber)':'var(--red)';
-          statusIcon=val>=m.thresholds[1]?'🟢':val>=m.thresholds[0]?'🟡':'🔴';
-        }
-      }
-      row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <input type="number" value="${val}" placeholder="${m.placeholder}" min="${m.min}" max="${m.max}"
-            data-mid="${m.id}"
-            style="width:70px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;text-align:center;outline:none;"
-            onchange="saveMarker('${m.id}','${ds}',this.value)">
-          <span style="font-size:10px;color:var(--muted);">${m.unit}</span>
-          <span style="font-size:12px;">${statusIcon}</span>
-        </div>`;
+      const val=saved?parseFloat(saved):'';let statusIcon='';
+      if(val!==''){if(m.invert){statusIcon=val<=m.thresholds[1]?'🟢':val<=m.thresholds[0]?'🟡':'🔴';}else{statusIcon=val>=m.thresholds[1]?'🟢':val>=m.thresholds[0]?'🟡':'🔴';}}
+      row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div style="display:flex;align-items:center;gap:6px;"><input type="number" value="${val}" placeholder="${m.placeholder}" min="${m.min}" max="${m.max}" data-mid="${m.id}" style="width:70px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:center;outline:none;" onchange="saveMarker('${m.id}','${ds}',this.value)"><span style="font-size:10px;color:var(--muted);">${m.unit}</span><span style="font-size:12px;">${statusIcon}</span></div>`;
     } else {
-      // 1-10 dot selector for perceived metrics
       const savedNum=saved?parseInt(saved):0;
       row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div class="marker-score" id="ms_${m.id}"></div>`;
       c.appendChild(row);
       const sd=row.querySelector(`#ms_${m.id}`);
-      for(let v=1;v<=10;v++){
-        const btn=document.createElement('button');
-        btn.className='score-dot'+(savedNum===v?` selected-${v}`:'');
-        btn.textContent=v;
-        btn.onclick=function(){try{localStorage.setItem(markerKey(m.id,ds),v);}catch(e){}renderMarkers();};
-        sd.appendChild(btn);
-      }
+      for(let v=1;v<=10;v++){const btn=document.createElement('button');btn.className='score-dot'+(savedNum===v?` selected-${v}`:'');btn.textContent=v;btn.onclick=function(){try{localStorage.setItem(markerKey(m.id,ds),v);}catch(e){}renderMarkers();};sd.appendChild(btn);}
       return;
     }
     c.appendChild(row);
   });
   updateMarkerSummary(ds);
 }
-
-function saveMarker(id,ds,val){
-  try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}
-  updateMarkerSummary(ds);
-}
-function saveAllMarkers(){
-  const ds=mds(markerDate);
-  document.querySelectorAll('#markersContainer input[type="number"]').forEach(inp=>{
-    const id=inp.getAttribute('data-mid');
-    if(id&&inp.value) try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}
-  });
-  renderMarkers();
-  const btn=event.target;btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save markers';},1500);
-}
-
+function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);}
+function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[type="number"]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();}
 function updateMarkerSummary(ds){
-  const vals={};
-  MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
-  const recovery=vals.mk1?parseFloat(vals.mk1):'';
-  const highStress=vals.mk6?parseFloat(vals.mk6):'';
-  const stress=vals.mk7?parseInt(vals.mk7):0;
-  const mood=vals.mk8?parseInt(vals.mk8):0;
-  const hasData=recovery!==''||highStress!==''||stress||mood;
-  if(!hasData){document.getElementById('markersSummary').style.display='none';return;}
+  const vals={};MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
+  const recovery=vals.mk1?parseFloat(vals.mk1):'';const highStress=vals.mk6?parseFloat(vals.mk6):'';const stress=vals.mk7?parseInt(vals.mk7):0;const mood=vals.mk8?parseInt(vals.mk8):0;
+  if(recovery===''&&highStress===''&&!stress&&!mood){document.getElementById('markersSummary').style.display='none';return;}
   document.getElementById('markersSummary').style.display='block';
   document.getElementById('msGrid').innerHTML=`
     <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=80?'🟢 Go':recovery>=60?'🟡 Moderate':'🔴 Rest'):''}</div></div>
@@ -513,6 +472,148 @@ function updateMarkerSummary(ds){
     <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>`;
 }
 
+// ── Strength Protocol ──
+const WARMUP=[
+  {id:'w1',name:'Dead Hang',detail:'Full decompression. Let everything go.',dur:'30s'},
+  {id:'w2',name:'Supine Psoas Stretch',detail:'Posterior pelvic tilt. Breathe into the right side.',dur:'60s'},
+  {id:'w3',name:'Glute Bridge Isometric',detail:'Right leads. 5s hold each.',dur:'5 × 5s'},
+  {id:'w4',name:'Wall Hip CARs',detail:'Right first. Full range, zero compensation.',dur:'5 each'},
+  {id:'w5',name:'Bird Dog',detail:'Spine neutral. No rotation. Pause at extension.',dur:'5 each'},
+  {id:'w6',name:'Band Pull-Apart',detail:'Warm the rear delts. Right shoulder back.',dur:'15 reps'},
+];
+const COOLDOWN=[
+  {id:'cd1',name:'Wall Hip CARs',detail:'Slow. Full range. Right side.',dur:'5 each'},
+  {id:'cd2',name:'Supine Psoas Stretch',detail:'Decompress what you loaded.',dur:'60s'},
+  {id:'cd3',name:'Dead Hang',detail:'Final spinal decompression.',dur:'30s'},
+  {id:'cd4',name:'FitMind Meditation',detail:'10–15 mins. Non-negotiable.',dur:'10–15 min'},
+  {id:'cd5',name:'Cold Shower',detail:'Finish cold. Own the discomfort.',dur:'Until cold'},
+];
+const STR_SESSIONS=[
+  {id:'A',label:'Session A',type:'Push',color:'#C8A96E',day:'Mon',
+   rules:['RIGHT LEADS','POSITION FIRST','NO GRIND','HEEL LIFT — RIGHT SHOE'],
+   exercises:[
+    {id:'A1',name:'Incline DB Press',sets:4,reps:'5',tempo:'3-1-1',load:'16kg',rest:120,color:'#C8A96E',cues:['Right side leads every set','Pack lats into bench','Pause at bottom — own the position','Stop at first slow rep'],subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor'},{n:'Wall-Supported Press',d:'Sit against wall, enforces upright torso'}]},
+    {id:'A2',name:'Push Press — KB Single Arm',sets:4,reps:'3',tempo:'Explosive',load:'8kg',rest:120,color:'#C8A96E',cues:['Heel lift in right shoe','Right glute squeeze before dip','Small dip — legs drive','Full lockout 1s at top','Right arm first'],subs:[{n:'Seated DB Shoulder Press',d:'Removes LLD issue'},{n:'Half-Kneeling KB Press',d:'Right knee down'}]},
+    {id:'A3',name:'Supported Lateral Raise',sets:3,reps:'6',tempo:'2-1-2',load:'4kg',rest:90,color:'#9B8EC4',superset:'A4',cues:['Chest on incline bench','Lead with elbow not wrist','2s eccentric','No shrug'],subs:[{n:'Side-Lying Lateral Raise',d:'Pure isolation'},{n:'Seated Lateral Raise',d:'Slight forward lean'}]},
+    {id:'A4',name:'Band Pull-Apart',sets:3,reps:'10',tempo:'Controlled',load:'Light band',rest:90,color:'#9B8EC4',supersetWith:'A3',cues:['Superset with A3 — no rest','Thumbs behind ears','Feel right rear delt','Corrective — not optional'],subs:[]},
+    {id:'A5',name:'Banded Pull-Up (Assisted)',sets:2,reps:'5',tempo:'2-1-2',load:'Band assist',rest:90,color:'#7EB8C9',cues:['Pack lats before pulling','Dead hang at bottom each rep','Right side leads'],subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Single Arm Band Row',d:'Right leads'}]},
+    {id:'A6',name:'Tricep Pushdown — Band',sets:3,reps:'8',tempo:'2-1-2',load:'Medium band',rest:90,color:'#7EB8C9',cues:['Elbows pinned','Full extension at bottom','Slow eccentric','Right arm first if unilateral'],subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, anywhere'}]},
+   ]},
+  {id:'B',label:'Session B',type:'Pull',color:'#7EB8C9',day:'Wed',
+   rules:['RIGHT LEADS','ELBOW TO HIP','OWN THE CONTRACTION','NO GRIND'],
+   exercises:[
+    {id:'B1',name:'Single Arm DB Row',sets:4,reps:'5',tempo:'2-1-2',load:'20kg',rest:120,color:'#7EB8C9',cues:['Right arm leads','Elbow to hip — not hand to shoulder','Pause and contract at top','No torso rotation','If QL fires before lat — stop'],subs:[{n:'Band Row (anchored)',d:'Same cues apply'},{n:'Incline DB Row',d:'Removes spinal loading'}]},
+    {id:'B2',name:'Band Face Pull',sets:3,reps:'8',tempo:'2-2-2',load:'Medium band',rest:90,color:'#7EB8C9',cues:['Anchor at upper chest height','Thumbs behind ears','External rotation emphasis','Right rear delt must work'],subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'},{n:'Prone DB Rear Delt Raise',d:'Face down on incline'}]},
+    {id:'B3',name:'Incline DB Curl',sets:3,reps:'6',tempo:'2-1-3',load:'8kg',rest:90,color:'#9B8EC4',cues:['Sit back on incline','3s eccentric','Shoulder pinned','Right arm first','No swing'],subs:[{n:'Standing DB Curl',d:'Strict form'},{n:'Band Curl',d:'Resistance increases at peak'}]},
+    {id:'B4',name:'Dead Hang',sets:3,reps:'30s',tempo:'Passive',load:'Bodyweight',rest:60,color:'#C8A96E',isDuration:true,cues:['Structural maintenance','Full passive decompression','Feel right spine lengthening','Breathe slowly'],subs:[{n:'Supported Hang',d:'Slight knee bend'},{n:'Doorframe Hang',d:'Grip top of doorframe'}]},
+    {id:'B5',name:'Bird Dog Row',sets:3,reps:'5',tempo:'3-1-2',load:'8kg',rest:90,color:'#9B8EC4',cues:['Start in bird dog position','Row while holding extension','Stability first','Right arm rows, right leg extends','Corrective as much as strength'],subs:[{n:'Plank DB Row',d:'Less range but stable'},{n:'Kneeling Single Arm Row',d:'Both knees down'}]},
+   ]},
+  {id:'C',label:'Session C',type:'Hinge + Lower',color:'#E07B4A',day:'Fri',
+   rules:['RIGHT LEADS','HIP HINGE NOT SQUAT','GLUTE AT TOP','POSITION FIRST'],
+   exercises:[
+    {id:'C1',name:'KB Swing',sets:5,reps:'5',tempo:'Explosive',load:'20kg',rest:120,color:'#E07B4A',cues:['Hip hinge — not a squat','Explosive hip snap','Right glute squeeze at top','Dead stop between reps if needed','Stop if lower back takes over'],subs:[{n:'KB Deadlift',d:'Same hinge, no swing'},{n:'Romanian Deadlift — DB',d:'Slow eccentric hinge'}]},
+    {id:'C2',name:'Single Leg RDL',sets:4,reps:'5',tempo:'3-1-2',load:'12.5kg contralateral',rest:120,color:'#E07B4A',cues:['Right leg leads','Contralateral load','3s down, own the bottom','Stop if QL fires before hamstring','Slight knee bend'],subs:[{n:'SL RDL — Bodyweight',d:'Build motor pattern first'},{n:'Hip Hinge to Wall',d:'Groove the pattern'}]},
+    {id:'C3',name:'Goblet Squat Hold',sets:3,reps:'20s',tempo:'Static',load:'8kg',rest:90,color:'#C8A96E',isDuration:true,cues:['Posterior pelvic tilt','Elbows inside knees','Feel right hip decompressing','Breathe slowly','Corrective as much as strength'],subs:[{n:'Bodyweight Squat Hold',d:'Arms forward for counterbalance'},{n:'Box Squat Hold',d:'Controls depth'}]},
+    {id:'C4',name:'Slant Board Calf Raise',sets:3,reps:'8',tempo:'3-1-3',load:'BW / 8kg',rest:90,color:'#9B8EC4',cues:['Right leads','3s eccentric','Full range — heel below board','Ankle mobility = hip mobility','Single leg when bilateral too easy'],subs:[{n:'Step Edge Calf Raise',d:'Same range principle'},{n:'Seated Calf Raise',d:'Loads soleus more'}]},
+    {id:'C5',name:'Glute Bridge Isometric',sets:3,reps:'5 × 5s',tempo:'Isometric',load:'Bodyweight',rest:60,color:'#E07B4A',cues:['Right glute must fire first','If it doesn\'t — reset','5s hold, full contraction','Feel anterior hip opening','Closes every lower session'],subs:[]},
+   ]},
+];
+
+let currentSession=0;
+let restTimers={};
+
+function renderStrength(){
+  const tabs=document.getElementById('strTabs');
+  tabs.innerHTML=STR_SESSIONS.map((s,i)=>`<div class="str-tab${i===currentSession?' active':''}" onclick="currentSession=${i};renderStrength()"><div class="st-day">${s.day}</div><div class="st-name">${s.label}</div><div class="st-type" style="color:${s.color}">${s.type}</div></div>`).join('');
+  const sess=STR_SESSIONS[currentSession];
+  document.getElementById('strRules').innerHTML=sess.rules.map(r=>`<span class="str-rule">${r}</span>`).join('');
+
+  // Warmup
+  const dk=todayKey();
+  let wh='<div class="section"><div class="section-label"><span class="icon">🔥</span><span class="title">Warmup · 8 min</span><div class="line"></div></div>';
+  WARMUP.forEach(w=>{
+    const key=`kos_str_warmup_${dk}_${w.id}`;const done=localStorage.getItem(key)==='1';
+    wh+=`<div class="item${done?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${key}',this.classList.contains('done')?'1':'0')" data-id="${w.id}"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">${w.name}</div><div class="item-detail">${w.detail}</div><span class="item-tag tag-time">${w.dur}</span></div></div>`;
+  });
+  wh+='</div>';
+  document.getElementById('strWarmup').innerHTML=wh;
+
+  // Exercises
+  let eh='<div class="section"><div class="section-label"><span class="icon">💪</span><span class="title">${sess.type} · ${sess.exercises.length} exercises</span><div class="line"></div></div></div>';
+  eh=eh.replace('${sess.type}',sess.type).replace('${sess.exercises.length}',sess.exercises.length);
+  sess.exercises.forEach(ex=>{
+    const ssTag=ex.superset?`<span class="ex-superset">SS ${ex.superset}</span>`:ex.supersetWith?`<span class="ex-superset">SS ${ex.supersetWith}</span>`:'';
+    eh+=`<div class="ex-card" id="ex-${ex.id}"><div class="ex-header" onclick="document.getElementById('ex-${ex.id}').classList.toggle('open')"><div style="display:flex;align-items:center;flex:1"><span class="ex-id">${ex.id}</span><span class="ex-name">${ex.name}</span>${ssTag}</div><span class="ex-load-tag">${ex.load}</span></div>`;
+    eh+=`<div class="ex-body"><div class="ex-stats"><div class="ex-stat"><div class="ex-stat-label">Load</div><div class="ex-stat-val">${ex.load}</div></div><div class="ex-stat"><div class="ex-stat-label">Reps</div><div class="ex-stat-val">${ex.reps}</div></div><div class="ex-stat"><div class="ex-stat-label">Tempo</div><div class="ex-stat-val">${ex.tempo}</div></div><div class="ex-stat"><div class="ex-stat-label">Rest</div><div class="ex-stat-val">${ex.rest}s</div></div></div>`;
+    eh+='<div class="ex-cues">';ex.cues.forEach(c=>{eh+=`<div class="ex-cue">${c}</div>`;});eh+='</div>';
+    // Set tracker
+    eh+='<div class="ex-sets">';
+    for(let s=1;s<=ex.sets;s++){
+      const sk=`kos_str_${dk}_${ex.id}_s${s}`;const sd=localStorage.getItem(sk)==='1';
+      eh+=`<div class="set-box${sd?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${sk}',this.classList.contains('done')?'1':'0')">${s}</div>`;
+    }
+    eh+='</div>';
+    // Rest timer button
+    eh+=`<div class="ex-rest-btn" onclick="startRest(this,${ex.rest})" id="rest-${ex.id}"><div class="ex-rest-fill" style="width:0%"></div><span style="position:relative;z-index:1">Start ${ex.rest}s rest</span></div>`;
+    // Subs
+    if(ex.subs&&ex.subs.length){
+      eh+='<div class="ex-subs"><div class="ex-subs-title">Substitutions</div>';
+      ex.subs.forEach(s=>{eh+=`<div class="ex-sub"><strong>${s.n}</strong> — ${s.d}</div>`;});
+      eh+='</div>';
+    }
+    eh+='</div></div>';
+  });
+  document.getElementById('strExercises').innerHTML=eh;
+
+  // Cooldown
+  let ch='<div class="section"><div class="section-label"><span class="icon">🧊</span><span class="title">Cooldown · 15 min</span><div class="line"></div></div>';
+  COOLDOWN.forEach(c=>{
+    const key=`kos_str_cooldown_${dk}_${c.id}`;const done=localStorage.getItem(key)==='1';
+    ch+=`<div class="item${done?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${key}',this.classList.contains('done')?'1':'0')" data-id="${c.id}"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">${c.name}</div><div class="item-detail">${c.detail}</div><span class="item-tag tag-green">${c.dur}</span></div></div>`;
+  });
+  ch+='</div><div style="height:24px;"></div>';
+  document.getElementById('strCooldown').innerHTML=ch;
+}
+
+function startRest(btn,secs){
+  const fill=btn.querySelector('.ex-rest-fill');const label=btn.querySelector('span');
+  if(btn._running){clearInterval(btn._running);btn._running=null;fill.style.width='0%';label.textContent=`Start ${secs}s rest`;return;}
+  let remaining=secs;
+  label.textContent=remaining+'s';fill.style.width='0%';
+  btn._running=setInterval(()=>{
+    remaining--;const pct=((secs-remaining)/secs)*100;
+    fill.style.width=pct+'%';label.textContent=remaining+'s';
+    if(remaining<=0){clearInterval(btn._running);btn._running=null;fill.style.width='100%';label.textContent='Done ✓';
+      setTimeout(()=>{fill.style.width='0%';label.textContent=`Start ${secs}s rest`;},2000);
+    }
+  },1000);
+}
+
+// ── Commitments ──
+const COMMITMENTS=[
+  {key:'physio',name:'Physiotherapy',detail:'Right hip, spine, structural asymmetry — weekly',total:10,unit:'Sessions'},
+  {key:'therapy',name:'Therapy',detail:'Mind, emotional resilience, attitude reset — weekly',total:10,unit:'Sessions'},
+  {key:'surf',name:'Surf Lessons',detail:'Joy, physicality, identity — weekly',total:10,unit:'Lessons'},
+  {key:'microneedling',name:'Microneedling',detail:'Nina — monthly cadence — collagen rebuild + skin quality',total:5,unit:'Sessions'},
+];
+
+function renderCommitments(){
+  const c=document.getElementById('commitContainer');
+  c.innerHTML=COMMITMENTS.map(cm=>{
+    let dots='';let doneCount=0;
+    for(let i=0;i<cm.total;i++){
+      const k=`kos_commit_${cm.key}_${i}`;const d=localStorage.getItem(k)==='1';if(d)doneCount++;
+      dots+=`<div class="commit-dot${d?' done'}" onclick="event.stopPropagation();this.classList.toggle('done');localStorage.setItem('${k}',this.classList.contains('done')?'1':'0');renderCommitments()"></div>`;
+    }
+    return `<div class="commit-row"><div class="commit-info"><div class="commit-name">${cm.name}</div><div class="commit-detail">${cm.detail}</div><div class="commit-dots">${dots}</div></div><div class="commit-count"><div class="cc-num">${doneCount}<span style="color:var(--muted);font-size:14px;font-weight:400">/${cm.total}</span></div><div class="cc-label">${cm.unit}</div></div></div>`;
+  }).join('');
+  // Restore notes
+  const notes=document.getElementById('commitNotes');
+  if(notes&&!notes._loaded){try{notes.value=localStorage.getItem('kos_commit_notes')||'';}catch(e){}notes._loaded=true;}
+}
+function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.getElementById('commitNotes').value);}catch(e){}}
+
+// ── Init ──
 function initDate(){
   const d=new Date();
   document.getElementById('dayName').textContent=DAYS[d.getDay()];
@@ -521,7 +622,6 @@ function initDate(){
   const tb=document.getElementById(dayMap[d.getDay()]);
   if(tb){tb.classList.remove('collapsed');tb.classList.add('today-block');}
 }
-// --- Podcast rotation (daily) ---
 const PODCASTS=[
   {id:'1f0qi12saeBEJmtnjOSszg',name:'Mental Models Daily'},
   {id:'1VyK52NSZHaDKeMJzT4TSM',name:'The Knowledge Project'},
@@ -529,48 +629,22 @@ const PODCASTS=[
   {id:'2IqXAVFR4e0Bmyjsdc8QzF',name:'Naval'},
   {id:'5bC65RDvs3oxnLyqqvkUYX',name:'Acquired'},
 ];
-// TODO: Add Founders, Resilient Mind, Life Wisdom when Spotify IDs confirmed
 function loadPodcast(){
   const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
   const p=PODCASTS[dayOfYear%PODCASTS.length];
   const el=document.getElementById('podcastEmbed');
   if(el) el.innerHTML=`<iframe style="border-radius:10px;width:100%;border:none;" src="https://open.spotify.com/embed/show/${p.id}?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
 }
-
-// --- Weather (Open-Meteo, free, no API key) ---
 function loadWeather(){
-  const el=document.getElementById('weather');
-  if(!el) return;
-  function fetchWeather(lat,lon,label){
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`)
-      .then(r=>r.json()).then(d=>{
-        const t=Math.round(d.current.temperature_2m);
-        const w=Math.round(d.current.wind_speed_10m);
-        const code=d.current.weather_code;
-        const icon=code<=1?'☀️':code<=3?'⛅':code<=48?'🌫️':code<=67?'🌧️':code<=77?'❄️':'⛈️';
-        el.textContent=`${icon} ${t}°C · ${w}km/h${label?' · '+label:''}`;
-      }).catch(()=>{el.textContent='';});
-  }
-  // Always load Cape Town immediately, then upgrade with geolocation if available
-  fetchWeather(-33.93,18.42,'CT');
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(pos=>{
-      fetchWeather(pos.coords.latitude.toFixed(2),pos.coords.longitude.toFixed(2),'');
-    },()=>{},{timeout:5000});
-  }
+  const el=document.getElementById('weather');if(!el)return;
+  function fw(lat,lon,label){fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`).then(r=>r.json()).then(d=>{const t=Math.round(d.current.temperature_2m);const w=Math.round(d.current.wind_speed_10m);const code=d.current.weather_code;const icon=code<=1?'☀️':code<=3?'⛅':code<=48?'🌫️':code<=67?'🌧️':code<=77?'❄️':'⛈️';el.textContent=`${icon} ${t}°C · ${w}km/h${label?' · '+label:''}`;}).catch(()=>{});}
+  fw(-33.93,18.42,'CT');
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{fw(pos.coords.latitude.toFixed(2),pos.coords.longitude.toFixed(2),'');},()=>{},{timeout:5000});}
 }
-
-// --- Time-based theme ---
-function setTheme(){
-  const h=new Date().getHours();
-  document.body.classList.remove('theme-day','theme-evening','theme-night');
-  if(h>=6&&h<18) document.body.classList.add('theme-day');
-  else if(h>=18&&h<21) document.body.classList.add('theme-evening');
-  else document.body.classList.add('theme-night');
-}
+function setTheme(){const h=new Date().getHours();document.body.classList.remove('theme-day','theme-evening','theme-night');if(h>=6&&h<18)document.body.classList.add('theme-day');else if(h>=18&&h<21)document.body.classList.add('theme-evening');else document.body.classList.add('theme-night');}
 
 initDate();restoreState();renderMarkers();renderWeeklyConformity();loadPodcast();setTheme();
-setInterval(setTheme,60000); // re-check every minuteloadWeather();
+setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
 </html>
