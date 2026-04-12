@@ -533,7 +533,7 @@ function renderStrength(){
   let wh='<div class="section"><div class="section-label"><span class="icon">🔥</span><span class="title">Warmup · 8 min</span><div class="line"></div></div>';
   WARMUP.forEach(w=>{
     const key=`kos_str_warmup_${dk}_${w.id}`;const done=localStorage.getItem(key)==='1';
-    wh+=`<div class="item${done?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${key}',this.classList.contains('done')?'1':'0')" data-id="${w.id}"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">${w.name}</div><div class="item-detail">${w.detail}</div><span class="item-tag tag-time">${w.dur}</span></div></div>`;
+    wh+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+w.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+w.name+'</div><div class="item-detail">'+w.detail+'</div><span class="item-tag tag-time">'+w.dur+'</span></div></div>';
   });
   wh+='</div>';
   document.getElementById('strWarmup').innerHTML=wh;
@@ -550,7 +550,7 @@ function renderStrength(){
     eh+='<div class="ex-sets">';
     for(let s=1;s<=ex.sets;s++){
       const sk=`kos_str_${dk}_${ex.id}_s${s}`;const sd=localStorage.getItem(sk)==='1';
-      eh+=`<div class="set-box${sd?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${sk}',this.classList.contains('done')?'1':'0')">${s}</div>`;
+      eh+='<div class="set-box'+(sd?' done':'')+'" onclick="lsToggle(this,\''+sk+'\')">'+s+'</div>';
     }
     eh+='</div>';
     // Rest timer button
@@ -569,7 +569,7 @@ function renderStrength(){
   let ch='<div class="section"><div class="section-label"><span class="icon">🧊</span><span class="title">Cooldown · 15 min</span><div class="line"></div></div>';
   COOLDOWN.forEach(c=>{
     const key=`kos_str_cooldown_${dk}_${c.id}`;const done=localStorage.getItem(key)==='1';
-    ch+=`<div class="item${done?' done'}" onclick="this.classList.toggle('done');localStorage.setItem('${key}',this.classList.contains('done')?'1':'0')" data-id="${c.id}"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">${c.name}</div><div class="item-detail">${c.detail}</div><span class="item-tag tag-green">${c.dur}</span></div></div>`;
+    ch+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+c.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+c.name+'</div><div class="item-detail">'+c.detail+'</div><span class="item-tag tag-green">'+c.dur+'</span></div></div>';
   });
   ch+='</div><div style="height:24px;"></div>';
   document.getElementById('strCooldown').innerHTML=ch;
@@ -603,7 +603,7 @@ function renderCommitments(){
     let dots='';let doneCount=0;
     for(let i=0;i<cm.total;i++){
       const k=`kos_commit_${cm.key}_${i}`;const d=localStorage.getItem(k)==='1';if(d)doneCount++;
-      dots+=`<div class="commit-dot${d?' done'}" onclick="event.stopPropagation();this.classList.toggle('done');localStorage.setItem('${k}',this.classList.contains('done')?'1':'0');renderCommitments()"></div>`;
+      dots+='<div class="commit-dot'+(d?' done':'')+'" onclick="event.stopPropagation();lsToggleCommit(this,\''+k+'\')"></div>';
     }
     return `<div class="commit-row"><div class="commit-info"><div class="commit-name">${cm.name}</div><div class="commit-detail">${cm.detail}</div><div class="commit-dots">${dots}</div></div><div class="commit-count"><div class="cc-num">${doneCount}<span style="color:var(--muted);font-size:14px;font-weight:400">/${cm.total}</span></div><div class="cc-label">${cm.unit}</div></div></div>`;
   }).join('');
@@ -612,6 +612,10 @@ function renderCommitments(){
   if(notes&&!notes._loaded){try{notes.value=localStorage.getItem('kos_commit_notes')||'';}catch(e){}notes._loaded=true;}
 }
 function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.getElementById('commitNotes').value);}catch(e){}}
+
+// Generic localStorage toggle for dynamically rendered items
+function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
+function lsToggleCommit(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}renderCommitments();}
 
 // ── Init ──
 function initDate(){
