@@ -223,9 +223,17 @@
     <div class="section-label"><span class="icon">🌅</span><span class="title">Morning</span><div class="line"></div></div>
     <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — 10 min, no sunglasses</div><div class="item-detail">Within 30 min of waking. Beach walk, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Smoothie + supplements</div><div class="item-detail">Protein, greens, creatine, Slow-Mag. Caffeine hard stop at 11am.</div><span class="item-tag tag-green">⏱ 10 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Meditation</div><div class="item-detail">12 min daily beats 60 min weekly.</div><span class="item-tag tag-time">⏱ 12 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">TM — 20 min</div><div class="item-detail">Transcendental Meditation. Mantra: So Hum. Eyes closed, effortless. Non-negotiable.</div><span class="item-tag tag-time">⏱ 05:15</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="m3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Journal — 10Qs + freewrite</div><div class="item-detail">10-step questionnaire then freewrite. End with mantra: <em>"I am relentless, disciplined and focused."</em></div><span class="item-tag tag-time">⏱ 15 min</span></div></div>
     <div id="podcastEmbed" style="margin:0 0 7px;padding:0 14px;"></div>
+  </div>
+  <div class="section">
+    <div class="section-label"><span class="icon">🎯</span><span class="title">Focus</span><div class="line"></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">90/90/1</div><div class="item-detail">First 90 minutes on your single most important project. For 90 consecutive days. No email. No meetings. Pure craft.</div><span class="item-tag tag-amber">⏱ 08:00</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60/10 blocks</div><div class="item-detail">Work 60 minutes in complete focus, then 10 minutes of full recovery. Movement, breath, away from screens.</div><span class="item-tag tag-green">all day</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min student</div><div class="item-detail">Reading, research, annual reports, philosophy. No podcasts, no summaries. Primary sources.</div><span class="item-tag tag-blue">⏱ variable</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min family</div><div class="item-detail">No iPhone. No TV. No distractions. Fully present — Hector and Bella only get one version of their father.</div><span class="item-tag tag-time">⏱ 18:00</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Joy GPS</div><div class="item-detail">Check in twice a day: does this bring me energy or drain it? Follow the aliveness signal.</div><span class="item-tag tag-green">check-in</span></div></div>
   </div>
   <div class="section">
     <div class="section-label"><span class="icon">🏋️</span><span class="title">Movement</span><div class="line"></div></div>
@@ -240,6 +248,7 @@
     <div class="item" onclick="toggle(this)" data-id="e3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Pennebaker journal — 5 min</div><div class="item-detail">Name the stressor. No editing, no solving.</div><span class="item-tag tag-green">⏱ 5 min</span></div></div>
     <div class="item" onclick="toggle(this)" data-id="e5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">In bed 8:30 — asleep by 9:30</div><div class="item-detail">Read fiction first. 30–60 min.</div><span class="item-tag tag-green">9:30pm</span></div></div>
   </div>
+  <div id="g2g-card" style="padding:0 20px;margin-top:20px"></div>
   <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
 </div>
 
@@ -282,7 +291,7 @@
   </div>
 
   <div class="day-block" id="block-mon">
-    <div class="day-header" onclick="toggleDay('block-mon')"><div><div class="day-name">Monday — <span style="color:var(--gold);font-size:12px">Session A · Push</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-mon')"><div><div class="day-name">Monday — <span style="color:var(--gold);font-size:12px">Session A · Push</span> <span style="color:var(--green);font-size:10px;margin-left:4px">CREATE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session A — Push</span><span class="di-dur">45 min</span></div>
@@ -293,7 +302,7 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-tue">
-    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday <span style="color:var(--green);font-size:10px;margin-left:4px">CREATE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
@@ -302,7 +311,7 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-wed">
-    <div class="day-header" onclick="toggleDay('block-wed')"><div><div class="day-name">Wednesday — <span style="color:var(--blue);font-size:12px">Session B · Pull</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker 2</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-wed')"><div><div class="day-name">Wednesday — <span style="color:var(--blue);font-size:12px">Session B · Pull</span> <span style="color:var(--blue);font-size:10px;margin-left:4px">EXECUTE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Z4 + Ice bath + Pennebaker 2</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session B — Pull</span><span class="di-dur">45 min</span></div>
@@ -313,7 +322,7 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-thu">
-    <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Active recovery + Z2 + Nature</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~1.75 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday <span style="color:var(--blue);font-size:10px;margin-left:4px">EXECUTE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Active recovery + Z2 + Nature</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~1.75 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 — ruck or swim</span><span class="di-dur">50 min</span></div>
@@ -321,7 +330,7 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-fri">
-    <div class="day-header" onclick="toggleDay('block-fri')"><div><div class="day-name">Friday — <span style="color:var(--amber);font-size:12px">Session C · Hinge</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Aesthetic + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-fri')"><div><div class="day-name">Friday — <span style="color:var(--amber);font-size:12px">Session C · Hinge</span> <span style="color:var(--amber);font-size:10px;margin-left:4px">REST + REVIEW</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Strength + Sauna + Aesthetic + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~3 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">💪</span><span class="di-name">Strength Session C — Hinge + Lower</span><span class="di-dur">45 min</span></div>
@@ -332,22 +341,25 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-sat">
-    <div class="day-header" onclick="toggleDay('block-sat')"><div><div class="day-name">Saturday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Surf / Golf + Family + Pennebaker 3</div></div><div class="day-meta"><div class="day-load load-low">LOW</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-sat')"><div><div class="day-name">Saturday <span style="color:var(--amber);font-size:10px;margin-left:4px">REST + REVIEW</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Surf / Golf + Family + Massage + Float + Pennebaker 3</div></div><div class="day-meta"><div class="day-load load-low">LOW</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack (lighter)</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">🏄</span><span class="di-name">Surf / golf / climb</span><span class="di-dur">90 min</span></div>
       <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Family outing — phone away</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">🧊</span><span class="di-name">Ice bath</span><span class="di-dur">10 min</span></div>
+      <div class="day-item"><span class="di-icon">💆</span><span class="di-name">Massage — 90 min deep tissue or Thai</span><span class="di-dur">90 min</span></div>
+      <div class="day-item"><span class="di-icon">🫧</span><span class="di-name">Float tank — cortisol reset</span><span class="di-dur">60 min</span></div>
       <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Pennebaker day 3 — close the loop</span><span class="di-dur">20 min</span></div>
     </div>
   </div>
   <div class="day-block collapsed" id="block-sun">
-    <div class="day-header" onclick="toggleDay('block-sun')"><div><div class="day-name">Sunday</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Rest + Weekly review + Family</div></div><div class="day-meta"><div class="day-load load-low">REST</div><div class="day-time">~1 hr</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-sun')"><div><div class="day-name">Sunday <span style="color:var(--gold);font-size:10px;margin-left:4px">RECOVER + RENEW</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Rest + Weekly review + Family + Weekly Design Session</div></div><div class="day-meta"><div class="day-load load-low">REST</div><div class="day-time">~1 hr</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Sunshine + smoothie + posture only</span><span class="di-dur">40 min</span></div>
       <div class="day-item"><span class="di-icon">📊</span><span class="di-name">Whoop 7-day HRV review</span><span class="di-dur">10 min</span></div>
       <div class="day-item"><span class="di-icon">✍️</span><span class="di-name">Weekly review — wins, stressors, one change</span><span class="di-dur">20 min</span></div>
-      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Full family morning — no phones</span><span class="di-dur">AM</span></div>
+      <div class="day-item"><span class="di-icon">👨‍👩‍👧‍👦</span><span class="di-name">Full family morning — no phones, no screens before noon</span><span class="di-dur">AM</span></div>
+      <div class="day-item"><span class="di-icon">🗓️</span><span class="di-name">Weekly Design Session — set 90/90/1 target, design each day, review Joy GPS</span><span class="di-dur">30 min</span></div>
     </div>
   </div>
   <div style="height:20px;"></div>
@@ -617,6 +629,34 @@ function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.
 function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
 function lsToggleCommit(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}renderCommitments();}
 
+// ── Good to Great — Daily Philosophy ──
+var G2G=[
+  {label:'Level 5 Leadership',sub:'First Who, Then What',body:'The highest level of leader combines fierce professional will with personal humility. Get the right people on the bus before deciding where to drive.',apply:'Who is on your bus right now? Is anyone holding back the vehicle?'},
+  {label:'Hedgehog Concept',sub:'The three circles',body:'The intersection of: what you are deeply passionate about, what you can be the best in the world at, what drives your economic engine.',apply:'Yours: Operator-investor in travel, real assets, and capital allocation. OSP lives in the centre.'},
+  {label:'The Flywheel',sub:'No single defining action',body:'Just consistent pushing. Turn after turn, the flywheel builds momentum — then a breakthrough. Each turn makes the next easier.',apply:'Your flywheel: Advisory cash \u2192 Capital compounds \u2192 Ventures experiment \u2192 Reputation builds \u2192 Better advisory clients.'},
+  {label:'20 Mile March',sub:'Consistency over heroism',body:'In good times and bad, advance the same 20 miles. The discipline of consistency beats the chaos of intensity.',apply:'Your march: 90/90/1 daily. One memo per week. One new contact per week. Every week.'},
+  {label:'Fire Bullets, Then Cannonballs',sub:'Calibrate before committing',body:'Fire small, low-cost bullets to test what works. Once you have empirical validation, concentrate fire.',apply:'OSP is a bullet. Veraxus is a bullet. When one lands, concentrate. That becomes the cannonball.'},
+  {label:'Productive Paranoia',sub:'Prepare for uncertainty',body:'Build cash reserves and buffers disproportionate to the apparent risk. The 10x threat can come at any time.',apply:'Advisory cash buffer = 6 months. Capital in quality businesses. No single dependency.'},
+  {label:'Clock Building, Not Time Telling',sub:'Build the machine',body:'Build an institution that consistently produces right answers without you. The goal is not your own greatness.',apply:'Komorebi is the clock. Not Lee Kelsall the advisor. The holdco outlasts the individual.'},
+  {label:'Preserve the Core / Stimulate Progress',sub:'Yin and yang of endurance',body:'Core values and purpose never change. Practices, strategies, and structures must be willing to change.',apply:'Your core: integrity, discipline, family, freedom. Everything else is strategy.'},
+  {label:'Confront the Brutal Facts',sub:'The Stockdale Paradox',body:'Retain unwavering faith that you will prevail — while simultaneously confronting the most brutal facts of your current reality.',apply:'You will build something significant. Right now: cash is tight, focus is scattered. Both are true.'},
+  {label:'10x Multiplier',sub:'Genius of the AND',body:'Reject the tyranny of the OR. Pursue both purpose AND profit. Both stability AND growth. The AND is the multiplier.',apply:'Advisory AND capital AND ventures. Not one or another \u2014 the three arms compound each other.'},
+];
+function renderG2G(){
+  var el=document.getElementById('g2g-card');if(!el)return;
+  var dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
+  var g=G2G[dayOfYear%G2G.length];
+  el.innerHTML='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;border-left:3px solid var(--gold)">'
+    +'<div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600">Daily Philosophy</div>'
+    +'<div style="font-size:15px;font-weight:500;color:var(--text2);margin-bottom:2px">'+g.label+'</div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-style:italic">'+g.sub+'</div>'
+    +'<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px">'+g.body+'</div>'
+    +'<div style="border-top:1px solid var(--border);padding-top:10px">'
+    +'<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Your application</div>'
+    +'<div style="font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">'+g.apply+'</div>'
+    +'</div></div>';
+}
+
 // ── Init ──
 function initDate(){
   const d=new Date();
@@ -647,7 +687,7 @@ function loadWeather(){
 }
 function setTheme(){const h=new Date().getHours();document.body.classList.remove('theme-day','theme-evening','theme-night');if(h>=6&&h<18)document.body.classList.add('theme-day');else if(h>=18&&h<21)document.body.classList.add('theme-evening');else document.body.classList.add('theme-night');}
 
-initDate();restoreState();renderMarkers();renderWeeklyConformity();loadPodcast();setTheme();
+initDate();restoreState();renderMarkers();renderWeeklyConformity();renderG2G();loadPodcast();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
