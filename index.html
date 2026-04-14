@@ -211,10 +211,14 @@
   <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
 </div>
 
-<!-- CONFORMITY -->
+<!-- DAILY SCORE + WEEKLY TREND -->
 <div style="padding:16px 14px 0;">
-  <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">7-day conformity</div>
-  <div id="weeklyConformity" style="display:flex;gap:4px;"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);">7-day score</div>
+    <div id="weeklyAvg" style="font-size:10px;color:var(--gold);font-family:'DM Mono',monospace;font-weight:500;"></div>
+  </div>
+  <div id="weeklyTrend" style="display:flex;gap:4px;"></div>
+  <div id="todayScoreDetail"></div>
 </div>
 
 <!-- STACKS (Morning + Evening) -->
@@ -411,9 +415,10 @@ function saveConformity(){
   const done=document.querySelectorAll('#tab-daily .item[data-id].done');
   const pct=all.length?Math.round((done.length/all.length)*100):0;
   try{localStorage.setItem(conformKey(todayKey()),pct);}catch(e){}
-  renderWeeklyConformity();
+  saveDailyScore();
+  renderWeeklyTrend();
 }
-function renderWeeklyConformity(){
+function renderWeeklyTrend(){
   const el=document.getElementById('weeklyConformity');if(!el)return;
   const today=new Date();let html='';
   for(let i=6;i>=0;i--){
@@ -501,7 +506,7 @@ function renderMarkers(){
   });
   updateMarkerSummary(ds);
 }
-function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);}
+function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);saveDailyScore();renderWeeklyTrend();}
 function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[data-mid]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();var btn=document.getElementById('save-markers-btn');if(btn){btn.textContent='Saved \u2713';btn.style.background='var(--green)';setTimeout(function(){btn.textContent='Save markers';btn.style.background='var(--gold)';},2000);}}
 function updateMarkerSummary(ds){
   const vals={};MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
@@ -662,6 +667,84 @@ function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.
 function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
 function lsToggleCommit(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}renderCommitments();}
 
+// ── Daily Score — snapshot of entire day ──
+function saveDailyScore(){
+  var dk=todayKey();var dateStr=dk.replace(/_/g,'-');
+  // Morning stack completion
+  var amData=STACK_DATA.am;var amDone=amData.steps.filter(function(_,i){return !!localStorage.getItem('ds-am-'+i+'-'+dateStr);}).length;
+  var amTotal=amData.steps.length;
+  // Evening stack completion
+  var pmData=STACK_DATA.pm;var pmDone=pmData.steps.filter(function(_,i){return !!localStorage.getItem('ds-pm-'+i+'-'+dateStr);}).length;
+  var pmTotal=pmData.steps.length;
+  // Protocol items
+  var protoIds=['f1','f2','f3','m6','f4','f5'];
+  var protoDone=protoIds.filter(function(id){return localStorage.getItem('kos_'+dk+'_'+id)==='1';}).length;
+  var protoTotal=protoIds.length;
+  // Markers
+  var recovery=localStorage.getItem('kos_marker_'+dk+'_mk1')||'';
+  var stress=localStorage.getItem('kos_marker_'+dk+'_mk7')||'';
+  var mood=localStorage.getItem('kos_marker_'+dk+'_mk8')||'';
+  var lowStress=localStorage.getItem('kos_marker_'+dk+'_mk9')||'';
+  // Compute overall score: weighted average
+  // Stack: 40% (morning 25%, evening 15%), Protocol: 40%, Markers logged: 20%
+  var stackPct=amTotal+pmTotal>0?Math.round(((amDone+pmDone)/(amTotal+pmTotal))*100):0;
+  var protoPct=protoTotal>0?Math.round((protoDone/protoTotal)*100):0;
+  var markersLogged=(recovery?1:0)+(stress?1:0)+(mood?1:0)+(lowStress?1:0);
+  var markerPct=Math.round((markersLogged/4)*100);
+  var overallScore=Math.round(stackPct*0.4+protoPct*0.4+markerPct*0.2);
+  var snapshot={
+    date:dateStr,
+    am:{done:amDone,total:amTotal},
+    pm:{done:pmDone,total:pmTotal},
+    protocol:{done:protoDone,total:protoTotal},
+    markers:{recovery:recovery||null,stress:stress?parseInt(stress):null,mood:mood?parseInt(mood):null,lowStress:lowStress||null},
+    score:overallScore,
+    stackPct:stackPct,
+    protoPct:protoPct,
+    markerPct:markerPct,
+    ts:new Date().toISOString()
+  };
+  try{localStorage.setItem('kos_day_'+dk,JSON.stringify(snapshot));}catch(e){}
+}
+function getDailyScore(dk){
+  try{var raw=localStorage.getItem('kos_day_'+dk);return raw?JSON.parse(raw):null;}catch(e){return null;}
+}
+function renderWeeklyTrend(){
+  var el=document.getElementById('weeklyTrend');if(!el)return;
+  var today=new Date();var html='';
+  var scores=[];
+  for(var i=6;i>=0;i--){
+    var d=new Date(today);d.setDate(today.getDate()-i);
+    var dk=dateKey(d);var day=getDailyScore(dk);
+    var score=day?day.score:0;
+    var isToday=i===0;
+    scores.push(score);
+    var barColor=score>=80?'var(--green)':score>=50?'var(--amber)':score>0?'var(--red)':'var(--surface2)';
+    html+='<div style="flex:1;text-align:center;opacity:'+(score===0&&!isToday?'0.3':'1')+'">';
+    html+='<div style="height:80px;display:flex;align-items:flex-end;justify-content:center;padding:0 2px;">';
+    html+='<div style="width:100%;max-width:28px;height:'+Math.max(score,2)+'%;background:'+barColor+';border-radius:4px 4px 0 0;transition:height 0.3s;"></div></div>';
+    html+='<div style="font-size:9px;color:'+(isToday?'var(--gold)':'var(--muted)')+';margin-top:4px;letter-spacing:1px;font-weight:'+(isToday?'500':'300')+'">'+DAYS[d.getDay()]+'</div>';
+    html+='<div style="font-size:10px;color:'+(isToday?'var(--text)':'var(--muted)')+';margin-top:1px">'+(score>0?score+'%':'\u2014')+'</div>';
+    html+='</div>';
+  }
+  // Weekly average
+  var activeDays=scores.filter(function(s){return s>0;});
+  var avg=activeDays.length?Math.round(activeDays.reduce(function(a,b){return a+b;},0)/activeDays.length):0;
+  el.innerHTML=html;
+  var avgEl=document.getElementById('weeklyAvg');
+  if(avgEl)avgEl.textContent=avg>0?avg+'% avg':'';
+  // Today detail
+  var todayScore=getDailyScore(todayKey());
+  var detailEl=document.getElementById('todayScoreDetail');
+  if(detailEl&&todayScore){
+    detailEl.innerHTML='<div style="display:flex;gap:12px;justify-content:center;margin-top:8px">'
+      +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--gold);font-family:DM Mono,monospace">'+todayScore.stackPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">STACKS</div></div>'
+      +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--accent);font-family:DM Mono,monospace">'+todayScore.protoPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">PROTOCOL</div></div>'
+      +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--blue);font-family:DM Mono,monospace">'+todayScore.markerPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">MARKERS</div></div>'
+      +'</div>';
+  }
+}
+
 // ── Exercise Schedule (moved from standalone tab) ──
 function renderExerciseSchedule(){
   var target=document.getElementById('exercise-schedule');
@@ -750,8 +833,10 @@ function renderStacks(){
   // Update main progress bar to reflect stack completion
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressCount').textContent=checked+' / '+steps.length;
-  // Auto-complete protocol morning/evening items
+  // Auto-complete protocol morning/evening items + save daily score
   syncProtocolAutoItems();
+  saveDailyScore();
+  renderWeeklyTrend();
 }
 function syncProtocolAutoItems(){
   // Check if all AM stack items done
@@ -830,7 +915,7 @@ function setTheme(){const h=new Date().getHours();document.body.classList.remove
 // Auto-select morning or evening stack based on time
 var _h=new Date().getHours();
 if(_h>=18)stackSession='pm';
-initDate();restoreState();renderStacks();renderMarkers();renderWeeklyConformity();renderG2G();loadPodcast();setTheme();
+initDate();restoreState();renderStacks();renderMarkers();renderWeeklyTrend();renderG2G();loadPodcast();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
