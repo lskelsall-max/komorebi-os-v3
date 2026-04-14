@@ -463,8 +463,9 @@ function switchTab(name,btn){
 const MARKERS=[
   {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
   {id:'mk6',label:'High Stress (Whoop)',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
-  {id:'mk7',label:'Perceived Stress',type:'dots',invert:true},
+  {id:'mk7',label:'Perceived Stress',type:'dots',invert:false,highBad:true},
   {id:'mk8',label:'Mood / Energy',type:'dots'},
+  {id:'mk9',label:'Low Stress Time (prev day)',type:'time',unit:'hrs',placeholder:'HH:MM',goal:900},
 ];
 let markerDate=new Date();
 function mds(d){return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;}
@@ -476,16 +477,45 @@ function renderMarkers(){
   MARKERS.forEach((m,i)=>{
     const saved=(()=>{try{return localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){return '';}})();
     const row=document.createElement('div');row.className='marker-row';
-    if(m.type==='number'){
+    if(m.type==='time'){
+      // HH:MM time input for low-stress tracking
+      const val=saved||'';
+      const mins=val?parseInt(val.split(':')[0])*60+parseInt(val.split(':')[1]||0):0;
+      const goalMins=m.goal||900;
+      let statusIcon='';
+      if(val){statusIcon=mins>=goalMins?'🟢':mins>=goalMins*0.8?'🟡':'🔴';}
+      row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div style="display:flex;align-items:center;gap:6px;"><input type="time" value="${val}" data-mid="${m.id}" style="width:80px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:center;outline:none;" onchange="saveMarker('${m.id}','${ds}',this.value)"><span style="font-size:10px;color:var(--muted);">${m.unit}</span><span style="font-size:12px;">${statusIcon}</span></div>`;
+      if(val){
+        const hh=Math.floor(mins/60);const mm=mins%60;
+        row.innerHTML+=`<div style="width:100%;margin-top:4px;font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">${hh}h ${mm}m of ${Math.floor(goalMins/60)}h goal</div>`;
+      }
+    } else if(m.type==='number'){
       const val=saved?parseFloat(saved):'';let statusIcon='';
       if(val!==''){if(m.invert){statusIcon=val<=m.thresholds[1]?'🟢':val<=m.thresholds[0]?'🟡':'🔴';}else{statusIcon=val>=m.thresholds[1]?'🟢':val>=m.thresholds[0]?'🟡':'🔴';}}
       row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div style="display:flex;align-items:center;gap:6px;"><input type="number" value="${val}" placeholder="${m.placeholder}" min="${m.min}" max="${m.max}" data-mid="${m.id}" style="width:70px;padding:6px 8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:center;outline:none;" onchange="saveMarker('${m.id}','${ds}',this.value)"><span style="font-size:10px;color:var(--muted);">${m.unit}</span><span style="font-size:12px;">${statusIcon}</span></div>`;
     } else {
+      // Dots 0-10
       const savedNum=saved?parseInt(saved):0;
+      const isHighBad=m.highBad||false;
       row.innerHTML=`<span class="marker-num">${i+1}</span><span class="marker-name">${m.label}</span><div class="marker-score" id="ms_${m.id}"></div>`;
       c.appendChild(row);
       const sd=row.querySelector(`#ms_${m.id}`);
-      for(let v=1;v<=10;v++){const btn=document.createElement('button');btn.className='score-dot'+(savedNum===v?` selected-${v}`:'');btn.textContent=v;btn.onclick=function(){try{localStorage.setItem(markerKey(m.id,ds),v);}catch(e){}renderMarkers();};sd.appendChild(btn);}
+      for(let v=0;v<=10;v++){
+        const btn=document.createElement('button');
+        let cls='score-dot';
+        if(savedNum===v&&v>0){
+          if(isHighBad){
+            // High = bad (stress): 0-3 green, 4-6 amber, 7-10 red
+            cls+=(v<=3?' selected-8':v<=6?' selected-5':' selected-2');
+          } else {
+            cls+=` selected-${v}`;
+          }
+        }
+        btn.className=cls;
+        btn.textContent=v;
+        btn.onclick=function(){try{localStorage.setItem(markerKey(m.id,ds),v);}catch(e){}renderMarkers();};
+        sd.appendChild(btn);
+      }
       return;
     }
     c.appendChild(row);
@@ -493,17 +523,20 @@ function renderMarkers(){
   updateMarkerSummary(ds);
 }
 function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);}
-function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[type="number"]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();}
+function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[data-mid]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();}
 function updateMarkerSummary(ds){
   const vals={};MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
   const recovery=vals.mk1?parseFloat(vals.mk1):'';const highStress=vals.mk6?parseFloat(vals.mk6):'';const stress=vals.mk7?parseInt(vals.mk7):0;const mood=vals.mk8?parseInt(vals.mk8):0;
-  if(recovery===''&&highStress===''&&!stress&&!mood){document.getElementById('markersSummary').style.display='none';return;}
+  const lowStress=vals.mk9||'';
+  const lowMins=lowStress?(parseInt(lowStress.split(':')[0])*60+parseInt(lowStress.split(':')[1]||0)):0;
+  if(recovery===''&&highStress===''&&!stress&&!mood&&!lowStress){document.getElementById('markersSummary').style.display='none';return;}
   document.getElementById('markersSummary').style.display='block';
   document.getElementById('msGrid').innerHTML=`
     <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=80?'🟢 Go':recovery>=60?'🟡 Moderate':'🔴 Rest'):''}</div></div>
     <div class="ms-item"><div class="ms-label">High Stress</div><div class="ms-val">${highStress!==''?highStress+' min':'—'}</div><div class="ms-sub">${highStress!==''?(highStress<=30?'🟢 Low':highStress<=60?'🟡 Moderate':'🔴 High'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">Stress (felt)</div><div class="ms-val">${stress||'—'}</div><div class="ms-sub">${stress?(stress<=3?'🔴 High':stress<=6?'🟡 Moderate':'🟢 Low'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood||'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>`;
+    <div class="ms-item"><div class="ms-label">Stress (felt)</div><div class="ms-val">${stress?stress+'/10':'—'}</div><div class="ms-sub">${stress?(stress<=3?'🟢 Low':stress<=6?'🟡 Moderate':'🔴 High'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood?mood+'/10':'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>
+    <div class="ms-item"><div class="ms-label">Low Stress Time</div><div class="ms-val">${lowStress||'—'}</div><div class="ms-sub">${lowStress?(lowMins>=900?'🟢 15h+ goal met':lowMins>=720?'🟡 '+Math.floor(lowMins/60)+'h':'🔴 '+Math.floor(lowMins/60)+'h — below target'):''}</div></div>`;
 }
 
 // ── Strength Protocol ──
