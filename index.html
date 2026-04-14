@@ -192,7 +192,7 @@
 <body>
 <div class="header">
   <div class="header-top">
-    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v4</div></div>
+    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v6</div></div>
     <div class="date-display">
       <div class="day" id="dayName"></div>
       <div class="date-str" id="dateStr"></div>
@@ -204,7 +204,8 @@
 </div>
 
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('daily',this)">Daily</button>
+  <button class="tab-btn active" onclick="switchTab('stacks',this)">Stacks</button>
+  <button class="tab-btn" onclick="switchTab('daily',this)">Protocol</button>
   <button class="tab-btn" onclick="switchTab('strength',this)">Strength</button>
   <button class="tab-btn" onclick="switchTab('commitments',this)">Commitments</button>
   <button class="tab-btn" onclick="switchTab('schedule',this)">Schedule</button>
@@ -217,8 +218,28 @@
   <div id="weeklyConformity" style="display:flex;gap:4px;"></div>
 </div>
 
-<!-- DAILY -->
-<div class="tab-content active" id="tab-daily">
+<!-- STACKS (Morning + Evening) -->
+<div class="tab-content active" id="tab-stacks">
+  <div style="padding:12px 20px 0;display:flex;gap:6px">
+    <button id="stack-am-btn" onclick="setStackSession('am')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold);transition:all .2s">MORNING</button>
+    <button id="stack-pm-btn" onclick="setStackSession('pm')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);transition:all .2s">EVENING</button>
+  </div>
+  <div id="stack-mode-bar" style="padding:8px 20px 0;display:flex;gap:6px">
+    <button id="stack-mode-5" onclick="setStackMode('5am')" style="flex:1;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--gold);transition:all .2s">5AM CLUB</button>
+    <button id="stack-mode-7" onclick="setStackMode('7am')" style="flex:1;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);transition:all .2s">7AM START</button>
+  </div>
+  <div id="stack-progress" style="padding:16px 20px 8px;display:flex;align-items:center;gap:14px">
+    <div id="stack-pct" style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold)">0%</div>
+    <div style="flex:1">
+      <div id="stack-title" style="font-size:14px;font-weight:500;color:var(--text2)">Morning Stack</div>
+      <div id="stack-sub" style="font-size:10px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace">10 steps</div>
+    </div>
+  </div>
+  <div id="stack-steps" style="padding:0 20px 24px"></div>
+</div>
+
+<!-- DAILY (now called Protocol) -->
+<div class="tab-content" id="tab-daily">
   <div class="section" style="margin-top:18px;">
     <div class="section-label"><span class="icon">🌅</span><span class="title">Morning</span><div class="line"></div></div>
     <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — 10 min, no sunglasses</div><div class="item-detail">Within 30 min of waking. Beach walk, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
@@ -435,6 +456,7 @@ function switchTab(name,btn){
   if(name==='markers') renderMarkers();
   if(name==='strength') renderStrength();
   if(name==='commitments') renderCommitments();
+  if(name==='stacks') renderStacks();
 }
 
 // ── Markers ──
@@ -629,6 +651,112 @@ function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.
 function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
 function lsToggleCommit(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}renderCommitments();}
 
+// ── Daily Stacks (Morning + Evening) ──
+var STACK_DATA={
+  am_5am:{title:'Morning Stack',sub:'5AM · 10 steps · ~55 min',steps:[
+    {label:'Wake — no phone',time:'05:00',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
+    {label:'Stretch + GTG',time:'05:02',mins:'10 min',note:'Roller along spine, right hip release, lats. Push-ups, bird dogs, hip bridge iso, wrist affirmations.'},
+    {label:'TM Meditation',time:'05:12',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
+    {label:'Affirmations',time:'05:32',mins:'5 min',note:'Read aloud. All six. Mean every word.'},
+    {label:'Morning journal',time:'05:37',mins:'10 min',note:'Read the 8 questions. Close the app. Write by hand.'},
+    {label:'Philosophy / wisdom',time:'05:47',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
+    {label:'Smoothie + supplements',time:'05:52',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
+    {label:'Sunlight',time:'05:57',mins:'5 min',note:'Outside. No sunglasses. Balcony, garden, or walk.'},
+    {label:'Jump in pool',time:'06:02',mins:'2 min',note:'Cold water. Full immersion. Breathe through it.'},
+    {label:'Kids prep + start day',time:'06:05',mins:'—',note:'Fully present. Phone away until 08:00 work block.'},
+  ]},
+  am_7am:{title:'Morning Stack',sub:'7AM · 10 steps · ~55 min',steps:[
+    {label:'Wake — no phone',time:'07:00',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
+    {label:'Stretch + GTG',time:'07:02',mins:'10 min',note:'Roller along spine, right hip release, lats. Push-ups, bird dogs, hip bridge iso, wrist affirmations.'},
+    {label:'TM Meditation',time:'07:12',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
+    {label:'Affirmations',time:'07:32',mins:'5 min',note:'Read aloud. All six. Mean every word.'},
+    {label:'Morning journal',time:'07:37',mins:'10 min',note:'Read the 8 questions. Close the app. Write by hand.'},
+    {label:'Philosophy / wisdom',time:'07:47',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
+    {label:'Smoothie + supplements',time:'07:52',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
+    {label:'Sunlight',time:'07:57',mins:'5 min',note:'Outside. No sunglasses. Walk if possible.'},
+    {label:'Jump in pool',time:'08:02',mins:'2 min',note:'Cold water. Full immersion. Breathe through it.'},
+    {label:'Start day',time:'08:05',mins:'—',note:'90/90/1 begins now. First 90 minutes on #1 priority only.'},
+  ]},
+  pm:{title:'Evening Stack',sub:'6:30PM · 9 steps · ~45 min',steps:[
+    {label:'Last meal done',time:'18:00',mins:'—',note:'Food cutoff. Nothing after this. Gut and sleep quality.'},
+    {label:'Devices away',time:'18:30',mins:'—',note:'Phone face-down or in another room. Hard stop.'},
+    {label:'Family time',time:'18:30',mins:'30 min',note:'Hector and Bella. No phone, no TV. Fully present.'},
+    {label:'Gua sha + skincare',time:'19:00',mins:'5 min',note:'Steel roller. Rosehip oil. Phyto Corrective.'},
+    {label:'Hot shower',time:'19:05',mins:'10 min',note:'Warm water drops core temp afterward — aids sleep onset.'},
+    {label:'Pennebaker journal',time:'19:15',mins:'5 min',note:'Name the stressor. No editing, no solving. Just write.'},
+    {label:'Ashwagandha + Mg',time:'19:20',mins:'—',note:'KSM-66 300mg + Magnesium glycinate 400mg with water.'},
+    {label:'Read fiction in bed',time:'20:30',mins:'30 min',note:'Physical book only. No screens. Let the mind wander.'},
+    {label:'Lights out',time:'21:30',mins:'—',note:'8 hours to 05:30. Sleep is the compound interest of health.'},
+  ]}
+};
+var stackSession='am';
+var stackMode='5am';
+function stackKey(){return stackSession==='pm'?'pm':'am_'+stackMode;}
+function stackStorageKey(idx){return 'ds-'+stackKey()+'-'+idx+'-'+todayKey().replace(/_/g,'-');}
+function isStackChecked(idx){return !!localStorage.getItem(stackStorageKey(idx));}
+function toggleStack(idx){
+  var k=stackStorageKey(idx);
+  if(localStorage.getItem(k))localStorage.removeItem(k);
+  else localStorage.setItem(k,'1');
+  renderStacks();
+}
+function setStackSession(s){stackSession=s;renderStacks();}
+function setStackMode(m){stackMode=m;renderStacks();}
+function renderStacks(){
+  var sk=stackKey();var data=STACK_DATA[sk];var steps=data.steps;
+  var checked=steps.filter(function(_,i){return isStackChecked(i)}).length;
+  var pct=Math.round((checked/steps.length)*100);
+  var color=stackSession==='pm'?'var(--amber)':'var(--gold)';
+  // Update tabs
+  document.getElementById('stack-am-btn').style.color=stackSession==='am'?'var(--gold)':'var(--muted)';
+  document.getElementById('stack-am-btn').style.borderColor=stackSession==='am'?'var(--gold)':'var(--border)';
+  document.getElementById('stack-pm-btn').style.color=stackSession==='pm'?'var(--amber)':'var(--muted)';
+  document.getElementById('stack-pm-btn').style.borderColor=stackSession==='pm'?'var(--amber)':'var(--border)';
+  // Mode bar
+  document.getElementById('stack-mode-bar').style.display=stackSession==='pm'?'none':'flex';
+  document.getElementById('stack-mode-5').style.color=stackMode==='5am'?'var(--gold)':'var(--muted)';
+  document.getElementById('stack-mode-5').style.borderColor=stackMode==='5am'?'var(--gold)':'var(--border)';
+  document.getElementById('stack-mode-7').style.color=stackMode==='7am'?'var(--gold)':'var(--muted)';
+  document.getElementById('stack-mode-7').style.borderColor=stackMode==='7am'?'var(--gold)':'var(--border)';
+  // Progress
+  document.getElementById('stack-pct').textContent=pct+'%';
+  document.getElementById('stack-pct').style.color=color;
+  document.getElementById('stack-title').textContent=data.title;
+  document.getElementById('stack-sub').textContent=checked+'/'+steps.length+' · '+data.sub;
+  // Steps
+  var h='';
+  steps.forEach(function(s,i){
+    var done=isStackChecked(i);
+    h+='<div onclick="toggleStack('+i+')" style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;opacity:'+(done?'0.4':'1')+';transition:opacity .2s">';
+    h+='<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);min-width:16px;margin-top:5px">'+(i<9?'0':'')+(i+1)+'</div>';
+    h+='<div style="width:24px;height:24px;border-radius:50%;border:1.5px solid '+(done?color:'var(--border)')+';background:'+(done?color:'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .25s">';
+    if(done)h+='<span style="color:var(--bg);font-size:11px;font-weight:700">\\u2713</span>';
+    h+='</div>';
+    h+='<div style="flex:1"><div style="font-size:15px;font-weight:400;color:'+(done?'var(--muted)':'var(--text2)')+';margin-bottom:3px;transition:color .2s'+(done?';text-decoration:line-through':'')+'">'+s.label+'</div>';
+    h+='<div style="display:flex;gap:8px;align-items:center"><span style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted)">'+s.time+'</span>';
+    if(s.mins!=='—')h+='<span style="font-family:DM Mono,monospace;font-size:9px;padding:2px 7px;border-radius:4px;background:'+(done?'transparent':stackSession==='pm'?'rgba(245,155,66,.1)':'var(--gold-dim)')+';color:'+(done?'var(--muted)':color)+'">'+s.mins+'</span>';
+    h+='</div>';
+    h+='<div style="font-size:12px;font-style:italic;color:'+(done?'var(--muted)':'rgba(255,255,255,.35)')+';margin-top:4px;line-height:1.5">'+s.note+'</div>';
+    h+='</div></div>';
+  });
+  // Completion state
+  if(checked===steps.length){
+    h='<div style="text-align:center;padding:40px 20px"><div style="font-size:48px;color:'+color+';margin-bottom:12px">\\u2726</div>';
+    h+='<div style="font-size:22px;font-weight:300;font-style:italic;color:'+color+';margin-bottom:8px">'+(stackSession==='am'?'Stack complete.':'Day closed.')+'</div>';
+    h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:20px">'+checked+'/'+steps.length+' \\u00b7 100%</div>';
+    h+='<button onclick="resetStacks()" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:DM Mono,monospace;font-size:10px;letter-spacing:1px;padding:10px 20px;border-radius:20px;cursor:pointer">Reset</button></div>';
+  }
+  document.getElementById('stack-steps').innerHTML=h;
+  // Update main progress bar to reflect stack completion
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressCount').textContent=checked+' / '+steps.length;
+}
+function resetStacks(){
+  var sk=stackKey();var total=STACK_DATA[sk].steps.length;
+  for(var i=0;i<total;i++)localStorage.removeItem(stackStorageKey(i));
+  renderStacks();
+}
+
 // ── Good to Great — Daily Philosophy ──
 var G2G=[
   {label:'Level 5 Leadership',sub:'First Who, Then What',body:'The highest level of leader combines fierce professional will with personal humility. Get the right people on the bus before deciding where to drive.',apply:'Who is on your bus right now? Is anyone holding back the vehicle?'},
@@ -687,7 +815,11 @@ function loadWeather(){
 }
 function setTheme(){const h=new Date().getHours();document.body.classList.remove('theme-day','theme-evening','theme-night');if(h>=6&&h<18)document.body.classList.add('theme-day');else if(h>=18&&h<21)document.body.classList.add('theme-evening');else document.body.classList.add('theme-night');}
 
-initDate();restoreState();renderMarkers();renderWeeklyConformity();renderG2G();loadPodcast();setTheme();
+// Auto-select morning or evening stack based on time
+var _h=new Date().getHours();
+if(_h>=18)stackSession='pm';
+else if(_h>=7)stackMode='7am';
+initDate();restoreState();renderStacks();renderMarkers();renderWeeklyConformity();renderG2G();loadPodcast();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
