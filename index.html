@@ -223,7 +223,23 @@
 
 <!-- STACKS (Morning + Evening) -->
 <div class="tab-content active" id="tab-stacks">
-  <div style="padding:12px 20px 0;display:flex;gap:6px">
+  <!-- Surf conditions -->
+  <div id="surf-card" style="margin:12px 20px 0;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);font-family:'DM Mono',monospace;font-weight:600;margin-bottom:4px">MUIZENBERG SURF</div>
+        <div id="surf-data" style="font-size:13px;color:var(--text2)"></div>
+      </div>
+      <div id="surf-rating" style="font-size:24px"></div>
+    </div>
+  </div>
+  <!-- Date navigator -->
+  <div style="padding:10px 20px 0;display:flex;align-items:center;justify-content:space-between">
+    <button onclick="changeStackDate(-1)" style="background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:14px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center">&#8249;</button>
+    <div id="stack-date-label" style="font-size:13px;font-weight:500;color:var(--text2);font-family:'DM Mono',monospace"></div>
+    <button onclick="changeStackDate(1)" style="background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:14px;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center">&#8250;</button>
+  </div>
+  <div style="padding:8px 20px 0;display:flex;gap:6px">
     <button id="stack-am-btn" onclick="setStackSession('am')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold);transition:all .2s">MORNING</button>
     <button id="stack-pm-btn" onclick="setStackSession('pm')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);transition:all .2s">EVENING</button>
   </div>
@@ -776,8 +792,11 @@ var STACK_DATA={
   ]}
 };
 var stackSession='am';
+var stackDate=new Date();
+function stackDateStr(){return stackDate.toISOString().slice(0,10);}
 function stackKey(){return stackSession;}
-function stackStorageKey(idx){return 'ds-'+stackKey()+'-'+idx+'-'+todayKey().replace(/_/g,'-');}
+function stackStorageKey(idx){return 'ds-'+stackKey()+'-'+idx+'-'+stackDateStr();}
+function changeStackDate(delta){stackDate=new Date(stackDate);stackDate.setDate(stackDate.getDate()+delta);renderStacks();}
 function isStackChecked(idx){return !!localStorage.getItem(stackStorageKey(idx));}
 function toggleStack(idx){
   var k=stackStorageKey(idx);
@@ -791,6 +810,14 @@ function renderStacks(){
   var checked=steps.filter(function(_,i){return isStackChecked(i)}).length;
   var pct=Math.round((checked/steps.length)*100);
   var color=stackSession==='pm'?'var(--amber)':'var(--gold)';
+  // Date label
+  var isStackToday=stackDateStr()===new Date().toISOString().slice(0,10);
+  var dateLabel=document.getElementById('stack-date-label');
+  if(dateLabel){
+    var sd=stackDate;
+    dateLabel.textContent=isStackToday?'Today':DAYS[sd.getDay()]+' '+sd.getDate()+' '+MONTHS[sd.getMonth()];
+    dateLabel.style.color=isStackToday?'var(--gold)':'var(--text2)';
+  }
   // Update tabs
   document.getElementById('stack-am-btn').style.color=stackSession==='am'?'var(--gold)':'var(--muted)';
   document.getElementById('stack-am-btn').style.borderColor=stackSession==='am'?'var(--gold)':'var(--border)';
@@ -905,12 +932,50 @@ function loadWeather(){
   fw(-33.93,18.42,'CT');
   if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>{fw(pos.coords.latitude.toFixed(2),pos.coords.longitude.toFixed(2),'');},()=>{},{timeout:5000});}
 }
+// ── Surf Conditions (Muizenberg via Open-Meteo Marine) ──
+function loadSurf(){
+  var card=document.getElementById('surf-card');if(!card)return;
+  // Muizenberg coordinates
+  fetch('https://marine-api.open-meteo.com/v1/marine?latitude=-34.11&longitude=18.47&current=wave_height,wave_period,wave_direction,wind_wave_height&hourly=wave_height&timezone=auto&forecast_days=1')
+  .then(function(r){return r.json()}).then(function(d){
+    var c=d.current;if(!c)return;
+    var waveH=c.wave_height||0;
+    var wavePeriod=c.wave_period||0;
+    var waveDir=c.wave_direction||0;
+    // Also get wind
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=-34.11&longitude=18.47&current=wind_speed_10m,wind_direction_10m&timezone=auto')
+    .then(function(r2){return r2.json()}).then(function(w){
+      var windSpeed=w.current?w.current.wind_speed_10m:0;
+      var windDir=w.current?w.current.wind_direction_10m:0;
+      // Rating logic for Muizenberg
+      // Ideal: offshore (NW-N, 270-360 or 0-45), 0.5-1.5m swell, period 8-14s
+      var isOffshore=(windDir>=250||windDir<=60);
+      var isLight=windSpeed<25;
+      var goodSwell=waveH>=0.5&&waveH<=2.0;
+      var goodPeriod=wavePeriod>=7;
+      var rating='';var ratingColor='';
+      if(isOffshore&&isLight&&goodSwell&&goodPeriod){rating='\uD83C\uDFC4';ratingColor='var(--green)';}// surfing emoji
+      else if(goodSwell&&isLight){rating='\uD83C\uDFC4';ratingColor='var(--amber)';}
+      else if(waveH<0.3){rating='\u2014';ratingColor='var(--muted)';}
+      else{rating='\uD83C\uDFC4';ratingColor='var(--red)';}
+      // Wind direction label
+      var dirs=['N','NE','E','SE','S','SW','W','NW'];
+      var windLabel=dirs[Math.round(windDir/45)%8];
+      var swellLabel=dirs[Math.round(waveDir/45)%8];
+      document.getElementById('surf-data').innerHTML=waveH.toFixed(1)+'m '+swellLabel+' swell &middot; '+wavePeriod+'s period &middot; '+Math.round(windSpeed)+'km/h '+windLabel;
+      document.getElementById('surf-rating').style.color=ratingColor;
+      document.getElementById('surf-rating').textContent=rating;
+      card.style.display='block';
+    }).catch(function(){});
+  }).catch(function(){});
+}
+
 function setTheme(){const h=new Date().getHours();document.body.classList.remove('theme-day','theme-evening','theme-night');if(h>=6&&h<18)document.body.classList.add('theme-day');else if(h>=18&&h<21)document.body.classList.add('theme-evening');else document.body.classList.add('theme-night');}
 
 // Auto-select morning or evening stack based on time
 var _h=new Date().getHours();
 if(_h>=18)stackSession='pm';
-initDate();restoreState();renderStacks();renderMarkers();renderWeeklyTrend();renderG2G();loadPodcast();setTheme();
+initDate();restoreState();renderStacks();renderMarkers();renderWeeklyTrend();renderG2G();loadPodcast();loadSurf();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
