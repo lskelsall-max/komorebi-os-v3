@@ -204,11 +204,10 @@
 </div>
 
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('stacks',this)">Stacks</button>
+  <button class="tab-btn active" onclick="switchTab('stacks',this)">Daily Stack</button>
+  <button class="tab-btn" onclick="switchTab('exercise',this)">Exercise</button>
   <button class="tab-btn" onclick="switchTab('daily',this)">Protocol</button>
-  <button class="tab-btn" onclick="switchTab('strength',this)">Strength</button>
   <button class="tab-btn" onclick="switchTab('commitments',this)">Commitments</button>
-  <button class="tab-btn" onclick="switchTab('schedule',this)">Schedule</button>
   <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
 </div>
 
@@ -224,10 +223,6 @@
     <button id="stack-am-btn" onclick="setStackSession('am')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--gold);transition:all .2s">MORNING</button>
     <button id="stack-pm-btn" onclick="setStackSession('pm')" style="flex:1;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);transition:all .2s">EVENING</button>
   </div>
-  <div id="stack-mode-bar" style="padding:8px 20px 0;display:flex;gap:6px">
-    <button id="stack-mode-5" onclick="setStackMode('5am')" style="flex:1;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--gold);transition:all .2s">5AM CLUB</button>
-    <button id="stack-mode-7" onclick="setStackMode('7am')" style="flex:1;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--muted);transition:all .2s">7AM START</button>
-  </div>
   <div id="stack-progress" style="padding:16px 20px 8px;display:flex;align-items:center;gap:14px">
     <div id="stack-pct" style="font-size:28px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold)">0%</div>
     <div style="flex:1">
@@ -241,40 +236,25 @@
 <!-- DAILY (now called Protocol) -->
 <div class="tab-content" id="tab-daily">
   <div class="section" style="margin-top:18px;">
-    <div class="section-label"><span class="icon">🌅</span><span class="title">Morning</span><div class="line"></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Sunshine — 10 min, no sunglasses</div><div class="item-detail">Within 30 min of waking. Beach walk, balcony, or school run on foot.</div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Smoothie + supplements</div><div class="item-detail">Protein, greens, creatine, Slow-Mag. Caffeine hard stop at 11am.</div><span class="item-tag tag-green">⏱ 10 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m8"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">TM — 20 min</div><div class="item-detail">Transcendental Meditation. Mantra: So Hum. Eyes closed, effortless. Non-negotiable.</div><span class="item-tag tag-time">⏱ 05:15</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Morning Journal — 8Qs</div><div class="item-detail">Grateful? Intentions? Mood? 3 priorities? Key actions? Obstacles? Who to appreciate? One focus? End with mantra: <em>"I am relentless, disciplined and focused. Every day, I move closer to my potential."</em></div><span class="item-tag tag-time">⏱ 10 min</span></div></div>
-    <div id="podcastEmbed" style="margin:0 0 7px;padding:0 14px;"></div>
+    <div class="section-label"><span class="icon">✓</span><span class="title">Daily Protocol</span><div class="line"></div></div>
+    <div class="item" id="proto-am" data-id="p_am"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Morning Stack</div><div class="item-detail">Auto-completes when all morning stack items are done.</div><span class="item-tag tag-time">~70 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">90/90/1</div><div class="item-detail">First 90 minutes on your single most important project. No email. No meetings.</div><span class="item-tag tag-amber">90 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60/10 blocks</div><div class="item-detail">Work 60, recover 10. Movement, breath, screens off. Repeat.</div><span class="item-tag tag-green">all day</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min student</div><div class="item-detail">Reading, research, annual reports, philosophy. Primary sources only.</div><span class="item-tag tag-blue">60 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="m6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Exercise — per schedule</div><div class="item-detail">Check Whoop first. Red → Z2 only. Green → follow the plan.</div><span class="item-tag tag-amber">60 min</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min family</div><div class="item-detail">No iPhone. No TV. Fully present — Hector and Bella.</div><span class="item-tag tag-time">18:00</span></div></div>
+    <div class="item" onclick="toggle(this)" data-id="f5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Joy GPS</div><div class="item-detail">Check in twice: does this bring energy or drain it?</div><span class="item-tag tag-green">check-in</span></div></div>
+    <div class="item" id="proto-pm" data-id="p_pm"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Evening Stack</div><div class="item-detail">Auto-completes when all evening stack items are done.</div><span class="item-tag tag-amber">~45 min</span></div></div>
   </div>
-  <div class="section">
-    <div class="section-label"><span class="icon">🎯</span><span class="title">Focus</span><div class="line"></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">90/90/1</div><div class="item-detail">First 90 minutes on your single most important project. For 90 consecutive days. No email. No meetings. Pure craft.</div><span class="item-tag tag-amber">⏱ 08:00</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60/10 blocks</div><div class="item-detail">Work 60 minutes in complete focus, then 10 minutes of full recovery. Movement, breath, away from screens.</div><span class="item-tag tag-green">all day</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min student</div><div class="item-detail">Reading, research, annual reports, philosophy. No podcasts, no summaries. Primary sources.</div><span class="item-tag tag-blue">⏱ variable</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min family</div><div class="item-detail">No iPhone. No TV. No distractions. Fully present — Hector and Bella only get one version of their father.</div><span class="item-tag tag-time">⏱ 18:00</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Joy GPS</div><div class="item-detail">Check in twice a day: does this bring me energy or drain it? Follow the aliveness signal.</div><span class="item-tag tag-green">check-in</span></div></div>
-  </div>
-  <div class="section">
-    <div class="section-label"><span class="icon">🏋️</span><span class="title">Movement</span><div class="line"></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Exercise — per schedule</div><div class="item-detail">Check Whoop first. Red → Z2 only. Green → follow the plan.</div><span class="item-tag tag-amber">⏱ 60 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="g1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Hip Rehab — Plan 1</div><div class="item-detail">Adductor stretch standing (4×20s) · Adductor stretch half-kneeling (4×20s) · Gastrocnemius stretch SL (4×20s) · Towel calf heel raises (5×10s) · Hip flexor psoas stretch (4×20s) · Hip external rotation NO BAND (4×6) · Calf heel raise SL (4×4) · Standing donkey kicks NO BALL (4×6)</div><span class="item-tag tag-amber">~15 min</span></div></div>
-  </div>
-  <div class="section">
-    <div class="section-label"><span class="icon">🌙</span><span class="title">Evening</span><div class="line"></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e0"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Prep for next day</div><span class="item-tag tag-blue">6pm</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Last meal before 6pm</div><span class="item-tag tag-amber">6pm cutoff</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Devices away by 6:30pm</div><span class="item-tag tag-time">6:30pm</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Evening Journal — 6Qs</div><div class="item-detail">Wins? Grateful for? Energy use? Do better tomorrow? Tomorrow's priorities? What to let go of?</div><span class="item-tag tag-green">⏱ 10 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="e5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">In bed 8:30 — asleep by 9:30</div><div class="item-detail">Read fiction first. 30–60 min.</div><span class="item-tag tag-green">9:30pm</span></div></div>
-  </div>
+  <div id="podcastEmbed" style="margin:0 0 7px;padding:0 14px;"></div>
   <div id="g2g-card" style="padding:0 20px;margin-top:20px"></div>
   <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
 </div>
 
 <!-- STRENGTH -->
-<div class="tab-content" id="tab-strength">
+<div class="tab-content" id="tab-exercise">
+  <div id="exercise-schedule"></div>
+  <div style="padding:0 20px;margin:20px 0 12px"><div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-family:'DM Mono',monospace;font-weight:600">Strength Protocol</div></div>
   <div class="str-tabs" id="strTabs"></div>
   <div class="str-rules" id="strRules"></div>
   <div id="strWarmup"></div>
@@ -296,7 +276,7 @@
 </div>
 
 <!-- SCHEDULE -->
-<div class="tab-content" id="tab-schedule">
+<div id="schedule-content" style="display:none">
   <div class="weekly-totals" style="margin-bottom:0;padding-bottom:0;">
     <div style="padding:16px 14px 6px;">
       <div class="wt-title">Weekly targets</div>
@@ -454,7 +434,7 @@ function switchTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
   if(name==='markers') renderMarkers();
-  if(name==='strength') renderStrength();
+  if(name==='exercise'){renderStrength();renderExerciseSchedule();}
   if(name==='commitments') renderCommitments();
   if(name==='stacks') renderStacks();
 }
@@ -462,7 +442,6 @@ function switchTab(name,btn){
 // ── Markers ──
 const MARKERS=[
   {id:'mk1',label:'Recovery (Whoop)',type:'number',unit:'%',placeholder:'0–100',min:0,max:100,thresholds:[60,80]},
-  {id:'mk6',label:'High Stress (Whoop)',type:'number',unit:'min',placeholder:'mins in high zone',min:0,max:1440,thresholds:[60,30],invert:true},
   {id:'mk7',label:'Perceived Stress',type:'dots',invert:false,highBad:true},
   {id:'mk8',label:'Mood / Energy',type:'dots'},
   {id:'mk9',label:'Low Stress Time (prev day)',type:'time',unit:'hrs',placeholder:'HH:MM',goal:900},
@@ -526,14 +505,13 @@ function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),
 function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[data-mid]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();}
 function updateMarkerSummary(ds){
   const vals={};MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
-  const recovery=vals.mk1?parseFloat(vals.mk1):'';const highStress=vals.mk6?parseFloat(vals.mk6):'';const stress=vals.mk7?parseInt(vals.mk7):0;const mood=vals.mk8?parseInt(vals.mk8):0;
+  const recovery=vals.mk1?parseFloat(vals.mk1):'';const stress=vals.mk7?parseInt(vals.mk7):0;const mood=vals.mk8?parseInt(vals.mk8):0;
   const lowStress=vals.mk9||'';
   const lowMins=lowStress?(parseInt(lowStress.split(':')[0])*60+parseInt(lowStress.split(':')[1]||0)):0;
-  if(recovery===''&&highStress===''&&!stress&&!mood&&!lowStress){document.getElementById('markersSummary').style.display='none';return;}
+  if(recovery===''&&!stress&&!mood&&!lowStress){document.getElementById('markersSummary').style.display='none';return;}
   document.getElementById('markersSummary').style.display='block';
   document.getElementById('msGrid').innerHTML=`
     <div class="ms-item"><div class="ms-label">Recovery</div><div class="ms-val">${recovery!==''?recovery+'%':'—'}</div><div class="ms-sub">${recovery!==''?(recovery>=80?'🟢 Go':recovery>=60?'🟡 Moderate':'🔴 Rest'):''}</div></div>
-    <div class="ms-item"><div class="ms-label">High Stress</div><div class="ms-val">${highStress!==''?highStress+' min':'—'}</div><div class="ms-sub">${highStress!==''?(highStress<=30?'🟢 Low':highStress<=60?'🟡 Moderate':'🔴 High'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Stress (felt)</div><div class="ms-val">${stress?stress+'/10':'—'}</div><div class="ms-sub">${stress?(stress<=3?'🟢 Low':stress<=6?'🟡 Moderate':'🔴 High'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Mood</div><div class="ms-val">${mood?mood+'/10':'—'}</div><div class="ms-sub">${mood?(mood>=8?'🟢 Strong':mood>=5?'🟡 OK':'🔴 Low'):''}</div></div>
     <div class="ms-item"><div class="ms-label">Low Stress Time</div><div class="ms-val">${lowStress||'—'}</div><div class="ms-sub">${lowStress?(lowMins>=900?'🟢 15h+ goal met':lowMins>=720?'🟡 '+Math.floor(lowMins/60)+'h':'🔴 '+Math.floor(lowMins/60)+'h — below target'):''}</div></div>`;
@@ -684,31 +662,28 @@ function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.
 function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
 function lsToggleCommit(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}renderCommitments();}
 
+// ── Exercise Schedule (moved from standalone tab) ──
+function renderExerciseSchedule(){
+  var target=document.getElementById('exercise-schedule');
+  var source=document.getElementById('schedule-content');
+  if(target&&source&&!target.innerHTML.trim()){
+    target.innerHTML=source.innerHTML;
+  }
+}
+
 // ── Daily Stacks (Morning + Evening) ──
 var STACK_DATA={
-  am_5am:{title:'Morning Stack',sub:'5AM · 10 steps · ~55 min',steps:[
-    {label:'Wake — no phone',time:'05:00',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
-    {label:'Hip Rehab — Plan 1',time:'05:02',mins:'15 min',note:'Adductor stretch standing, adductor half-kneeling, gastroc stretch SL, towel calf raises, hip flexor psoas, hip ext rotation (no band), calf raise SL, donkey kicks (no ball).'},
-    {label:'TM Meditation',time:'05:12',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
-    {label:'Affirmations',time:'05:32',mins:'5 min',note:'1. I am a business builder, investor, adventurer and lifelong learner. 2. I have designed two highly successful businesses in 12 years. 3. I create positive outcomes for my business partners. 4. I move freely \u2014 climb, surf, lift, swing, run and swim. 5. I have a magnetic personality \u2014 confidence, intelligence, kindness. 6. I am exactly where I\\'m meant to be.'},
-    {label:'Morning journal',time:'05:37',mins:'10 min',note:'1. What am I grateful for today? 2. What are my intentions? 3. What mood do I want? 4. Three priorities? 5. Key actions? 6. Potential obstacles? 7. Who can I appreciate? 8. One thing to focus on?'},
-    {label:'Philosophy / wisdom',time:'05:47',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
-    {label:'Smoothie + supplements',time:'05:52',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
-    {label:'Sunlight',time:'05:57',mins:'5 min',note:'Outside. No sunglasses. Balcony, garden, or walk.'},
-    {label:'Jump in pool',time:'06:02',mins:'2 min',note:'Cold water. Full immersion. Breathe through it.'},
-    {label:'Kids prep + start day',time:'06:05',mins:'—',note:'Fully present. Phone away until 08:00 work block.'},
-  ]},
-  am_7am:{title:'Morning Stack',sub:'7AM · 10 steps · ~55 min',steps:[
-    {label:'Wake — no phone',time:'07:00',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
-    {label:'Hip Rehab — Plan 1',time:'07:02',mins:'15 min',note:'Adductor stretch standing, adductor half-kneeling, gastroc stretch SL, towel calf raises, hip flexor psoas, hip ext rotation (no band), calf raise SL, donkey kicks (no ball).'},
-    {label:'TM Meditation',time:'07:12',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
-    {label:'Affirmations',time:'07:32',mins:'5 min',note:'1. I am a business builder, investor, adventurer and lifelong learner. 2. I have designed two highly successful businesses in 12 years. 3. I create positive outcomes for my business partners. 4. I move freely \u2014 climb, surf, lift, swing, run and swim. 5. I have a magnetic personality \u2014 confidence, intelligence, kindness. 6. I am exactly where I\\'m meant to be.'},
-    {label:'Morning journal',time:'07:37',mins:'10 min',note:'1. What am I grateful for today? 2. What are my intentions? 3. What mood do I want? 4. Three priorities? 5. Key actions? 6. Potential obstacles? 7. Who can I appreciate? 8. One thing to focus on?'},
-    {label:'Philosophy / wisdom',time:'07:47',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
-    {label:'Smoothie + supplements',time:'07:52',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
-    {label:'Sunlight',time:'07:57',mins:'5 min',note:'Outside. No sunglasses. Walk if possible.'},
-    {label:'Jump in pool',time:'08:02',mins:'2 min',note:'Cold water. Full immersion. Breathe through it.'},
-    {label:'Start day',time:'08:05',mins:'—',note:'90/90/1 begins now. First 90 minutes on #1 priority only.'},
+  am:{title:'Morning Stack',sub:'10 steps · ~70 min',steps:[
+    {label:'Wake — no phone',time:'',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
+    {label:'Hip Rehab — Plan 1',time:'',mins:'15 min',note:'Adductor stretch standing, adductor half-kneeling, gastroc stretch SL, towel calf raises, hip flexor psoas, hip ext rotation (no band), calf raise SL, donkey kicks (no ball).'},
+    {label:'TM Meditation',time:'',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
+    {label:'Affirmations',time:'',mins:'5 min',note:'1. I am a business builder, investor, adventurer and lifelong learner. 2. I have designed two highly successful businesses in 12 years. 3. I create positive outcomes for my business partners. 4. I move freely \u2014 climb, surf, lift, swing, run and swim. 5. I have a magnetic personality \u2014 confidence, intelligence, kindness. 6. I am exactly where I\\'m meant to be.'},
+    {label:'Morning journal — 8Qs',time:'',mins:'10 min',note:'1. What am I grateful for today? 2. What are my intentions? 3. What mood do I want? 4. Three priorities? 5. Key actions? 6. Potential obstacles? 7. Who can I appreciate? 8. One thing to focus on?'},
+    {label:'Philosophy / wisdom',time:'',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
+    {label:'Smoothie + supplements',time:'',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
+    {label:'Sunlight',time:'',mins:'5 min',note:'Outside. No sunglasses. Balcony, garden, or walk.'},
+    {label:'Cold immersion',time:'',mins:'2 min',note:'Pool or cold shower. Full immersion. Breathe through it.'},
+    {label:'Kids + start day',time:'',mins:'—',note:'Fully present. Phone away until work block. Then 90/90/1.'},
   ]},
   pm:{title:'Evening Stack',sub:'6:30PM · 9 steps · ~45 min',steps:[
     {label:'Last meal done',time:'18:00',mins:'—',note:'Food cutoff. Nothing after this. Gut and sleep quality.'},
@@ -723,8 +698,7 @@ var STACK_DATA={
   ]}
 };
 var stackSession='am';
-var stackMode='5am';
-function stackKey(){return stackSession==='pm'?'pm':'am_'+stackMode;}
+function stackKey(){return stackSession;}
 function stackStorageKey(idx){return 'ds-'+stackKey()+'-'+idx+'-'+todayKey().replace(/_/g,'-');}
 function isStackChecked(idx){return !!localStorage.getItem(stackStorageKey(idx));}
 function toggleStack(idx){
@@ -734,7 +708,6 @@ function toggleStack(idx){
   renderStacks();
 }
 function setStackSession(s){stackSession=s;renderStacks();}
-function setStackMode(m){stackMode=m;renderStacks();}
 function renderStacks(){
   var sk=stackKey();var data=STACK_DATA[sk];var steps=data.steps;
   var checked=steps.filter(function(_,i){return isStackChecked(i)}).length;
@@ -745,12 +718,6 @@ function renderStacks(){
   document.getElementById('stack-am-btn').style.borderColor=stackSession==='am'?'var(--gold)':'var(--border)';
   document.getElementById('stack-pm-btn').style.color=stackSession==='pm'?'var(--amber)':'var(--muted)';
   document.getElementById('stack-pm-btn').style.borderColor=stackSession==='pm'?'var(--amber)':'var(--border)';
-  // Mode bar
-  document.getElementById('stack-mode-bar').style.display=stackSession==='pm'?'none':'flex';
-  document.getElementById('stack-mode-5').style.color=stackMode==='5am'?'var(--gold)':'var(--muted)';
-  document.getElementById('stack-mode-5').style.borderColor=stackMode==='5am'?'var(--gold)':'var(--border)';
-  document.getElementById('stack-mode-7').style.color=stackMode==='7am'?'var(--gold)':'var(--muted)';
-  document.getElementById('stack-mode-7').style.borderColor=stackMode==='7am'?'var(--gold)':'var(--border)';
   // Progress
   document.getElementById('stack-pct').textContent=pct+'%';
   document.getElementById('stack-pct').style.color=color;
@@ -783,6 +750,18 @@ function renderStacks(){
   // Update main progress bar to reflect stack completion
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressCount').textContent=checked+' / '+steps.length;
+  // Auto-complete protocol morning/evening items
+  syncProtocolAutoItems();
+}
+function syncProtocolAutoItems(){
+  // Check if all AM stack items done
+  var amData=STACK_DATA.am;var amDone=amData.steps.every(function(_,i){return !!localStorage.getItem('ds-am-'+i+'-'+todayKey().replace(/_/g,'-'));});
+  var amEl=document.getElementById('proto-am');
+  if(amEl){if(amDone)amEl.classList.add('done');else amEl.classList.remove('done');}
+  // Check if all PM stack items done
+  var pmData=STACK_DATA.pm;var pmDone=pmData.steps.every(function(_,i){return !!localStorage.getItem('ds-pm-'+i+'-'+todayKey().replace(/_/g,'-'));});
+  var pmEl=document.getElementById('proto-pm');
+  if(pmEl){if(pmDone)pmEl.classList.add('done');else pmEl.classList.remove('done');}
 }
 function resetStacks(){
   var sk=stackKey();var total=STACK_DATA[sk].steps.length;
@@ -851,7 +830,6 @@ function setTheme(){const h=new Date().getHours();document.body.classList.remove
 // Auto-select morning or evening stack based on time
 var _h=new Date().getHours();
 if(_h>=18)stackSession='pm';
-else if(_h>=7)stackMode='7am';
 initDate();restoreState();renderStacks();renderMarkers();renderWeeklyConformity();renderG2G();loadPodcast();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
