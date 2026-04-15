@@ -233,7 +233,7 @@
 <body>
 <div class="header">
   <div class="header-top">
-    <div><h1>Komorebi OS</h1><div class="subtitle">Daily Protocol · v6</div></div>
+    <div><h1>Komorebi OS</h1><div class="subtitle">What moves the needle</div></div>
     <div class="date-display">
       <div class="day" id="dayName"></div>
       <div class="date-str" id="dateStr"></div>
@@ -245,9 +245,8 @@
 </div>
 
 <div class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('stacks',this)">Daily Stack</button>
-  <button class="tab-btn" onclick="switchTab('exercise',this)">Exercise</button>
-  <button class="tab-btn" onclick="switchTab('daily',this)">Protocol</button>
+  <button class="tab-btn active" onclick="switchTab('stacks',this)">Today</button>
+  <button class="tab-btn" onclick="switchTab('exercise',this)">Strength</button>
   <button class="tab-btn" onclick="switchTab('commitments',this)">Commitments</button>
   <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
   <button class="tab-btn" onclick="switchTab('horizon',this)">Horizon</button>
@@ -295,23 +294,6 @@
   <div id="stack-steps" style="padding:0 20px 24px"></div>
 </div>
 
-<!-- DAILY (now called Protocol) -->
-<div class="tab-content" id="tab-daily">
-  <div class="section" style="margin-top:18px;">
-    <div class="section-label"><span class="icon">✓</span><span class="title">Daily Protocol</span><div class="line"></div></div>
-    <div class="item" id="proto-am" data-id="p_am"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Morning Stack</div><div class="item-detail">Auto-completes when all morning stack items are done.</div><span class="item-tag tag-time">~70 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f1"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">90/90/1</div><div class="item-detail">First 90 minutes on your single most important project. No email. No meetings.</div><span class="item-tag tag-amber">90 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f2"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60/10 blocks</div><div class="item-detail">Work 60, recover 10. Movement, breath, screens off. Repeat.</div><span class="item-tag tag-green">all day</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f3"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min student</div><div class="item-detail">Reading, research, annual reports, philosophy. Primary sources only.</div><span class="item-tag tag-blue">60 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="m6"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Exercise — per schedule</div><div class="item-detail">Check Whoop first. Red → Z2 only. Green → follow the plan.</div><span class="item-tag tag-amber">60 min</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f4"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">60 min family</div><div class="item-detail">No iPhone. No TV. Fully present — Hector and Bella.</div><span class="item-tag tag-time">18:00</span></div></div>
-    <div class="item" onclick="toggle(this)" data-id="f5"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Joy GPS</div><div class="item-detail">Check in twice: does this bring energy or drain it?</div><span class="item-tag tag-green">check-in</span></div></div>
-    <div class="item" id="proto-pm" data-id="p_pm"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">Evening Stack</div><div class="item-detail">Auto-completes when all evening stack items are done.</div><span class="item-tag tag-amber">~45 min</span></div></div>
-  </div>
-  <div id="podcastEmbed" style="margin:0 0 7px;padding:0 14px;"></div>
-  <div id="g2g-card" style="padding:0 20px;margin-top:20px"></div>
-  <div class="reset-wrap"><button class="reset-btn" onclick="resetDay()">Reset today</button></div>
-</div>
 
 <!-- STRENGTH -->
 <div class="tab-content" id="tab-exercise">
@@ -869,27 +851,17 @@ function renderExerciseSchedule(){
 
 // ── Daily Stacks (Morning + Evening) ──
 var STACK_DATA={
-  am:{title:'Morning Stack',sub:'10 steps · ~70 min',steps:[
-    {label:'Wake — no phone',time:'',mins:'2 min',note:'Leave phone face-down. Feet on floor immediately.'},
+  am:{title:'Morning',sub:'5 steps · ~50 min + work block',steps:[
+    {label:'Wake — no phone',time:'05:30',mins:'2 min',note:'Feet on floor. Phone stays face-down until after meditation.'},
     {label:'Hip Rehab — Plan 1',time:'',mins:'15 min',note:'Adductor stretch standing, adductor half-kneeling, gastroc stretch SL, towel calf raises, hip flexor psoas, hip ext rotation (no band), calf raise SL, donkey kicks (no ball).'},
     {label:'TM Meditation',time:'',mins:'20 min',note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.'},
-    {label:'Affirmations',time:'',mins:'5 min',note:'1. I am a business builder, investor, adventurer and lifelong learner. 2. I have designed two highly successful businesses in 12 years. 3. I create positive outcomes for my business partners. 4. I move freely \u2014 climb, surf, lift, swing, run and swim. 5. I have a magnetic personality \u2014 confidence, intelligence, kindness. 6. I am exactly where I am meant to be.'},
-    {label:'Morning journal — 8Qs',time:'',mins:'10 min',note:'1. What am I grateful for today? 2. What are my intentions? 3. What mood do I want? 4. Three priorities? 5. Key actions? 6. Potential obstacles? 7. Who can I appreciate? 8. One thing to focus on?'},
-    {label:'Philosophy / wisdom',time:'',mins:'5 min',note:'One Good to Great concept. One Stoic passage. Sit with it.'},
-    {label:'Smoothie + supplements',time:'',mins:'5 min',note:'Protein, greens, creatine, Alpha GPC, D3/K2.'},
-    {label:'Sunlight',time:'',mins:'5 min',note:'Outside. No sunglasses. Balcony, garden, or walk.'},
-    {label:'Cold immersion',time:'',mins:'2 min',note:'Pool or cold shower. Full immersion. Breathe through it.'},
-    {label:'Kids + start day',time:'',mins:'—',note:'Fully present. Phone away until work block. Then 90/90/1.'},
+    {label:'Journal — priorities + intentions',time:'',mins:'10 min',note:'3 priorities for today. What am I grateful for? What mood do I want? What can I let go of? One thing to focus on.'},
+    {label:'90/90/1 — Veraxus',time:'',mins:'90 min',note:'First 90 minutes. Single most important project. No email. No meetings. No phone. This is the lever.'},
   ]},
-  pm:{title:'Evening Stack',sub:'6:30PM · 9 steps · ~45 min',steps:[
-    {label:'Last meal done',time:'18:00',mins:'—',note:'Food cutoff. Nothing after this. Gut and sleep quality.'},
-    {label:'Devices away',time:'18:30',mins:'—',note:'Phone face-down or in another room. Hard stop.'},
-    {label:'Family time',time:'18:30',mins:'30 min',note:'Hector and Bella. No phone, no TV. Fully present.'},
-    {label:'Gua sha + skincare',time:'19:00',mins:'5 min',note:'Steel roller. Rosehip oil. Phyto Corrective.'},
-    {label:'Hot shower',time:'19:05',mins:'10 min',note:'Warm water drops core temp afterward — aids sleep onset.'},
-    {label:'Evening journal',time:'19:15',mins:'10 min',note:'1. What were my wins today? 2. What am I grateful for from today? 3. How did I utilise my energy? 4. How can I do this better tomorrow? 5. Priorities and actions for tomorrow? 6. What can I let go of for a fresh start?'},
-    {label:'Ashwagandha + Mg',time:'19:20',mins:'—',note:'KSM-66 300mg + Magnesium glycinate 400mg with water.'},
-    {label:'Read fiction in bed',time:'20:30',mins:'30 min',note:'Physical book only. No screens. Let the mind wander.'},
+  pm:{title:'Evening',sub:'6:30PM · 4 steps',steps:[
+    {label:'Devices away',time:'18:30',mins:'—',note:'Phone face-down or in another room. Hard stop. Everything after this is analogue.'},
+    {label:'Family time — fully present',time:'18:30',mins:'30 min',note:'Hector and Bella. No phone, no TV. Be there.'},
+    {label:'Evening journal — close the day',time:'19:30',mins:'10 min',note:'What were my wins? How did I use my energy? What can I do better tomorrow? 3 priorities for tomorrow.'},
     {label:'Lights out',time:'21:30',mins:'—',note:'8 hours to 05:30. Sleep is the compound interest of health.'},
   ]}
 };
@@ -957,8 +929,6 @@ function renderStacks(){
   // Update main progress bar to reflect stack completion
   document.getElementById('progressBar').style.width=pct+'%';
   document.getElementById('progressCount').textContent=checked+' / '+steps.length;
-  // Auto-complete protocol morning/evening items + save daily score
-  syncProtocolAutoItems();
   saveDailyScore();
   renderWeeklyTrend();
 }
@@ -1383,7 +1353,7 @@ function setTheme(){const h=new Date().getHours();document.body.classList.remove
 // Auto-select morning or evening stack based on time
 var _h=new Date().getHours();
 if(_h>=18)stackSession='pm';
-initDate();restoreState();renderStacks();renderMarkers();renderWeeklyTrend();renderG2G();loadPodcast();loadSurf();setTheme();
+initDate();renderStacks();renderMarkers();renderWeeklyTrend();loadSurf();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
