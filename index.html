@@ -316,6 +316,7 @@
     <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Session notes</div>
     <textarea id="commitNotes" placeholder="Observations, reactions, next steps..." oninput="saveCommitNotes()"></textarea>
   </div>
+  <div style="text-align:center;padding:12px 14px 0;"><button id="save-commits-btn" onclick="saveCommits()" style="background:var(--gold);color:var(--bg);border:none;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:10px 28px;border-radius:20px;cursor:pointer;">Save commitments</button></div>
   <div style="height:24px;"></div>
 </div>
 
@@ -750,6 +751,7 @@ function renderCommitments(){
   if(notes&&!notes._loaded){try{notes.value=localStorage.getItem('kos_commit_notes')||'';}catch(e){}notes._loaded=true;}
 }
 function saveCommitNotes(){try{localStorage.setItem('kos_commit_notes',document.getElementById('commitNotes').value);}catch(e){}}
+function saveCommits(){saveCommitNotes();var btn=document.getElementById('save-commits-btn');if(btn){btn.textContent='Saved \u2713';btn.style.background='var(--green)';setTimeout(function(){btn.textContent='Save commitments';btn.style.background='var(--gold)';},2000);}}
 
 // Generic localStorage toggle for dynamically rendered items
 function lsToggle(el,key){el.classList.toggle('done');try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}}
