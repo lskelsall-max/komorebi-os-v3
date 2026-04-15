@@ -187,6 +187,47 @@
   .commit-notes{margin:12px 20px 0;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
   .commit-notes textarea{width:100%;background:transparent;border:none;color:var(--text2);font-family:'DM Mono',monospace;font-size:12px;resize:none;outline:none;min-height:60px;line-height:1.6;}
   .commit-notes textarea::placeholder{color:var(--muted);}
+
+  /* HORIZON TAB */
+  .hz-sub{display:flex;gap:6px;padding:12px 20px;}
+  .hz-sbtn{padding:7px 14px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:11px;font-family:'Inter',sans-serif;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;transition:all .2s;}
+  .hz-sbtn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:600;}
+  .hz-nav{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 4px;}
+  .hz-dots{display:flex;gap:4px;justify-content:center;padding:0 20px 12px;}
+  .hz-dot{width:7px;height:7px;border-radius:50%;cursor:pointer;transition:all .15s;}
+  .ms-card{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--surface);border-radius:var(--radius);margin:0 20px 8px;border:1px solid var(--border);border-left:3px solid var(--muted);cursor:pointer;transition:all .2s;user-select:none;}
+  .ms-card:active{transform:scale(.98);}
+  .ms-card.ms-done{opacity:.4;}
+  .ms-card.ms-done .ms-status{text-decoration:line-through;}
+  .ms-badge{font-size:9px;letter-spacing:.5px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;}
+  .ms-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:none;}
+  .ms-card.ms-exp .ms-desc{display:block;}
+  .fam-strip{display:flex;flex-wrap:wrap;gap:5px;padding:8px 20px;}
+  .fam-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:4px 9px;border-radius:10px;font-weight:500;}
+  .act-strip{margin:8px 20px;padding:10px 14px;background:rgba(244,54,76,.08);border:1px solid rgba(244,54,76,.25);border-radius:var(--radius);}
+  .act-pills{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+  .act-pill{font-size:10px;padding:4px 10px;border-radius:12px;background:rgba(244,54,76,.12);color:var(--red);border:1px solid rgba(244,54,76,.2);cursor:pointer;font-weight:500;transition:background .15s;}
+  .act-pill:active{background:rgba(244,54,76,.25);}
+  .hg-wrap{padding:0 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .hg-wrap::-webkit-scrollbar{display:none;}
+  .hg-grid{display:grid;gap:2px;min-width:520px;}
+  .hg-hdr{font-size:9px;text-align:center;color:var(--muted);padding:6px 2px;}
+  .hg-cell{border-radius:6px;padding:6px;cursor:pointer;border:1px solid transparent;min-height:42px;display:flex;flex-direction:column;justify-content:space-between;transition:all .15s;}
+  .hg-cell:active{transform:scale(.97);}
+  .hg-cell.hg-sel{border-color:var(--accent);}
+  .hg-cell.hg-done{opacity:.35;}
+  .hg-detail{margin:8px 20px 0;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 20px;}
+  .cal-hdr{font-size:9px;font-weight:500;text-align:center;color:var(--muted);padding:4px 0;}
+  .cal-cell{min-height:48px;padding:4px;border-radius:6px;border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;}
+  .cal-cell.cal-busy{cursor:pointer;border-color:var(--border);}
+  .cal-cell.cal-busy:active{background:var(--surface2);}
+  .cal-cell.cal-sel{border-color:var(--accent)!important;}
+  .cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:auto;}
+  .cal-cdot{width:5px;height:5px;border-radius:2px;}
+  .cal-legend{display:flex;flex-wrap:wrap;gap:8px;padding:4px 20px 8px;margin:0;}
+  .cal-legend span{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--muted);}
+  .cal-legend .cld{width:6px;height:6px;border-radius:2px;}
 </style>
 </head>
 <body>
@@ -209,6 +250,7 @@
   <button class="tab-btn" onclick="switchTab('daily',this)">Protocol</button>
   <button class="tab-btn" onclick="switchTab('commitments',this)">Commitments</button>
   <button class="tab-btn" onclick="switchTab('markers',this)">Markers</button>
+  <button class="tab-btn" onclick="switchTab('horizon',this)">Horizon</button>
 </div>
 
 <!-- DAILY SCORE + WEEKLY TREND -->
@@ -400,6 +442,12 @@
   <div style="height:20px;"></div>
 </div>
 
+<!-- HORIZON -->
+<div class="tab-content" id="tab-horizon">
+  <div class="hz-sub" id="hz-sub"></div>
+  <div id="hz-content"></div>
+</div>
+
 <script>
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -446,6 +494,7 @@ function switchTab(name,btn){
   if(name==='exercise'){renderStrength();renderExerciseSchedule();}
   if(name==='commitments') renderCommitments();
   if(name==='stacks') renderStacks();
+  if(name==='horizon') renderHorizon();
 }
 
 // ── Markers ──
@@ -969,6 +1018,312 @@ function loadSurf(){
     }).catch(function(){});
   }).catch(function(){});
 }
+
+// ── Life Command Centre — Horizon ──
+var HZ_WEEKS=[['Apr 15','Apr 21'],['Apr 22','Apr 28'],['Apr 29','May 5'],['May 6','May 12'],['May 13','May 19'],['May 20','May 26'],['May 27','Jun 2'],['Jun 3','Jun 9'],['Jun 10','Jun 16'],['Jun 17','Jun 23'],['Jun 24','Jun 30'],['Jul 1','Jul 7']];
+var HZ_PHASE='Ronin Phase';
+var HZ_START='2026-04-15';
+var HZ_PILLARS=[
+  {id:'aesthetics',nm:'Aesthetics',c:'#d4537e',wk:[
+    {s:'Microneedling done',b:'done',a:'Tue Apr 14 — Veronika',d:'Session 1 complete. Recovery: no sun/salt water 5–7 days. Gua Sha once redness clears. Take baseline photos this week.'},
+    {s:'Dr Erasmus — book',b:'book',a:'Last week of April',d:'Book Dr Erasmus for full botox and filler analysis + treatment last week April. Scope: submental, jawline, crow\'s feet.'},
+    {s:'Dr Erasmus treatment',b:'locked',a:'Apr 27–30 (TBC)',d:'Dr Erasmus full session. Same-day photos.'},
+    {s:'Therapy begins',b:'locked',a:'May 7 — Dr Kruger',d:'First therapy session May 7. Arrive with nothing prepared.'},
+    {s:'Microneedling #2 — book',b:'book',a:'May 13–27 window',d:'Book next session 4–6 weeks post-treatment. Decision: Veronika, Nina, or RF microneedling (Morpheus8).'},
+    {s:'Microneedling #2',b:'locked',a:'~May 20 (TBC)',d:'Second session (provider TBC). Assess skin texture, laxity, jawline vs baseline.'},
+    {s:'Dr Gluckman — book',b:'book',a:'Frenum assessment',d:'Book Dr Gluckman: frenectomy required for Invisalign? Gap preference is accommodatable.'},
+    {s:'Oral hygienist',b:'book',a:'Before cosmetic work',d:'Professional hygiene clean before Invisalign or whitening.'},
+    {s:'Hair med 5-month',b:null,a:null,d:'MHR spray 5-month mark. Assess scalp response. Confirm Aug 11 density gate on track.'},
+    {s:'Skincare audit',b:null,a:null,d:'Review full stack. Confirm collagen peptide timing. Check retinol tolerance.'},
+    {s:'Phase 1 assessment',b:null,a:null,d:'Comprehensive review against Week 1 baseline photos. Plan hair transplant consultation.'},
+    {s:'Hair consult prep',b:null,a:null,d:'MHR consultation prep. Submit ASMED photo pack. R100k budget confirmed for Month 6–12.'}
+  ]},
+  {id:'hip',nm:'Hip & Physique',c:'#4c8bf5',wk:[
+    {s:'Physio #1 done',b:'done',a:'Mon Apr 13',d:'First physio complete. Daily corrective non-negotiable: psoas stretch, glute bridge ISO, wall hip CARs, bird dog, wall sit.'},
+    {s:'Strength A/B/C locked',b:null,a:null,d:'Mon/Wed/Fri: Upper Push / Lower+Hip / Upper Pull. Warm-up before every session.'},
+    {s:'Hip ROM retest',b:null,a:null,d:'Retest right hip internal/external rotation vs W1 baseline. Prep questions for May 4 physio.'},
+    {s:'Physio follow-up',b:'locked',a:'May 4 @ 9:15am',d:'Follow-up physio. Bring ROM notes, orthotic observations, right glute activation log.'},
+    {s:'Hypertrophy intro',b:null,a:null,d:'TUT hypertrophy sets where ROM is improving. Supported lateral raises, calves, quad TUT.'},
+    {s:'Hollywood map Phase 1',b:null,a:null,d:'First 6-week block: arms, shoulders, torso. Monitor right shoulder/QL asymmetry.'},
+    {s:'Orthotics decision',b:null,a:null,d:'Definitive call: neutral stack, revert to custom, or commission corrective.'},
+    {s:'8-week check-in',b:null,a:null,d:'Shoulder press + farmer carry benchmarks, body comp estimate, right glute activation quality.'},
+    {s:'Surf-hip integration',b:null,a:null,d:'Integrate surf hip rotation drills into daily corrective. Track right hip external rotation trend.'},
+    {s:'Phase 2 hypertrophy',b:null,a:null,d:'Increase loads where stability confirmed. Add calves GTG and quad TUT. Right side always leads.'},
+    {s:'Strength benchmark',b:null,a:null,d:'3-rep max: shoulder press, deadlift variant. Compare vs W1. Quantify asymmetry reduction.'},
+    {s:'12-week review',b:null,a:null,d:'Full physique and mobility review. Reassess body fat. Set next block targets.'}
+  ]},
+  {id:'veraxus',nm:'Veraxus',c:'#1DB954',wk:[
+    {s:'MVP product spec',b:null,a:null,d:'Core operator problem, minimum features, 3 lead targets. One page.'},
+    {s:'Operator outreach #1',b:null,a:null,d:'First 5 outreach attempts. Refine pitch based on real responses.'},
+    {s:'Demo build',b:null,a:null,d:'Demo-ready prototype: enough to show the workflow. Function over aesthetics.'},
+    {s:'First demo call',b:null,a:null,d:'First demo call with a real operator. Record feedback verbatim.'},
+    {s:'Pricing model',b:null,a:null,d:'Define pricing. Build financial model. Target: R50k ARR within 6 months.'},
+    {s:'First LOI or pilot',b:null,a:null,d:'First letter of intent or paid pilot. R5–10k is proof enough. Close something.'},
+    {s:'Pilot onboarding',b:null,a:null,d:'Begin onboarding first operator. Document every step — this is the playbook.'},
+    {s:'Product feedback loop',b:null,a:null,d:'Weekly structured feedback with pilot client. Top 3 gaps identified.'},
+    {s:'Outreach wave 2',b:null,a:null,d:'10 new operator targets. Use pilot as social proof.'},
+    {s:'Revenue milestone',b:null,a:null,d:'Target R20–30k confirmed MRR. Build or outsource decision.'},
+    {s:'Operator #2 onboard',b:null,a:null,d:'Begin onboarding second operator. Two clients = a business.'},
+    {s:'Q1 review',b:null,a:null,d:'Full 12-week review: revenue, clients, gaps, team. Write a 1-page memo.'}
+  ]},
+  {id:'wisdom',nm:'Worldly Wisdom',c:'#c9a84c',wk:[
+    {s:'Book 1 begins',b:null,a:null,d:'Daring Greatly — Brené Brown. 30 mins physical reading every evening.'},
+    {s:'Book 1 mid-point',b:null,a:null,d:'3 key insights in morning journal. Share one at family dinner.'},
+    {s:'Book 1 complete',b:null,a:null,d:'Complete Book 1. 1-page reflection. Add to Notion Anti-Library.'},
+    {s:'Book 2 begins',b:null,a:null,d:'The Drama of the Gifted Child — Miller. Read slowly. Lands differently at 43.'},
+    {s:'Book 2 mid-point',b:null,a:null,d:'Extract 3 mental models applicable right now. Apply at least one immediately.'},
+    {s:'Book 2 complete',b:null,a:null,d:'Reflection written. Choose Book 3 from Anti-Library.'},
+    {s:'Book 3 begins',b:null,a:null,d:'Meditations or Letters from a Stoic — re-read with fresh eyes.'},
+    {s:'Book 3 mid-point',b:null,a:null,d:'Can you explain the central idea to Hector in 2 minutes? If not, re-read.'},
+    {s:'Book 3 complete',b:null,a:null,d:'3-book quarter review. What has materially changed in how you think?'},
+    {s:'Book 4 begins',b:null,a:null,d:'Follow curiosity. Biography, investment classic, or something outside your usual circle.'},
+    {s:'Book 4 mid-point',b:null,a:null,d:'Cross-pollinate: one idea from this book applied to Veraxus or investing.'},
+    {s:'Quarter wisdom review',b:null,a:null,d:'4 books, models extracted, Notion updated. What single insight changed you most?'}
+  ]},
+  {id:'surfing',nm:'Surfing',c:'#f59b42',wk:[
+    {s:'Lesson 1',b:'warn',a:'Fri Apr 17 @ 3pm',d:'First lesson. Rain is skin-protective post-microneedling. Wear rash vest, rinse face immediately after.'},
+    {s:'Lesson 2',b:'locked',a:'Fri Apr 24 @ 3pm',d:'Second lesson. Daily kneeling-to-squat drill continues each morning.'},
+    {s:'Lesson 3',b:'locked',a:'Fri May 1 @ 3pm',d:'Target: consistent pop-up on white water with correct back foot placement.'},
+    {s:'Lesson 4',b:'locked',a:'Fri May 8 @ 3pm',d:'Target: standing and riding small white water waves. Hip restriction visibly reducing?'},
+    {s:'Lesson 5',b:'locked',a:'Fri May 15 @ 3pm',d:'Is the kneeling-to-squat drill translating to better back foot placement?'},
+    {s:'Lesson 6',b:'locked',a:'Fri May 22 @ 3pm',d:'Sixth lesson. First solo session this week if conditions allow.'},
+    {s:'Solo session #1',b:null,a:'Fri May 29',d:'Target first independent session. No performance expectations — surfing is now a habit.'},
+    {s:'Progress check',b:null,a:'Fri Jun 5',d:'8-lesson mark. Assess pop-up reliability and right hip improvement.'},
+    {s:'Extended session',b:null,a:'Fri Jun 12',d:'60–90 min session. Shift focus to wave reading rather than mechanics.'},
+    {s:'Lesson 10',b:null,a:'Fri Jun 19',d:'10-week mark. School holidays starting — check family scheduling.'},
+    {s:'Holiday week',b:'warn',a:'Jun 26 — Kruger',d:'Family in Kruger — surf lesson paused. Resume on return.'},
+    {s:'Summer surf plan',b:null,a:'Fri Jul 3',d:'Post-holiday return. Set summer surf schedule. Surfing is now part of weekly life.'}
+  ]},
+  {id:'relationships',nm:'Relationships',c:'#9B8EC4',wk:[
+    {s:'Susie conversation',b:null,a:null,d:'Honest conversation about the Ronin Phase. Frame with love. Listen as much as you speak.'},
+    {s:'Frank + Henry calls',b:null,a:null,d:'Phone calls (not texts). Tell them where you are. Let them in.'},
+    {s:'Date night',b:null,a:null,d:'One intentional date night with Susie. Booked in advance. No phones.'},
+    {s:'Therapy begins',b:'locked',a:'May 7 — Dr Kruger',d:'First therapy session with Dr Kruger. Arrive with nothing prepared. Just show up.'},
+    {s:'Cape Town connection',b:null,a:null,d:'In-person catch-up from your 29-person audit. Not networking — friendship.'},
+    {s:'Family day',b:null,a:null,d:'Full family day: beach, hike, or Camps Bay morning. Let Hector choose.'},
+    {s:'Susie mid-quarter check',b:null,a:null,d:'How is she experiencing the Ronin Phase? Listen more.'},
+    {s:'Community connection',b:null,a:null,d:'Walk with Ian, neighbour dinner, VUSA session. Community matters more than it seems.'},
+    {s:'Frank or Henry update',b:null,a:null,d:'Update call on Veraxus. Let them see momentum. Ask for one specific introduction.'},
+    {s:'Kids curriculum',b:null,a:null,d:'Lead a deliberate 2-hour curriculum session with Hector and Bella.'},
+    {s:'Relationship reflection',b:null,a:null,d:'Journal: how are Susie, Hector, Bella, Frank, Henry trending? What needs more of you?'},
+    {s:'Quarter review',b:null,a:null,d:'Who did you genuinely show up for? Plan one meaningful gesture before Q3 closes.'}
+  ]}
+];
+// Family events
+var HZ_FAM_COLORS={lee:{bg:'rgba(76,139,245,.15)',tc:'#4c8bf5'},susie:{bg:'rgba(212,83,126,.15)',tc:'#d4537e'},fam:{bg:'rgba(29,185,84,.12)',tc:'#1DB954'},kids:{bg:'rgba(201,168,76,.15)',tc:'#c9a84c'},warn:{bg:'rgba(244,54,76,.15)',tc:'#f4364c'},mile:{bg:'rgba(155,142,196,.15)',tc:'#9B8EC4'}};
+function buildFamEvents(){
+  var E=[];
+  function a(d,t,c,n){E.push({d:d,t:t,c:c,n:n||''});}
+  function r(s,e,t,c,n){var d=new Date(s+'T12:00:00');var ed=new Date(e+'T12:00:00');while(d<=ed){a(d.toISOString().slice(0,10),t,c,n);d.setDate(d.getDate()+1);}}
+  var sk=new Set(['2026-06-26','2026-10-02','2026-10-09']);
+  for(var f=new Date('2026-04-17T12:00:00');f<=new Date('2026-10-30T12:00:00');f.setDate(f.getDate()+7)){var ds=f.toISOString().slice(0,10);if(!sk.has(ds))a(ds,'Surf lesson','lee','Weekly Friday surf lesson.');}
+  a('2026-05-14','Susie departs','susie','Portugal with Beth. Lee home with kids.');
+  r('2026-05-15','2026-05-22','Susie in Portugal','susie','Comporta + Lisbon with Beth.');
+  a('2026-05-22','Susie returns','susie');
+  a('2026-05-31',"John's birthday",'mile');a('2026-06-01','Bella turns 6','mile');a('2026-07-17','Hector turns 9','mile');
+  a('2026-09-23',"Brother's birthday",'mile');a('2026-09-25',"Susie's birthday",'mile','Day before Mauritius.');
+  a('2026-06-19','School hols (est)','kids');r('2026-07-01','2026-07-20','Holiday clubs','kids');a('2026-07-21','Kids back to school','kids');
+  a('2026-09-23','School breaks up','kids');r('2026-10-05','2026-10-06','Holiday club / Lexi','kids');a('2026-10-07','Kids back to school','kids');
+  r('2026-06-21','2026-06-25','Mozambique','fam','Azura Benguela Island.');
+  r('2026-06-26','2026-06-29','Royal Malawane','fam','Kruger. Buy bush gear by early June.');
+  r('2026-09-26','2026-10-03','Mauritius','fam','Lux Belle Mare.');a('2026-09-24','Public holiday','fam','Heritage Day.');
+  a('2026-07-27','Susie departs UK','susie','Board meetings.');r('2026-07-28','2026-07-31','Susie in UK','susie');
+  r('2026-08-01','2026-08-02','Susie returns','susie');r('2026-10-08','2026-10-11','Pick Cup Kent','lee','Golf trip.');
+  a('2026-07-27','Flights needed','warn','Susie UK flights. Jul 27 – Aug 1.');
+  a('2026-09-26','SAA flights needed','warn','Family of 4, Sep 26 – Oct 3.');
+  a('2026-10-08','Flights needed','warn','Lee Kent flights. Oct 8–11.');
+  return E;
+}
+var HZ_FAM=buildFamEvents();
+var HZ_ACTIONS=[
+  {t:'SAA flights — Mauritius Sep 26–Oct 3',w:null},
+  {t:'Lee flights — Pick Cup Kent Oct 8–11',w:null},
+  {t:'Susie UK flights — Jul 27',w:null},
+  {t:'Dr Erasmus — book last week Apr',w:1},
+  {t:'Microneedling #2 — Nina vs RF',w:4},
+  {t:'Dr Gluckman — frenum consult',w:6},
+  {t:'Oral hygienist — book',w:7},
+];
+var CAL_MONTHS=[{n:'May',y:2026,m:5,d:31,s:4},{n:'Jun',y:2026,m:6,d:30,s:0},{n:'Jul',y:2026,m:7,d:31,s:2},{n:'Aug',y:2026,m:8,d:31,s:5},{n:'Sep',y:2026,m:9,d:30,s:1},{n:'Oct',y:2026,m:10,d:31,s:3}];
+
+var hzView='week',hzWeek=0,hzBlock=0,hzCalMonth=0,hzSel=null,hzCalSel=null,hzExpCard=null;
+// Init hzWeek from today
+(function(){var diff=Math.floor((new Date()-new Date(HZ_START+'T00:00:00'))/(86400000));var w=Math.floor(diff/7);if(w>=0&&w<12)hzWeek=w;hzBlock=Math.floor(hzWeek/4);})();
+
+function hzMsKey(w,pid){return 'kos_ms_'+w+'_'+pid;}
+function hzIsDone(w,pid){return localStorage.getItem(hzMsKey(w,pid))==='1';}
+function hzToggleDone(w,pid,ev){if(ev)ev.stopPropagation();var k=hzMsKey(w,pid);localStorage.getItem(k)==='1'?localStorage.removeItem(k):localStorage.setItem(k,'1');hzExpCard=null;renderHorizon();}
+
+function famForWeek(wi){
+  var start=new Date(HZ_START+'T00:00:00');start.setDate(start.getDate()+wi*7);
+  var evs=[],seen=new Set();
+  for(var i=0;i<7;i++){var d=new Date(start);d.setDate(start.getDate()+i);var ds=d.toISOString().slice(0,10);
+    HZ_FAM.filter(function(e){return e.d===ds}).forEach(function(e){if(!seen.has(e.t)){seen.add(e.t);evs.push(e);}});}
+  return evs;
+}
+function famForDate(ds){return HZ_FAM.filter(function(e){return e.d===ds});}
+
+function renderHorizon(){
+  // Sub-tabs
+  var sub=document.getElementById('hz-sub');
+  sub.innerHTML=['Week','12-Week','Calendar'].map(function(l,i){
+    var ids=['week','grid','calendar'];
+    return '<button class="hz-sbtn'+(hzView===ids[i]?' active':'')+'" onclick="hzView=\''+ids[i]+'\';hzSel=null;hzCalSel=null;renderHorizon()">'+l+'</button>';
+  }).join('');
+  var c=document.getElementById('hz-content');
+  if(hzView==='week') renderHzWeek(c);
+  else if(hzView==='grid') renderHzGrid(c);
+  else renderHzCalendar(c);
+}
+
+function renderHzWeek(c){
+  var wl=HZ_WEEKS[hzWeek];var done=HZ_PILLARS.filter(function(p){return hzIsDone(hzWeek,p.id);}).length;
+  var evs=famForWeek(hzWeek);
+  var acts=HZ_ACTIONS.filter(function(a){return a.w===null||a.w===hzWeek;});
+  var h='';
+  // Nav
+  h+='<div class="hz-nav"><button class="nav-btn" onclick="if(hzWeek>0){hzWeek--;hzExpCard=null;renderHorizon()}">\u2039</button>';
+  h+='<div style="text-align:center"><div style="font-size:14px;font-weight:600;color:var(--text2)">Week '+(hzWeek+1)+' <span style="color:var(--muted);font-weight:400;font-size:12px">\u2014 '+wl[0]+'\u2013'+wl[1]+'</span></div>';
+  h+='<div style="font-size:10px;color:var(--muted);margin-top:2px">'+HZ_PHASE+'</div></div>';
+  h+='<button class="nav-btn" onclick="if(hzWeek<11){hzWeek++;hzExpCard=null;renderHorizon()}">\u203A</button></div>';
+  // Dots
+  h+='<div class="hz-dots">';
+  for(var i=0;i<12;i++){var cls=i<hzWeek?'past':i===hzWeek?'cur':'fut';
+    h+='<div class="hz-dot" style="background:'+(i===hzWeek?'var(--accent)':i<hzWeek?'var(--muted)':'rgba(255,255,255,.1)')+';'+(i===hzWeek?'width:9px;height:9px':'')+'" onclick="hzWeek='+i+';hzExpCard=null;renderHorizon()"></div>';}
+  h+='</div>';
+  // Progress
+  h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 8px"><div style="font-size:11px;color:var(--muted)"><span style="font-weight:600;color:'+(done===6?'var(--green)':'var(--text2)')+'">'+done+'/6</span> milestones complete</div></div>';
+  // Family bar
+  if(evs.length){
+    h+='<div class="fam-strip">';
+    evs.forEach(function(e){var fc=HZ_FAM_COLORS[e.c]||HZ_FAM_COLORS.fam;
+      h+='<span class="fam-pill" style="background:'+fc.bg+';color:'+fc.tc+'"><span class="fam-dot" style="background:'+fc.tc+';width:5px;height:5px;border-radius:50%;flex-shrink:0"></span>'+e.t+'</span>';});
+    h+='</div>';
+  }
+  // Cards
+  HZ_PILLARS.forEach(function(p){
+    var m=p.wk[hzWeek];if(!m)return;var isDone=hzIsDone(hzWeek,p.id);var isExp=hzExpCard===p.id&&!isDone;
+    var effBadge=isDone?'done':m.b;
+    h+='<div class="ms-card'+(isDone?' ms-done':'')+(isExp?' ms-exp':'')+'" style="border-left-color:'+p.c+'" onclick="if(!'+isDone+'){hzExpCard=hzExpCard===\''+p.id+'\'?null:\''+p.id+'\';renderHorizon();}">';
+    // Toggle button
+    h+='<div style="width:26px;height:26px;border-radius:50%;border:2px solid '+(isDone?'var(--green)':'rgba(255,255,255,.2)')+';background:'+(isDone?'var(--green)':'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="hzToggleDone('+hzWeek+',\''+p.id+'\',event)">';
+    if(isDone)h+='<span style="color:#fff;font-size:12px;font-weight:700">\u2713</span>';
+    h+='</div>';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:'+p.c+'">'+p.nm+'</span>';
+    if(effBadge){
+      var bc=effBadge==='done'?'rgba(29,185,84,.15);color:var(--green)':effBadge==='book'?'var(--gold-dim);color:var(--gold)':effBadge==='warn'?'rgba(244,54,76,.12);color:var(--red)':'rgba(255,255,255,.08);color:var(--muted)';
+      h+='<span class="ms-badge" style="background:'+bc+'">'+effBadge+'</span>';
+    }
+    h+='</div>';
+    h+='<div class="ms-status" style="font-size:14px;font-weight:500;color:var(--text2);margin-top:3px">'+m.s+'</div>';
+    if(m.a&&!isDone)h+='<div style="font-size:11px;color:var(--muted);margin-top:2px">'+m.a+'</div>';
+    h+='<div class="ms-desc">'+m.d+'</div>';
+    h+='</div></div>';
+  });
+  // Action items
+  if(acts.length){
+    h+='<div class="act-strip"><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);font-weight:600">Book now</div><div class="act-pills">';
+    acts.forEach(function(a){h+='<span class="act-pill">'+a.t+'</span>';});
+    h+='</div></div>';
+  }
+  h+='<div style="height:24px"></div>';
+  c.innerHTML=h;
+}
+
+function renderHzGrid(c){
+  var blocks=[{l:'W1\u20134',r:[0,1,2,3]},{l:'W5\u20138',r:[4,5,6,7]},{l:'W9\u201312',r:[8,9,10,11]}];
+  var bl=blocks[hzBlock];var wks=bl.r;
+  var h='';
+  // Block tabs
+  h+='<div style="display:flex;gap:6px;padding:8px 20px">';
+  blocks.forEach(function(b,i){h+='<button class="hz-sbtn'+(i===hzBlock?' active':'')+'" style="'+(i===hzBlock?'':'background:var(--surface2)')+'" onclick="hzBlock='+i+';hzSel=null;renderHorizon()">'+b.l+' <span style="color:var(--muted);margin-left:4px;font-weight:400">'+HZ_WEEKS[b.r[0]][0]+'</span></button>';});
+  h+='</div>';
+  // Grid
+  h+='<div class="hg-wrap"><div class="hg-grid" style="grid-template-columns:90px repeat(4,1fr)">';
+  // Header row
+  h+='<div></div>';
+  wks.forEach(function(wi){h+='<div class="hg-hdr"><span style="font-weight:600;color:var(--text2)">W'+(wi+1)+'</span><br>'+HZ_WEEKS[wi][0]+'</div>';});
+  // Family row
+  h+='<div style="font-size:9px;color:var(--muted);padding:4px;display:flex;align-items:start">Family</div>';
+  wks.forEach(function(wi){
+    var evs=famForWeek(wi);var seen=new Set();
+    h+='<div style="background:rgba(255,255,255,.03);border-radius:4px;padding:3px;min-height:30px;display:flex;flex-direction:column;gap:1px">';
+    evs.forEach(function(e){if(seen.has(e.c))return;seen.add(e.c);var fc=HZ_FAM_COLORS[e.c]||HZ_FAM_COLORS.fam;
+      h+='<div style="font-size:7px;padding:1px 3px;border-radius:2px;background:'+fc.bg+';color:'+fc.tc+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+e.t+'</div>';});
+    h+='</div>';
+  });
+  // Divider
+  h+='<div style="grid-column:1/-1;height:1px;background:var(--border);margin:2px 0"></div>';
+  // Pillar rows
+  HZ_PILLARS.forEach(function(p){
+    h+='<div style="display:flex;align-items:center;gap:5px;padding:4px"><span style="width:6px;height:6px;border-radius:50%;background:'+p.c+';flex-shrink:0"></span><span style="font-size:10px;font-weight:600;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.nm+'</span></div>';
+    wks.forEach(function(wi){
+      var m=p.wk[wi];if(!m){h+='<div></div>';return;}
+      var isDone=hzIsDone(wi,p.id);var isSel=hzSel&&hzSel.p===p.id&&hzSel.w===wi;
+      h+='<div class="hg-cell'+(isDone?' hg-done':'')+(isSel?' hg-sel':'')+'" style="background:rgba('+hexToRgb(p.c)+',.08);'+(isSel?'border-color:'+p.c:'border-color:transparent')+'" onclick="hzSel=(hzSel&&hzSel.p===\''+p.id+'\'&&hzSel.w==='+wi+')?null:{p:\''+p.id+'\',w:'+wi+'};renderHorizon()">';
+      if(isDone)h+='<div style="position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">\u2713</div>';
+      h+='<span style="font-size:9px;line-height:1.3;color:'+p.c+'">'+m.s+'</span>';
+      if(m.b&&!isDone)h+='<span style="font-size:7px;font-weight:600;text-transform:uppercase;padding:1px 3px;border-radius:2px;background:rgba(0,0,0,.2);color:'+p.c+';width:fit-content;margin-top:1px">'+m.b+'</span>';
+      h+='</div>';
+    });
+  });
+  h+='</div></div>';
+  // Detail panel
+  if(hzSel){
+    var sp=HZ_PILLARS.find(function(p){return p.id===hzSel.p;});
+    if(sp){var sm=sp.wk[hzSel.w];var sd=hzIsDone(hzSel.w,sp.id);
+      h+='<div class="hg-detail"><div style="font-size:10px;font-weight:500;color:'+sp.c+'">'+sp.nm+' \u00B7 Week '+(hzSel.w+1)+'</div>';
+      h+='<div style="font-size:14px;font-weight:600;color:var(--text2);margin-top:4px">'+sm.s+(sd?' \u2014 complete':'')+'</div>';
+      h+='<div style="font-size:12px;color:var(--muted);line-height:1.5;margin-top:6px">'+(sm.a?sm.a+' \u2014 ':'')+sm.d+'</div></div>';
+    }
+  }
+  h+='<div style="height:24px"></div>';
+  c.innerHTML=h;
+}
+
+function renderHzCalendar(c){
+  var mo=CAL_MONTHS[hzCalMonth];
+  var h='';
+  // Month tabs
+  h+='<div style="display:flex;flex-wrap:wrap;gap:5px;padding:8px 20px">';
+  CAL_MONTHS.forEach(function(m,i){h+='<button class="hz-sbtn'+(i===hzCalMonth?' active':'')+'" style="'+(i===hzCalMonth?'':'background:var(--surface2);padding:5px 10px')+'" onclick="hzCalMonth='+i+';hzCalSel=null;renderHorizon()">'+m.n+'</button>';});
+  h+='</div>';
+  // Legend
+  h+='<div class="cal-legend">';
+  [{l:'Lee',c:'lee'},{l:'Susie',c:'susie'},{l:'Family',c:'fam'},{l:'Kids',c:'kids'},{l:'Action',c:'warn'},{l:'Birthday',c:'mile'}].forEach(function(i){
+    var fc=HZ_FAM_COLORS[i.c];h+='<span><span class="cld" style="background:'+fc.tc+'"></span>'+i.l+'</span>';});
+  h+='</div>';
+  // Calendar grid
+  h+='<div class="cal-grid">';
+  ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(function(d){h+='<div class="cal-hdr">'+d+'</div>';});
+  for(var e=0;e<mo.s;e++)h+='<div class="cal-cell" style="border-color:transparent"></div>';
+  for(var d=1;d<=mo.d;d++){
+    var ds=mo.y+'-'+(mo.m<10?'0':'')+mo.m+'-'+(d<10?'0':'')+d;
+    var devs=famForDate(ds);var busy=devs.length>0;var isSel=hzCalSel===ds;
+    h+='<div class="cal-cell'+(busy?' cal-busy':'')+(isSel?' cal-sel':'')+'"'+(busy?' onclick="hzCalSel=(hzCalSel===\''+ds+'\'?null:\''+ds+'\');renderHorizon()"':'')+'>';
+    h+='<span style="font-size:10px;font-weight:500;color:'+(busy?'var(--text2)':'var(--muted)')+'">'+d+'</span>';
+    if(busy){var seen=new Set();h+='<div class="cal-dots">';
+      devs.forEach(function(ev){if(seen.has(ev.c))return;seen.add(ev.c);var fc=HZ_FAM_COLORS[ev.c]||HZ_FAM_COLORS.fam;
+        h+='<span class="cal-cdot" style="background:'+fc.tc+'"></span>';});h+='</div>';}
+    h+='</div>';
+  }
+  h+='</div>';
+  // Selected day detail
+  if(hzCalSel){
+    var sevs=famForDate(hzCalSel);var seen2=new Set();
+    if(sevs.length){
+      var day=parseInt(hzCalSel.slice(-2));
+      h+='<div class="hg-detail"><div style="font-size:11px;font-weight:500;color:var(--muted);margin-bottom:8px">'+mo.n+' '+day+'</div>';
+      sevs.forEach(function(e){if(seen2.has(e.t))return;seen2.add(e.t);var fc=HZ_FAM_COLORS[e.c]||HZ_FAM_COLORS.fam;
+        h+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px"><span style="width:8px;height:8px;border-radius:2px;background:'+fc.tc+';flex-shrink:0;margin-top:3px"></span><div><div style="font-size:12px;font-weight:600;color:var(--text2)">'+e.t+'</div>'+(e.n?'<div style="font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4">'+e.n+'</div>':'')+'</div></div>';});
+      h+='</div>';
+    }
+  }
+  h+='<div style="height:24px"></div>';
+  c.innerHTML=h;
+}
+function hexToRgb(hex){var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return r+','+g+','+b;}
 
 function setTheme(){const h=new Date().getHours();document.body.classList.remove('theme-day','theme-evening','theme-night');if(h>=6&&h<18)document.body.classList.add('theme-day');else if(h>=18&&h<21)document.body.classList.add('theme-evening');else document.body.classList.add('theme-night');}
 
