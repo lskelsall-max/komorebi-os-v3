@@ -240,8 +240,7 @@
       <div id="weather" style="font-size:11px;color:var(--gold);margin-top:4px;"></div>
     </div>
   </div>
-  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
-  <div class="progress-text"><span>Daily checklist</span><span class="count" id="progressCount">0 / 0</span></div>
+  <div id="triScore" style="display:flex;gap:12px;margin-top:12px;justify-content:center"></div>
 </div>
 
 <div class="tab-nav">
@@ -452,12 +451,30 @@ function restoreState(){
   document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{try{if(localStorage.getItem(itemKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
   updateProgress();
 }
-function updateProgress(){
-  const all=document.querySelectorAll('#tab-daily .item[data-id]');
-  const done=document.querySelectorAll('#tab-daily .item[data-id].done');
-  const pct=all.length?Math.round((done.length/all.length)*100):0;
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressCount').textContent=done.length+' / '+all.length;
+function updateProgress(){}
+function updateTriScore(){
+  var dk=todayKey();var ds=dk.replace(/_/g,'-');
+  // Stacks %
+  var amSteps=STACK_DATA.am.steps.length;var pmSteps=STACK_DATA.pm.steps.length;var total=amSteps+pmSteps;
+  var amDone=STACK_DATA.am.steps.filter(function(_,i){return !!localStorage.getItem('ds-am-'+i+'-'+ds);}).length;
+  var pmDone=STACK_DATA.pm.steps.filter(function(_,i){return !!localStorage.getItem('ds-pm-'+i+'-'+ds);}).length;
+  var stackPct=total?Math.round(((amDone+pmDone)/total)*100):0;
+  // Markers %
+  var markerIds=['mk1','mk7','mk8','mk9'];
+  var markersLogged=markerIds.filter(function(id){return !!localStorage.getItem('kos_marker_'+dk+'_'+id);}).length;
+  var markerPct=Math.round((markersLogged/markerIds.length)*100);
+  // Horizon % (milestones this week)
+  var wi=Math.floor((new Date()-new Date(HZ_START+'T00:00:00'))/86400000/7);
+  var msDone=0;if(wi>=0&&wi<12){HZ_PILLARS.forEach(function(p){if(localStorage.getItem('kos_ms_'+wi+'_'+p.id)==='1')msDone++;});}
+  var hzPct=Math.round((msDone/6)*100);
+  // Render
+  var el=document.getElementById('triScore');if(!el)return;
+  function pill(label,pct,color){
+    return '<div style="text-align:center;flex:1;max-width:100px">'
+      +'<div style="font-size:20px;font-weight:700;font-family:DM Mono,monospace;color:'+color+';line-height:1">'+pct+'%</div>'
+      +'<div style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:3px">'+label+'</div></div>';
+  }
+  el.innerHTML=pill('Stacks',stackPct,'var(--gold)')+pill('Markers',markerPct,'var(--blue)')+pill('Horizon',hzPct,'var(--green)');
 }
 function saveConformity(){
   const all=document.querySelectorAll('#tab-daily .item[data-id]');
@@ -466,6 +483,7 @@ function saveConformity(){
   try{localStorage.setItem(conformKey(todayKey()),pct);}catch(e){}
   saveDailyScore();
   renderWeeklyTrend();
+  updateTriScore();
 }
 // old conformity chart removed — replaced by renderWeeklyTrend below
 function resetDay(){document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{el.classList.remove('done');try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}});updateProgress();saveConformity();}
@@ -544,7 +562,7 @@ function renderMarkers(){
   });
   updateMarkerSummary(ds);
 }
-function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);saveDailyScore();renderWeeklyTrend();}
+function saveMarker(id,ds,val){try{if(val)localStorage.setItem(markerKey(id,ds),val);else localStorage.removeItem(markerKey(id,ds));}catch(e){}updateMarkerSummary(ds);saveDailyScore();updateTriScore();renderWeeklyTrend();}
 function saveAllMarkers(){const ds=mds(markerDate);document.querySelectorAll('#markersContainer input[data-mid]').forEach(inp=>{const id=inp.getAttribute('data-mid');if(id&&inp.value)try{localStorage.setItem(markerKey(id,ds),inp.value);}catch(e){}});renderMarkers();var btn=document.getElementById('save-markers-btn');if(btn){btn.textContent='Saved \u2713';btn.style.background='var(--green)';setTimeout(function(){btn.textContent='Save markers';btn.style.background='var(--gold)';},2000);}}
 function updateMarkerSummary(ds){
   const vals={};MARKERS.forEach(m=>{try{vals[m.id]=localStorage.getItem(markerKey(m.id,ds))||'';}catch(e){vals[m.id]='';}});
@@ -932,6 +950,7 @@ function renderStacks(){
   document.getElementById('progressCount').textContent=checked+' / '+steps.length;
   saveDailyScore();
   renderWeeklyTrend();
+  updateTriScore();
 }
 function syncProtocolAutoItems(){
   // Check if all AM stack items done
@@ -1154,15 +1173,13 @@ function buildFamEvents(){
   a('2026-07-27','Susie departs UK','susie','Board meetings.');r('2026-07-28','2026-07-31','Susie in UK','susie');
   r('2026-08-01','2026-08-02','Susie returns','susie');r('2026-10-08','2026-10-11','Pick Cup Kent','lee','Golf trip.');
   a('2026-07-27','Flights needed','warn','Susie UK flights. Jul 27 – Aug 1.');
-  a('2026-09-26','SAA flights needed','warn','Family of 4, Sep 26 – Oct 3.');
   a('2026-10-08','Flights needed','warn','Lee Kent flights. Oct 8–11.');
   return E;
 }
 var HZ_FAM=buildFamEvents();
 var HZ_ACTIONS=[
-  {t:'SAA flights — Mauritius Sep 26–Oct 3',w:null},
   {t:'Lee flights — Pick Cup Kent Oct 8–11',w:null},
-  {t:'Susie UK flights — Jul 27',w:null},
+  {t:'Book UK flights — Susie Jul 27 (by end Apr)',w:null},
   {t:'Dr Erasmus — book last week Apr',w:1},
   {t:'Microneedling #2 — Nina vs RF',w:4},
   {t:'Dr Gluckman — frenum consult',w:6},
@@ -1176,7 +1193,7 @@ var hzView='week',hzWeek=0,hzBlock=0,hzCalMonth=0,hzSel=null,hzCalSel=null,hzExp
 
 function hzMsKey(w,pid){return 'kos_ms_'+w+'_'+pid;}
 function hzIsDone(w,pid){return localStorage.getItem(hzMsKey(w,pid))==='1';}
-function hzToggleDone(w,pid,ev){if(ev)ev.stopPropagation();var k=hzMsKey(w,pid);localStorage.getItem(k)==='1'?localStorage.removeItem(k):localStorage.setItem(k,'1');hzExpCard=null;renderHorizon();}
+function hzToggleDone(w,pid,ev){if(ev)ev.stopPropagation();var k=hzMsKey(w,pid);localStorage.getItem(k)==='1'?localStorage.removeItem(k):localStorage.setItem(k,'1');hzExpCard=null;renderHorizon();updateTriScore();}
 
 function famForWeek(wi){
   var start=new Date(HZ_START+'T00:00:00');start.setDate(start.getDate()+wi*7);
@@ -1354,7 +1371,7 @@ function setTheme(){const h=new Date().getHours();document.body.classList.remove
 // Auto-select morning or evening stack based on time
 var _h=new Date().getHours();
 if(_h>=18)stackSession='pm';
-initDate();renderStacks();renderMarkers();renderWeeklyTrend();loadSurf();setTheme();
+initDate();renderStacks();renderMarkers();renderWeeklyTrend();updateTriScore();loadSurf();setTheme();
 setInterval(setTheme,60000);loadWeather();
 </script>
 </body>
