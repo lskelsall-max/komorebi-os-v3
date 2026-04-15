@@ -34,11 +34,6 @@
   .date-display{text-align:right;}
   .date-display .day{font-size:17px;font-weight:600;color:var(--accent);}
   .date-display .date-str{font-size:10px;color:var(--muted);letter-spacing:0.5px;text-transform:uppercase;margin-top:1px;}
-  .progress-bar-wrap{margin-top:12px;background:var(--surface2);border-radius:4px;height:4px;overflow:hidden;}
-  .progress-bar{height:100%;background:var(--accent);border-radius:4px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
-  .progress-text{display:flex;justify-content:space-between;margin-top:6px;}
-  .progress-text span{font-size:11px;color:var(--muted);font-weight:500;}
-  .progress-text .count{color:var(--accent);font-weight:600;}
 
   /* TABS */
   .tab-nav{display:flex;gap:8px;padding:12px 20px;background:var(--bg);position:sticky;top:106px;z-index:99;overflow-x:auto;-webkit-overflow-scrolling:touch;}
@@ -444,13 +439,6 @@ function weekKey(id){const d=new Date();const s=new Date(d);s.setDate(d.getDate(
 function markerKey(id,ds){return `kos_marker_${ds}_${id}`;}
 function conformKey(ds){return `kos_conform_${ds}`;}
 
-// ── Daily toggle ──
-function toggle(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(itemKey(id),done?'1':'0');}catch(e){}updateProgress();saveConformity();}
-function toggleWeek(el){const id=el.dataset.id;const done=el.classList.toggle('done');try{localStorage.setItem(weekKey(id),done?'1':'0');}catch(e){}}
-function restoreState(){
-  document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{try{if(localStorage.getItem(itemKey(el.dataset.id))==='1')el.classList.add('done');}catch(e){}});
-  updateProgress();
-}
 function updateProgress(){}
 function updateTriScore(){
   var dk=todayKey();var ds=dk.replace(/_/g,'-');
@@ -476,17 +464,6 @@ function updateTriScore(){
   }
   el.innerHTML=pill('Stacks',stackPct,'var(--gold)')+pill('Markers',markerPct,'var(--blue)')+pill('Horizon',hzPct,'var(--green)');
 }
-function saveConformity(){
-  const all=document.querySelectorAll('#tab-daily .item[data-id]');
-  const done=document.querySelectorAll('#tab-daily .item[data-id].done');
-  const pct=all.length?Math.round((done.length/all.length)*100):0;
-  try{localStorage.setItem(conformKey(todayKey()),pct);}catch(e){}
-  saveDailyScore();
-  renderWeeklyTrend();
-  updateTriScore();
-}
-// old conformity chart removed — replaced by renderWeeklyTrend below
-function resetDay(){document.querySelectorAll('#tab-daily .item[data-id]').forEach(el=>{el.classList.remove('done');try{localStorage.removeItem(itemKey(el.dataset.id));}catch(e){}});updateProgress();saveConformity();}
 function toggleDay(id){document.getElementById(id).classList.toggle('collapsed');}
 function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
@@ -728,7 +705,6 @@ function renderStrength(){
   } else {
     document.getElementById('strCooldown').innerHTML='<div style="height:24px;"></div>';
   }
-  document.getElementById('strCooldown').innerHTML=ch;
 }
 
 function startRest(btn,secs){
@@ -785,32 +761,30 @@ function saveDailyScore(){
   // Evening stack completion
   var pmData=STACK_DATA.pm;var pmDone=pmData.steps.filter(function(_,i){return !!localStorage.getItem('ds-pm-'+i+'-'+dateStr);}).length;
   var pmTotal=pmData.steps.length;
-  // Protocol items
-  var protoIds=['f1','f2','f3','m6','f4','f5'];
-  var protoDone=protoIds.filter(function(id){return localStorage.getItem('kos_'+dk+'_'+id)==='1';}).length;
-  var protoTotal=protoIds.length;
   // Markers
   var recovery=localStorage.getItem('kos_marker_'+dk+'_mk1')||'';
   var stress=localStorage.getItem('kos_marker_'+dk+'_mk7')||'';
   var mood=localStorage.getItem('kos_marker_'+dk+'_mk8')||'';
   var lowStress=localStorage.getItem('kos_marker_'+dk+'_mk9')||'';
-  // Compute overall score: weighted average
-  // Stack: 40% (morning 25%, evening 15%), Protocol: 40%, Markers logged: 20%
+  // Horizon milestones this week
+  var wi=Math.floor((new Date()-new Date(HZ_START+'T00:00:00'))/86400000/7);
+  var hzDone=0;if(wi>=0&&wi<12){HZ_PILLARS.forEach(function(p){if(localStorage.getItem('kos_ms_'+wi+'_'+p.id)==='1')hzDone++;});}
+  // Compute overall score: 50% stacks + 25% markers + 25% horizon
   var stackPct=amTotal+pmTotal>0?Math.round(((amDone+pmDone)/(amTotal+pmTotal))*100):0;
-  var protoPct=protoTotal>0?Math.round((protoDone/protoTotal)*100):0;
   var markersLogged=(recovery?1:0)+(stress?1:0)+(mood?1:0)+(lowStress?1:0);
   var markerPct=Math.round((markersLogged/4)*100);
-  var overallScore=Math.round(stackPct*0.4+protoPct*0.4+markerPct*0.2);
+  var hzPct=Math.round((hzDone/6)*100);
+  var overallScore=Math.round(stackPct*0.5+markerPct*0.25+hzPct*0.25);
   var snapshot={
     date:dateStr,
     am:{done:amDone,total:amTotal},
     pm:{done:pmDone,total:pmTotal},
-    protocol:{done:protoDone,total:protoTotal},
     markers:{recovery:recovery||null,stress:stress?parseInt(stress):null,mood:mood?parseInt(mood):null,lowStress:lowStress||null},
+    horizon:{done:hzDone,total:6},
     score:overallScore,
     stackPct:stackPct,
-    protoPct:protoPct,
     markerPct:markerPct,
+    hzPct:hzPct,
     ts:new Date().toISOString()
   };
   try{localStorage.setItem('kos_day_'+dk,JSON.stringify(snapshot));}catch(e){}
@@ -855,8 +829,8 @@ function renderWeeklyTrend(){
   if(detailEl&&todayScore){
     detailEl.innerHTML='<div style="display:flex;gap:12px;justify-content:center;margin-top:8px">'
       +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--gold);font-family:DM Mono,monospace">'+todayScore.stackPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">STACKS</div></div>'
-      +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--accent);font-family:DM Mono,monospace">'+todayScore.protoPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">PROTOCOL</div></div>'
       +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--blue);font-family:DM Mono,monospace">'+todayScore.markerPct+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">MARKERS</div></div>'
+      +'<div style="text-align:center"><div style="font-size:18px;font-weight:700;color:var(--green);font-family:DM Mono,monospace">'+(todayScore.hzPct||0)+'%</div><div style="font-size:8px;color:var(--muted);letter-spacing:1px">HORIZON</div></div>'
       +'</div>';
   }
 }
@@ -946,22 +920,9 @@ function renderStacks(){
     h+='<button onclick="resetStacks()" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:DM Mono,monospace;font-size:10px;letter-spacing:1px;padding:10px 20px;border-radius:20px;cursor:pointer">Reset</button></div>';
   }
   document.getElementById('stack-steps').innerHTML=h;
-  // Update main progress bar to reflect stack completion
-  document.getElementById('progressBar').style.width=pct+'%';
-  document.getElementById('progressCount').textContent=checked+' / '+steps.length;
   saveDailyScore();
   renderWeeklyTrend();
   updateTriScore();
-}
-function syncProtocolAutoItems(){
-  // Check if all AM stack items done
-  var amData=STACK_DATA.am;var amDone=amData.steps.every(function(_,i){return !!localStorage.getItem('ds-am-'+i+'-'+todayKey().replace(/_/g,'-'));});
-  var amEl=document.getElementById('proto-am');
-  if(amEl){if(amDone)amEl.classList.add('done');else amEl.classList.remove('done');}
-  // Check if all PM stack items done
-  var pmData=STACK_DATA.pm;var pmDone=pmData.steps.every(function(_,i){return !!localStorage.getItem('ds-pm-'+i+'-'+todayKey().replace(/_/g,'-'));});
-  var pmEl=document.getElementById('proto-pm');
-  if(pmEl){if(pmDone)pmEl.classList.add('done');else pmEl.classList.remove('done');}
 }
 function resetStacks(){
   var sk=stackKey();var total=STACK_DATA[sk].steps.length;
@@ -969,33 +930,6 @@ function resetStacks(){
   renderStacks();
 }
 
-// ── Good to Great — Daily Philosophy ──
-var G2G=[
-  {label:'Level 5 Leadership',sub:'First Who, Then What',body:'The highest level of leader combines fierce professional will with personal humility. Get the right people on the bus before deciding where to drive.',apply:'Who is on your bus right now? Is anyone holding back the vehicle?'},
-  {label:'Hedgehog Concept',sub:'The three circles',body:'The intersection of: what you are deeply passionate about, what you can be the best in the world at, what drives your economic engine.',apply:'Yours: Operator-investor in travel, real assets, and capital allocation. OSP lives in the centre.'},
-  {label:'The Flywheel',sub:'No single defining action',body:'Just consistent pushing. Turn after turn, the flywheel builds momentum — then a breakthrough. Each turn makes the next easier.',apply:'Your flywheel: Advisory cash \u2192 Capital compounds \u2192 Ventures experiment \u2192 Reputation builds \u2192 Better advisory clients.'},
-  {label:'20 Mile March',sub:'Consistency over heroism',body:'In good times and bad, advance the same 20 miles. The discipline of consistency beats the chaos of intensity.',apply:'Your march: 90/90/1 daily. One memo per week. One new contact per week. Every week.'},
-  {label:'Fire Bullets, Then Cannonballs',sub:'Calibrate before committing',body:'Fire small, low-cost bullets to test what works. Once you have empirical validation, concentrate fire.',apply:'OSP is a bullet. Veraxus is a bullet. When one lands, concentrate. That becomes the cannonball.'},
-  {label:'Productive Paranoia',sub:'Prepare for uncertainty',body:'Build cash reserves and buffers disproportionate to the apparent risk. The 10x threat can come at any time.',apply:'Advisory cash buffer = 6 months. Capital in quality businesses. No single dependency.'},
-  {label:'Clock Building, Not Time Telling',sub:'Build the machine',body:'Build an institution that consistently produces right answers without you. The goal is not your own greatness.',apply:'Komorebi is the clock. Not Lee Kelsall the advisor. The holdco outlasts the individual.'},
-  {label:'Preserve the Core / Stimulate Progress',sub:'Yin and yang of endurance',body:'Core values and purpose never change. Practices, strategies, and structures must be willing to change.',apply:'Your core: integrity, discipline, family, freedom. Everything else is strategy.'},
-  {label:'Confront the Brutal Facts',sub:'The Stockdale Paradox',body:'Retain unwavering faith that you will prevail — while simultaneously confronting the most brutal facts of your current reality.',apply:'You will build something significant. Right now: cash is tight, focus is scattered. Both are true.'},
-  {label:'10x Multiplier',sub:'Genius of the AND',body:'Reject the tyranny of the OR. Pursue both purpose AND profit. Both stability AND growth. The AND is the multiplier.',apply:'Advisory AND capital AND ventures. Not one or another \u2014 the three arms compound each other.'},
-];
-function renderG2G(){
-  var el=document.getElementById('g2g-card');if(!el)return;
-  var dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
-  var g=G2G[dayOfYear%G2G.length];
-  el.innerHTML='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;border-left:3px solid var(--gold)">'
-    +'<div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:600">Daily Philosophy</div>'
-    +'<div style="font-size:15px;font-weight:500;color:var(--text2);margin-bottom:2px">'+g.label+'</div>'
-    +'<div style="font-size:11px;color:var(--muted);margin-bottom:10px;font-style:italic">'+g.sub+'</div>'
-    +'<div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px">'+g.body+'</div>'
-    +'<div style="border-top:1px solid var(--border);padding-top:10px">'
-    +'<div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:4px">Your application</div>'
-    +'<div style="font-size:12px;color:var(--muted);line-height:1.5;font-style:italic">'+g.apply+'</div>'
-    +'</div></div>';
-}
 
 // ── Init ──
 function initDate(){
@@ -1005,19 +939,6 @@ function initDate(){
   const dayMap=['block-sun','block-mon','block-tue','block-wed','block-thu','block-fri','block-sat'];
   const tb=document.getElementById(dayMap[d.getDay()]);
   if(tb){tb.classList.remove('collapsed');tb.classList.add('today-block');}
-}
-const PODCASTS=[
-  {id:'1f0qi12saeBEJmtnjOSszg',name:'Mental Models Daily'},
-  {id:'1VyK52NSZHaDKeMJzT4TSM',name:'The Knowledge Project'},
-  {id:'22fi0RqfoBACCuQDv97wFO',name:'Invest Like the Best'},
-  {id:'2IqXAVFR4e0Bmyjsdc8QzF',name:'Naval'},
-  {id:'5bC65RDvs3oxnLyqqvkUYX',name:'Acquired'},
-];
-function loadPodcast(){
-  const dayOfYear=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/(1000*60*60*24));
-  const p=PODCASTS[dayOfYear%PODCASTS.length];
-  const el=document.getElementById('podcastEmbed');
-  if(el) el.innerHTML=`<iframe style="border-radius:10px;width:100%;border:none;" src="https://open.spotify.com/embed/show/${p.id}?utm_source=generator&theme=0" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
 }
 function loadWeather(){
   const el=document.getElementById('weather');if(!el)return;
