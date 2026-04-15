@@ -910,7 +910,7 @@ function renderStacks(){
     h+='<div onclick="toggleStack('+i+')" style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;opacity:'+(done?'0.4':'1')+';transition:opacity .2s">';
     h+='<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted);min-width:16px;margin-top:5px">'+(i<9?'0':'')+(i+1)+'</div>';
     h+='<div style="width:24px;height:24px;border-radius:50%;border:1.5px solid '+(done?color:'var(--border)')+';background:'+(done?color:'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .25s">';
-    if(done)h+='<span style="color:var(--bg);font-size:11px;font-weight:700">\\u2713</span>';
+    if(done)h+='<span style="color:var(--bg);font-size:11px;font-weight:700">\u2713</span>';
     h+='</div>';
     h+='<div style="flex:1"><div style="font-size:15px;font-weight:400;color:'+(done?'var(--muted)':'var(--text2)')+';margin-bottom:3px;transition:color .2s'+(done?';text-decoration:line-through':'')+'">'+s.label+'</div>';
     h+='<div style="display:flex;gap:8px;align-items:center"><span style="font-family:DM Mono,monospace;font-size:9px;color:var(--muted)">'+s.time+'</span>';
@@ -921,9 +921,9 @@ function renderStacks(){
   });
   // Completion state
   if(checked===steps.length){
-    h='<div style="text-align:center;padding:40px 20px"><div style="font-size:48px;color:'+color+';margin-bottom:12px">\\u2726</div>';
+    h='<div style="text-align:center;padding:40px 20px"><div style="font-size:48px;color:'+color+';margin-bottom:12px">\u2726</div>';
     h+='<div style="font-size:22px;font-weight:300;font-style:italic;color:'+color+';margin-bottom:8px">'+(stackSession==='am'?'Stack complete.':'Day closed.')+'</div>';
-    h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:20px">'+checked+'/'+steps.length+' \\u00b7 100%</div>';
+    h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:1px;margin-bottom:20px">'+checked+'/'+steps.length+' \u00b7 100%</div>';
     h+='<button onclick="resetStacks()" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);font-family:DM Mono,monospace;font-size:10px;letter-spacing:1px;padding:10px 20px;border-radius:20px;cursor:pointer">Reset</button></div>';
   }
   document.getElementById('stack-steps').innerHTML=h;
