@@ -365,10 +365,11 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-tue">
-    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday <span style="color:var(--green);font-size:10px;margin-left:4px">CREATE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Z2 + Nature + Social</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~2 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-tue')"><div><div class="day-name">Tuesday — <span style="color:var(--blue);font-size:12px">Beach Circuit</span> <span style="color:var(--green);font-size:10px;margin-left:4px">CREATE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">AMRAP 40 min + Ocean dip + Nature + Social</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 cardio — swim or beach walk</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🏖️</span><span class="di-name">Beach Circuit — AMRAP 40 min</span><span class="di-dur">45 min</span></div>
+      <div class="day-item"><span class="di-icon">🌊</span><span class="di-name">Ocean dip — full immersion</span><span class="di-dur">5 min</span></div>
       <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature — barefoot beach or park</span><span class="di-dur">30 min</span></div>
       <div class="day-item"><span class="di-icon">🤝</span><span class="di-name">Social — Henry / Frank / Charlie</span><span class="di-dur">30 min</span></div>
     </div>
@@ -385,10 +386,11 @@
     </div>
   </div>
   <div class="day-block collapsed" id="block-thu">
-    <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday <span style="color:var(--blue);font-size:10px;margin-left:4px">EXECUTE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Active recovery + Z2 + Nature</div></div><div class="day-meta"><div class="day-load load-med">MED</div><div class="day-time">~1.75 hrs</div><div class="chevron">▼</div></div></div>
+    <div class="day-header" onclick="toggleDay('block-thu')"><div><div class="day-name">Thursday — <span style="color:var(--blue);font-size:12px">Beach Circuit</span> <span style="color:var(--blue);font-size:10px;margin-left:4px">EXECUTE</span></div><div style="font-size:10px;color:var(--muted);margin-top:2px;">AMRAP 40 min + Ocean dip + Nature</div></div><div class="day-meta"><div class="day-load load-high">HIGH</div><div class="day-time">~2.5 hrs</div><div class="chevron">▼</div></div></div>
     <div class="day-items">
       <div class="day-item"><span class="di-icon">🌅</span><span class="di-name">Daily stack</span><span class="di-dur">90 min</span></div>
-      <div class="day-item"><span class="di-icon">🏊</span><span class="di-name">Z2 — ruck or swim</span><span class="di-dur">50 min</span></div>
+      <div class="day-item"><span class="di-icon">🏖️</span><span class="di-name">Beach Circuit — AMRAP 40 min</span><span class="di-dur">45 min</span></div>
+      <div class="day-item"><span class="di-icon">🌊</span><span class="di-name">Ocean dip — full immersion</span><span class="di-dur">5 min</span></div>
       <div class="day-item"><span class="di-icon">🌿</span><span class="di-name">Nature walk</span><span class="di-dur">30 min</span></div>
     </div>
   </div>
@@ -620,6 +622,19 @@ const STR_SESSIONS=[
     {id:'C4',name:'Slant Board Calf Raise',sets:3,reps:'8',tempo:'3-1-3',load:'BW / 8kg',rest:90,color:'#9B8EC4',cues:['Right leads','3s eccentric','Full range — heel below board','Ankle mobility = hip mobility','Single leg when bilateral too easy'],subs:[{n:'Step Edge Calf Raise',d:'Same range principle'},{n:'Seated Calf Raise',d:'Loads soleus more'}]},
     {id:'C5',name:'Glute Bridge Isometric',sets:3,reps:'5 × 5s',tempo:'Isometric',load:'Bodyweight',rest:60,color:'#E07B4A',cues:['Right glute must fire first','If it doesn\'t — reset','5s hold, full contraction','Feel anterior hip opening','Closes every lower session'],subs:[]},
    ]},
+  {id:'D',label:'Beach Circuit',type:'Conditioning',color:'#4c8bf5',day:'Tue/Thu',
+   rules:['AMRAP 40 MIN','NO REST BETWEEN MOVES','SPRINT THE HILLS','FINISH IN THE OCEAN'],
+   exercises:[
+    {id:'D1',name:'Yoga Push-Ups',sets:1,reps:'10',tempo:'Controlled',load:'BW',rest:0,color:'#4c8bf5',cues:['Downward dog to chaturanga to upward dog','Full range — hips to floor on up-dog','Engage core through transition','Breathe: inhale up, exhale down'],subs:[{n:'Knee Push-Ups',d:'Same flow, knees down'},{n:'Pike Push-Ups',d:'Emphasise shoulders'}]},
+    {id:'D2',name:'Lunges',sets:1,reps:'10 each',tempo:'Controlled',load:'BW',rest:0,color:'#4c8bf5',cues:['Right leg leads','Knee tracks over toe','Upright torso — no forward lean','Drive through heel to stand'],subs:[{n:'Reverse Lunges',d:'Easier on knees'},{n:'Walking Lunges',d:'Cover ground'}]},
+    {id:'D3',name:'Lateral Jumps',sets:1,reps:'20',tempo:'Explosive',load:'BW',rest:0,color:'#4c8bf5',cues:['Land soft — absorb with both legs','Stay low in athletic stance','Quick off the ground','Right hip: controlled lateral loading'],subs:[{n:'Lateral Shuffle',d:'No jump, lower impact'},{n:'Skater Hops',d:'Single leg landing'}]},
+    {id:'D4',name:'Bear Crawls',sets:1,reps:'20m',tempo:'Controlled',load:'BW',rest:0,color:'#4c8bf5',cues:['Knees 1 inch off ground','Opposite hand and foot move together','Core braced — no hip sway','Sand adds instability — embrace it'],subs:[{n:'Crawl on Knees',d:'Build pattern first'},{n:'Crab Walk',d:'Posterior chain emphasis'}]},
+    {id:'D5',name:'Shoulder Taps',sets:1,reps:'10 each',tempo:'Controlled',load:'BW',rest:0,color:'#4c8bf5',cues:['High plank — hands under shoulders','Minimal hip rotation','Brace before lifting hand','Anti-rotation core work'],subs:[{n:'Plank Hold',d:'Static if taps too hard'},{n:'Bird Dog',d:'Same anti-rotation pattern'}]},
+    {id:'D6',name:'Reverse Bird Dogs',sets:1,reps:'8 each',tempo:'3-1-2',load:'BW',rest:0,color:'#9B8EC4',cues:['Table-top position, belly up','Extend opposite arm and leg','Squeeze glute at top','Right glute — make it fire'],subs:[{n:'Glute Bridge',d:'Simpler posterior chain activation'},{n:'Supine March',d:'Lighter alternative'}]},
+    {id:'D7',name:'Bird Dogs',sets:1,reps:'8 each',tempo:'3-1-2',load:'BW',rest:0,color:'#9B8EC4',cues:['Spine neutral throughout','Reach long — don\'t lift high','Right side: feel the glute, not the QL','Corrective as much as conditioning'],subs:[]},
+    {id:'D8',name:'Hill Sprints + 1km Run',sets:1,reps:'1km',tempo:'Max effort hills',load:'BW',rest:0,color:'#E07B4A',cues:['Sprint up every hill on the route','Jog the flats — recover between hills','End-to-end: 1km total distance','Push through — this is the finisher'],subs:[{n:'Flat Sprints',d:'30m repeats if no hills'},{n:'Stairs',d:'Find a staircase, sprint it'}]},
+    {id:'D9',name:'Ocean Dip',sets:1,reps:'5 min',tempo:'Immersion',load:'—',rest:0,color:'#4c8bf5',isDuration:true,cues:['Full immersion — head under','Breathe: 4 in, 8 out','Cold is the reward, not the punishment','Parasympathetic reset after circuit'],subs:[{n:'Cold Shower',d:'If ocean not accessible'},{n:'Ice Bath',d:'10–15°C, 3–5 min'}]},
+   ]},
 ];
 
 let currentSession=0;
@@ -631,33 +646,64 @@ function renderStrength(){
   const sess=STR_SESSIONS[currentSession];
   document.getElementById('strRules').innerHTML=sess.rules.map(r=>`<span class="str-rule">${r}</span>`).join('');
 
-  // Warmup
   const dk=todayKey();
-  let wh='<div class="section"><div class="section-label"><span class="icon">🔥</span><span class="title">Warmup · 8 min</span><div class="line"></div></div>';
-  WARMUP.forEach(w=>{
-    const key=`kos_str_warmup_${dk}_${w.id}`;const done=localStorage.getItem(key)==='1';
-    wh+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+w.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+w.name+'</div><div class="item-detail">'+w.detail+'</div><span class="item-tag tag-time">'+w.dur+'</span></div></div>';
-  });
-  wh+='</div>';
-  document.getElementById('strWarmup').innerHTML=wh;
+  const isCircuit=sess.id==='D';
+
+  // Warmup (skip for circuit)
+  if(!isCircuit){
+    let wh='<div class="section"><div class="section-label"><span class="icon">🔥</span><span class="title">Warmup · 8 min</span><div class="line"></div></div>';
+    WARMUP.forEach(w=>{
+      const key=`kos_str_warmup_${dk}_${w.id}`;const done=localStorage.getItem(key)==='1';
+      wh+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+w.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+w.name+'</div><div class="item-detail">'+w.detail+'</div><span class="item-tag tag-time">'+w.dur+'</span></div></div>';
+    });
+    wh+='</div>';
+    document.getElementById('strWarmup').innerHTML=wh;
+  } else {
+    document.getElementById('strWarmup').innerHTML='';
+  }
 
   // Exercises
-  let eh='<div class="section"><div class="section-label"><span class="icon">💪</span><span class="title">${sess.type} · ${sess.exercises.length} exercises</span><div class="line"></div></div></div>';
-  eh=eh.replace('${sess.type}',sess.type).replace('${sess.exercises.length}',sess.exercises.length);
+  let eh='';
+  if(isCircuit){
+    // AMRAP circuit rendering
+    const rounds=parseInt(localStorage.getItem(`kos_str_circuit_rounds_${dk}`)||'0');
+    eh+='<div style="padding:0 20px;margin-bottom:16px">';
+    eh+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">';
+    eh+='<div><div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:600">AMRAP · 40 minutes</div>';
+    eh+='<div style="font-size:11px;color:var(--muted);margin-top:2px">Complete full circuit, repeat. Log rounds.</div></div>';
+    eh+='<div style="display:flex;align-items:center;gap:8px">';
+    eh+='<button onclick="adjCircuitRounds(-1)" style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">\u2212</button>';
+    eh+='<div style="text-align:center"><div style="font-size:32px;font-weight:700;color:var(--accent);font-family:DM Mono,monospace;line-height:1">'+rounds+'</div><div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)">Rounds</div></div>';
+    eh+='<button onclick="adjCircuitRounds(1)" style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">+</button>';
+    eh+='</div></div>';
+    // AMRAP timer button
+    eh+='<div class="ex-rest-btn" onclick="startRest(this,2400)" id="rest-amrap" style="margin-bottom:16px"><div class="ex-rest-fill" style="width:0%"></div><span style="position:relative;z-index:1">Start 40:00 AMRAP timer</span></div>';
+    eh+='</div>';
+    eh+='<div class="section"><div class="section-label"><span class="icon">🏖️</span><span class="title">Circuit · '+sess.exercises.length+' moves · no rest</span><div class="line"></div></div></div>';
+  } else {
+    eh+='<div class="section"><div class="section-label"><span class="icon">💪</span><span class="title">'+sess.type+' · '+sess.exercises.length+' exercises</span><div class="line"></div></div></div>';
+  }
   sess.exercises.forEach(ex=>{
     const ssTag=ex.superset?`<span class="ex-superset">SS ${ex.superset}</span>`:ex.supersetWith?`<span class="ex-superset">SS ${ex.supersetWith}</span>`:'';
     eh+=`<div class="ex-card" id="ex-${ex.id}"><div class="ex-header" onclick="document.getElementById('ex-${ex.id}').classList.toggle('open')"><div style="display:flex;align-items:center;flex:1"><span class="ex-id">${ex.id}</span><span class="ex-name">${ex.name}</span>${ssTag}</div><span class="ex-load-tag">${ex.load}</span></div>`;
-    eh+=`<div class="ex-body"><div class="ex-stats"><div class="ex-stat"><div class="ex-stat-label">Load</div><div class="ex-stat-val">${ex.load}</div></div><div class="ex-stat"><div class="ex-stat-label">Reps</div><div class="ex-stat-val">${ex.reps}</div></div><div class="ex-stat"><div class="ex-stat-label">Tempo</div><div class="ex-stat-val">${ex.tempo}</div></div><div class="ex-stat"><div class="ex-stat-label">Rest</div><div class="ex-stat-val">${ex.rest}s</div></div></div>`;
-    eh+='<div class="ex-cues">';ex.cues.forEach(c=>{eh+=`<div class="ex-cue">${c}</div>`;});eh+='</div>';
-    // Set tracker
-    eh+='<div class="ex-sets">';
-    for(let s=1;s<=ex.sets;s++){
-      const sk=`kos_str_${dk}_${ex.id}_s${s}`;const sd=localStorage.getItem(sk)==='1';
-      eh+='<div class="set-box'+(sd?' done':'')+'" onclick="lsToggle(this,\''+sk+'\')">'+s+'</div>';
+    if(isCircuit){
+      // Circuit: show reps + cues only, no set tracking or rest timer
+      eh+=`<div class="ex-body"><div class="ex-stats" style="grid-template-columns:1fr 1fr"><div class="ex-stat"><div class="ex-stat-label">Reps</div><div class="ex-stat-val">${ex.reps}</div></div><div class="ex-stat"><div class="ex-stat-label">Tempo</div><div class="ex-stat-val">${ex.tempo}</div></div></div>`;
+    } else {
+      eh+=`<div class="ex-body"><div class="ex-stats"><div class="ex-stat"><div class="ex-stat-label">Load</div><div class="ex-stat-val">${ex.load}</div></div><div class="ex-stat"><div class="ex-stat-label">Reps</div><div class="ex-stat-val">${ex.reps}</div></div><div class="ex-stat"><div class="ex-stat-label">Tempo</div><div class="ex-stat-val">${ex.tempo}</div></div><div class="ex-stat"><div class="ex-stat-label">Rest</div><div class="ex-stat-val">${ex.rest}s</div></div></div>`;
     }
-    eh+='</div>';
-    // Rest timer button
-    eh+=`<div class="ex-rest-btn" onclick="startRest(this,${ex.rest})" id="rest-${ex.id}"><div class="ex-rest-fill" style="width:0%"></div><span style="position:relative;z-index:1">Start ${ex.rest}s rest</span></div>`;
+    eh+='<div class="ex-cues">';ex.cues.forEach(c=>{eh+=`<div class="ex-cue">${c}</div>`;});eh+='</div>';
+    if(!isCircuit){
+      // Set tracker
+      eh+='<div class="ex-sets">';
+      for(let s=1;s<=ex.sets;s++){
+        const sk=`kos_str_${dk}_${ex.id}_s${s}`;const sd=localStorage.getItem(sk)==='1';
+        eh+='<div class="set-box'+(sd?' done':'')+'" onclick="lsToggle(this,\''+sk+'\')">'+s+'</div>';
+      }
+      eh+='</div>';
+      // Rest timer button
+      eh+=`<div class="ex-rest-btn" onclick="startRest(this,${ex.rest})" id="rest-${ex.id}"><div class="ex-rest-fill" style="width:0%"></div><span style="position:relative;z-index:1">Start ${ex.rest}s rest</span></div>`;
+    }
     // Subs
     if(ex.subs&&ex.subs.length){
       eh+='<div class="ex-subs"><div class="ex-subs-title">Substitutions</div>';
@@ -668,13 +714,18 @@ function renderStrength(){
   });
   document.getElementById('strExercises').innerHTML=eh;
 
-  // Cooldown
-  let ch='<div class="section"><div class="section-label"><span class="icon">🧊</span><span class="title">Cooldown · 15 min</span><div class="line"></div></div>';
-  COOLDOWN.forEach(c=>{
-    const key=`kos_str_cooldown_${dk}_${c.id}`;const done=localStorage.getItem(key)==='1';
-    ch+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+c.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+c.name+'</div><div class="item-detail">'+c.detail+'</div><span class="item-tag tag-green">'+c.dur+'</span></div></div>';
-  });
-  ch+='</div><div style="height:24px;"></div>';
+  // Cooldown (skip for circuit — ocean dip is the cooldown)
+  if(!isCircuit){
+    let ch='<div class="section"><div class="section-label"><span class="icon">🧊</span><span class="title">Cooldown · 15 min</span><div class="line"></div></div>';
+    COOLDOWN.forEach(c=>{
+      const key=`kos_str_cooldown_${dk}_${c.id}`;const done=localStorage.getItem(key)==='1';
+      ch+='<div class="item'+(done?' done':'')+'" onclick="lsToggle(this,\''+key+'\')" data-id="'+c.id+'"><div class="checkbox"><span class="checkbox-tick">✓</span></div><div class="item-content"><div class="item-title">'+c.name+'</div><div class="item-detail">'+c.detail+'</div><span class="item-tag tag-green">'+c.dur+'</span></div></div>';
+    });
+    ch+='</div><div style="height:24px;"></div>';
+    document.getElementById('strCooldown').innerHTML=ch;
+  } else {
+    document.getElementById('strCooldown').innerHTML='<div style="height:24px;"></div>';
+  }
   document.getElementById('strCooldown').innerHTML=ch;
 }
 
@@ -691,6 +742,8 @@ function startRest(btn,secs){
     }
   },1000);
 }
+
+function adjCircuitRounds(delta){const dk=todayKey();const k=`kos_str_circuit_rounds_${dk}`;let r=parseInt(localStorage.getItem(k)||'0')+delta;if(r<0)r=0;localStorage.setItem(k,r);renderStrength();}
 
 // ── Commitments ──
 const COMMITMENTS=[
