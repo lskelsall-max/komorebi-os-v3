@@ -640,6 +640,7 @@ const STR_SESSIONS=[
 
 let currentSession=0;
 let restTimers={};
+function strWeekKey(){var d=new Date();var day=d.getDay();var diff=day===0?-6:1-day;var mon=new Date(d);mon.setDate(d.getDate()+diff);return mon.getFullYear()+'_'+mon.getMonth()+'_'+mon.getDate();}
 
 function renderStrength(){
   const tabs=document.getElementById('strTabs');
@@ -647,7 +648,7 @@ function renderStrength(){
   const sess=STR_SESSIONS[currentSession];
   document.getElementById('strRules').innerHTML=sess.rules.map(r=>`<span class="str-rule">${r}</span>`).join('');
 
-  const dk=todayKey();
+  const dk=strWeekKey();
   const isCircuit=sess.id==='D';
 
   // Warmup (skip for circuit)
@@ -744,7 +745,7 @@ function startRest(btn,secs){
   },1000);
 }
 
-function adjCircuitRounds(delta){const dk=todayKey();const k=`kos_str_circuit_rounds_${dk}`;let r=parseInt(localStorage.getItem(k)||'0')+delta;if(r<0)r=0;localStorage.setItem(k,r);renderStrength();}
+function adjCircuitRounds(delta){const dk=strWeekKey();const k=`kos_str_circuit_rounds_${dk}`;let r=parseInt(localStorage.getItem(k)||'0')+delta;if(r<0)r=0;localStorage.setItem(k,r);renderStrength();}
 
 // ── Commitments ──
 const COMMITMENTS=[
