@@ -72,6 +72,21 @@ html,body{
 }
 .track-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
+/* ── FIELDS ── */
+.field-label{
+  font-family:var(--mn);font-size:8px;letter-spacing:0.14em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:5px;
+}
+.field-line{
+  width:100%;background:none;border:none;
+  border-bottom:1px solid var(--border);
+  color:var(--text);font-family:var(--sf);font-size:18px;font-weight:300;
+  padding:7px 0;outline:none;margin-bottom:16px;
+  transition:border-color 0.2s;
+}
+.field-line:focus{border-color:var(--borderM);}
+.field-line::placeholder{color:var(--dim);}
+
 /* ── CHECKLIST ── */
 .check-item{
   display:flex;align-items:flex-start;gap:14px;
@@ -106,34 +121,51 @@ html,body{
 .check-item.done .check-text{color:var(--dim);}
 .check-item.done .check-sub{color:var(--dim);}
 
-/* ── VIEW BTN ── */
+/* ── BODY TRACK ── */
+.session-line{
+  font-family:var(--sf);font-size:22px;font-weight:400;
+  color:var(--text);margin-bottom:5px;line-height:1.2;
+}
+.session-meta{
+  font-family:var(--mn);font-size:9px;color:var(--muted);
+  letter-spacing:0.1em;margin-bottom:18px;
+}
 .view-btn{
   display:inline-block;font-family:var(--mn);font-size:8px;
   letter-spacing:0.18em;text-transform:uppercase;
   color:var(--ember);background:var(--emberF);
   border:1px solid rgba(176,96,48,0.28);
   padding:7px 14px;cursor:pointer;border-radius:1px;
-  margin:0 0 4px 34px;transition:opacity 0.2s;
+  margin-bottom:26px;transition:opacity 0.2s;
 }
 .view-btn:active{opacity:0.6;}
 
-/* ── REWARDS ── */
-.reward-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 0;border-bottom:1px solid var(--border);
-  cursor:pointer;-webkit-user-select:none;user-select:none;
+.time-row{
+  display:flex;gap:32px;margin-top:22px;
+  padding-top:22px;border-top:1px solid var(--border);
 }
-.reward-item:last-child{border-bottom:none;}
-.reward-item:active{opacity:0.6;}
-.reward-text{
-  font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);
+.time-label{
+  font-family:var(--mn);font-size:8px;letter-spacing:0.14em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:5px;
 }
-.reward-pips{display:flex;gap:5px;}
-.reward-pip{
-  width:18px;height:18px;border:1px solid var(--borderM);
-  border-radius:2px;background:none;transition:all 0.2s;
+.time-value{
+  font-family:var(--sf);font-size:24px;font-weight:300;color:var(--text);
 }
-.reward-pip.done{background:var(--sage);border-color:var(--sage);}
+
+/* ── SPINE TRACK ── */
+.spine-source{
+  font-family:var(--sf);font-size:13px;font-style:italic;
+  color:var(--muted);letter-spacing:0.03em;margin-bottom:22px;
+}
+.spine-field{
+  width:100%;background:none;border:none;
+  border-bottom:1px solid var(--border);
+  color:var(--text);font-family:var(--sf);font-size:17px;font-weight:300;
+  padding:7px 0;outline:none;margin-bottom:16px;
+  transition:border-color 0.2s;
+}
+.spine-field:focus{border-color:var(--sage);}
+.spine-field::placeholder{color:var(--dim);}
 
 /* ── WORKOUT OVERLAY ── */
 .overlay{
@@ -248,16 +280,58 @@ html,body{
     </div>
   </div>
 
-  <!-- ── DAILY PROTOCOL ── -->
+  <!-- ── VERAXUS ── -->
   <div class="track">
-    <div class="track-label" style="color:var(--gold)">Daily Protocol</div>
-    <div id="floors"></div>
+    <div class="track-label" style="color:var(--gold)">Veraxus</div>
+
+    <div class="field-label">Status</div>
+    <input class="field-line" id="v-status" placeholder="One sentence."
+      oninput="save('v-status',this.value)">
+
+    <div class="field-label">Next action</div>
+    <input class="field-line" id="v-next" placeholder="One sentence."
+      oninput="save('v-next',this.value)">
+
+    <div class="field-label" style="margin-top:20px;margin-bottom:8px">Demo readiness</div>
+    <div id="v-checklist"></div>
   </div>
 
-  <!-- ── WEEKLY REWARDS ── -->
+  <!-- ── BODY ── -->
+  <div class="track">
+    <div class="track-label" style="color:var(--ember)">Body</div>
+
+    <div class="session-line" id="session-line">—</div>
+    <div class="session-meta" id="session-meta"></div>
+    <div class="view-btn" onclick="openWorkout()">View workout →</div>
+
+    <div class="field-label" style="margin-bottom:8px">Daily correctives</div>
+    <div id="correctives"></div>
+
+    <div class="time-row">
+      <div>
+        <div class="time-label">Food cutoff</div>
+        <div class="time-value">17:30</div>
+      </div>
+      <div>
+        <div class="time-label">Bedtime</div>
+        <div class="time-value">20:00</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── THE SPINE ── -->
   <div class="track" style="border-bottom:none">
-    <div class="track-label" style="color:var(--sage)">Weekly Rewards</div>
-    <div id="rewards"></div>
+    <div class="track-label" style="color:var(--sage)">The Spine</div>
+
+    <div class="spine-source">The Odyssey — Emily Wilson translation</div>
+
+    <div class="field-label">Progress</div>
+    <input class="spine-field" id="spine-progress" placeholder="Book 1, line 1"
+      oninput="save('spine-progress',this.value)">
+
+    <div class="field-label">Passage today</div>
+    <input class="spine-field" id="spine-passage" placeholder="One line."
+      oninput="saveToday('spine-passage',this.value)">
   </div>
 
   <!-- MANTRA -->
@@ -291,36 +365,46 @@ html,body{
   </div>
 </div>
 
+<!-- HORIZON -->
+<div class="tab-content" id="tab-horizon">
+  <div class="hz-sub" id="hz-sub"></div>
+  <div id="hz-content"></div>
+</div>
+
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
-const FLOORS = [
-  { id:'f1', label:'Movement',           sub:'10-min corrective warmup',                          color:'ember', workout:true },
-  { id:'f2', label:'Veraxus',            sub:'One 60-min build session',                          color:'gold' },
-  { id:'f3', label:'Research',           sub:'One company page or idea written down',              color:'gold' },
-  { id:'f4', label:'Reading — morning',  sub:'One page · Seneca / Meditations / Tao Te Ching',   color:'gold' },
-  { id:'f5', label:'Reading — evening',  sub:'One page · The Odyssey',                            color:'gold' },
-  { id:'f6', label:'Family',             sub:'One fully-present moment per kid',                  color:'gold' },
-  { id:'f7', label:'Protein',            sub:'Smoothie + one intentional protein meal',           color:'sage' },
-];
-
-const REWARDS = [
-  { id:'r1', label:'Surf · Climb · Golf', target:1 },
-  { id:'r2', label:'Sauna',               target:2 },
-  { id:'r3', label:'Ice bath / Ocean dip',target:2 },
-  { id:'r4', label:'Strength session',    target:3 },
-  { id:'r5', label:'Cardio session',      target:3 },
+const READINESS = [
+  'MCP — quote engine live',
+  'Agent portal — deployed',
+  'Specials + packages — Machaba complete',
+  'Auth + login — working',
+  'PDF brochures — wired',
+  'Data audit — clean',
+  'Pitch deck — ready',
+  'Machaba Safaris — meeting booked',
+  'First operator pitch — done',
+  'First commercial agreement — signed',
 ];
 
 const CORRECTIVES = [
-  { id:'c1', label:'Spine roller',                    note:'Full length · 2 min' },
-  { id:'c2', label:'Right hip release',               note:'Hip flexor + psoas · 90s' },
-  { id:'c3', label:'Bird dogs',                       note:'5 each side · spine neutral' },
-  { id:'c4', label:'Hip bridge iso — right leads',    note:'5 × 5s hold' },
-  { id:'c5', label:'Dead hang',                       note:'Full decompression · 30s' },
+  { id:'c1', label:'Spine roller', note:'Full length · 2 min' },
+  { id:'c2', label:'Right hip release', note:'Hip flexor + psoas · 90s' },
+  { id:'c3', label:'Bird dogs', note:'5 each side · spine neutral' },
+  { id:'c4', label:'Hip bridge iso — right leads', note:'5 × 5s hold' },
+  { id:'c5', label:'Dead hang', note:'Full decompression · 30s' },
 ];
 
 const DAY_SESSIONS = { 1:'A', 3:'B', 5:'C' };
+const DAY_LABELS = {
+  0:{ line:'Sunday — Rest',               meta:'Recovery · No training' },
+  1:{ line:'Monday — Session A',          meta:'Push · Incline press, shoulder, pull-up' },
+  2:{ line:'Tuesday — Z2',                meta:'Swim or beach walk · 50 min' },
+  3:{ line:'Wednesday — Session B',       meta:'Pull · Row, face pull, curl, hang' },
+  4:{ line:'Thursday — Active Recovery',  meta:'Z2 ruck or swim · Nature walk' },
+  5:{ line:'Friday — Session C',          meta:'Hinge + Lower · Swing, RDL, glute' },
+  6:{ line:'Saturday — Surf',             meta:'Surf or sport · Family · Recovery' },
+};
 
 const WARMUP = [
   {id:'w1',name:'Dead Hang',              note:'Full decompression. Let everything go.',            dur:'30s'},
@@ -417,17 +501,6 @@ function loadBool(key){try{return localStorage.getItem('kos3_'+key)==='1';}catch
 function saveDailyBool(key,val){try{localStorage.setItem('kos3_'+key+'_'+todayStr(),val?'1':'0');}catch(e){}}
 function loadDailyBool(key){try{return localStorage.getItem('kos3_'+key+'_'+todayStr())==='1';}catch(e){return false;}}
 
-function weekKey(){
-  var d=new Date();
-  var day=d.getDay()||7;
-  var thu=new Date(d);thu.setDate(d.getDate()+4-day);
-  var yr=thu.getFullYear();
-  var wk=Math.ceil(((thu-new Date(yr,0,1))/864e5+1)/7);
-  return yr+'W'+String(wk).padStart(2,'0');
-}
-function saveWeekly(key,val){try{localStorage.setItem('kos3_wk_'+weekKey()+'_'+key,val);}catch(e){}}
-function loadWeekly(key){try{return localStorage.getItem('kos3_wk_'+weekKey()+'_'+key)||'0';}catch(e){return '0';}}
-
 // ── HEADER ───────────────────────────────────────────────────────────────────
 
 function renderHeader(){
@@ -442,68 +515,75 @@ function updateClock(){
   document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
 
-// ── FLOORS ───────────────────────────────────────────────────────────────────
+// ── VERAXUS ──────────────────────────────────────────────────────────────────
 
-function renderFloors(){
-  var c=document.getElementById('floors');
+function renderVeraxus(){
+  document.getElementById('v-status').value=load('v-status');
+  document.getElementById('v-next').value=load('v-next');
+  var c=document.getElementById('v-checklist');
   c.innerHTML='';
-  FLOORS.forEach(function(floor){
-    var checked=loadDailyBool(floor.id);
+  READINESS.forEach(function(label,i){
+    var key='v-ready-'+i;
+    var checked=loadBool(key);
     var el=document.createElement('div');
     el.className='check-item'+(checked?' done':'');
-    el.innerHTML='<div class="check-box'+(checked?' on-'+floor.color:'')+'"><span class="check-tick">✓</span></div>'
-      +'<div class="check-text">'+floor.label
-      +'<div class="check-sub">'+floor.sub+'</div></div>';
+    el.innerHTML='<div class="check-box'+(checked?' on-gold':'')+'"><span class="check-tick">✓</span></div>'
+      +'<div class="check-text">'+label+'</div>';
     el.onclick=function(){
-      var now=!loadDailyBool(floor.id);
-      saveDailyBool(floor.id,now);
+      var now=!loadBool(key);
+      saveBool(key,now);
       el.classList.toggle('done',now);
-      el.querySelector('.check-box').classList.toggle('on-'+floor.color,now);
+      el.querySelector('.check-box').classList.toggle('on-gold',now);
     };
     c.appendChild(el);
-    if(floor.workout){
-      var btn=document.createElement('div');
-      btn.className='view-btn';
-      btn.textContent='View workout →';
-      btn.onclick=function(){openWorkout();};
-      c.appendChild(btn);
-    }
   });
 }
 
-// ── REWARDS ──────────────────────────────────────────────────────────────────
+// ── BODY ─────────────────────────────────────────────────────────────────────
 
-function renderRewards(){
-  var c=document.getElementById('rewards');
+var currentSessIdx=0;
+
+function renderBody(){
+  var dow=new Date().getDay();
+  var info=DAY_LABELS[dow];
+  document.getElementById('session-line').textContent=info.line;
+  document.getElementById('session-meta').textContent=info.meta;
+  var sessId=DAY_SESSIONS[dow];
+  if(sessId)currentSessIdx=SESSIONS.findIndex(function(s){return s.id===sessId;});
+  var c=document.getElementById('correctives');
   c.innerHTML='';
-  REWARDS.forEach(function(r){
-    var count=parseInt(loadWeekly(r.id))||0;
+  CORRECTIVES.forEach(function(item){
+    var key='corr-'+item.id;
+    var checked=loadDailyBool(key);
     var el=document.createElement('div');
-    el.className='reward-item';
-    var pips='';
-    for(var i=0;i<r.target;i++){pips+='<div class="reward-pip'+(i<count?' done':'')+'"></div>';}
-    el.innerHTML='<div class="reward-text">'+r.label+'</div>'
-      +'<div class="reward-pips">'+pips+'</div>';
-    (function(rid,rtarget){
-      el.onclick=function(){
-        var cur=parseInt(loadWeekly(rid))||0;
-        var next=cur<rtarget?cur+1:0;
-        saveWeekly(rid,String(next));
-        renderRewards();
-      };
-    })(r.id,r.target);
+    el.className='check-item'+(checked?' done':'');
+    el.innerHTML='<div class="check-box'+(checked?' on-ember':'')+'"><span class="check-tick">✓</span></div>'
+      +'<div class="check-text">'+item.label
+      +'<div class="check-sub">'+item.note+'</div></div>';
+    el.onclick=function(){
+      var now=!loadDailyBool(key);
+      saveDailyBool(key,now);
+      el.classList.toggle('done',now);
+      el.querySelector('.check-box').classList.toggle('on-ember',now);
+    };
     c.appendChild(el);
   });
+}
+
+// ── SPINE ────────────────────────────────────────────────────────────────────
+
+function renderSpine(){
+  document.getElementById('spine-progress').value=load('spine-progress');
+  document.getElementById('spine-passage').value=loadToday('spine-passage');
 }
 
 // ── WORKOUT OVERLAY ──────────────────────────────────────────────────────────
-
-var currentSessIdx=0;
 
 function openWorkout(){renderWorkout();document.getElementById('workout-overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeWorkout(){document.getElementById('workout-overlay').classList.remove('open');document.body.style.overflow='';}
 
 function renderWorkout(){
+  // Session tabs
   document.getElementById('sess-tabs').innerHTML=SESSIONS.map(function(s,i){
     return '<div class="sess-tab'+(i===currentSessIdx?' active':'')+'" onclick="currentSessIdx='+i+';renderWorkout()">'
       +'<div class="sess-tab-day">'+s.day+'</div>'
@@ -597,15 +677,12 @@ function startRest(btn,secs){
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 
-var _dow=new Date().getDay();
-var _sessId=DAY_SESSIONS[_dow];
-if(_sessId)currentSessIdx=SESSIONS.findIndex(function(s){return s.id===_sessId;});
-
 renderHeader();
 updateClock();
 setInterval(updateClock,1000);
-renderFloors();
-renderRewards();
+renderVeraxus();
+renderBody();
+renderSpine();
 </script>
 </body>
 </html>
