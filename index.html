@@ -156,9 +156,10 @@ html,body{
   padding:6px 14px;cursor:pointer;border-radius:1px;
 }
 
-.sess-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:16px 24px;}
+.sess-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px;padding:16px 24px;}
+.sess-tabs::-webkit-scrollbar{display:none;}
 .sess-tab{
-  padding:12px 8px;background:none;border:1px solid var(--border);
+  flex-shrink:0;min-width:80px;padding:12px 8px;background:none;border:1px solid var(--border);
   cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;
 }
 .sess-tab.active{background:var(--emberF);border-color:rgba(176,96,48,0.35);}
@@ -232,6 +233,33 @@ html,body{
 .wo-item-name{font-family:var(--sf);font-size:16px;font-weight:300;flex:1;transition:color 0.2s;}
 .wo-item-dur{font-family:var(--mn);font-size:9px;color:var(--muted);letter-spacing:0.08em;padding-top:3px;}
 .wo-item.done .wo-item-name{color:var(--dim);}
+
+/* ── JOURNAL OVERLAY ── */
+.j-tabs{display:flex;gap:6px;padding:16px 24px;}
+.j-tab{flex:1;padding:10px 6px;background:none;border:1px solid var(--border);cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;font-family:var(--mn);font-size:9px;letter-spacing:0.15em;color:var(--muted);}
+.j-tab.active{background:var(--goldF);border-color:rgba(200,164,85,0.35);color:var(--gold);}
+.j-body{padding:0 24px 48px;}
+.j-q{padding:16px 0;border-bottom:1px solid var(--border);}
+.j-q-num{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:8px;}
+.j-q-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);margin-bottom:10px;line-height:1.35;}
+.j-textarea{width:100%;min-height:52px;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:11px;padding:10px 12px;resize:none;outline:none;line-height:1.6;border-radius:1px;}
+.j-affirm{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:14px;}
+.j-affirm-num{font-family:var(--mn);font-size:9px;color:var(--gold);min-width:16px;padding-top:3px;}
+.j-affirm-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);line-height:1.4;}
+.j-mantra{padding:20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);text-align:center;border-radius:1px;}
+.j-mantra-label{font-family:var(--mn);font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.j-mantra-text{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--text);line-height:1.6;}
+.affirm-btn{display:block;width:100%;margin-top:24px;padding:12px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
+.affirm-btn.done{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+
+/* ── COUNTER UI ── */
+.counter-row{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 4px;}
+.counter-info .counter-label{font-family:var(--mn);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
+.counter-info .counter-sub{font-family:var(--sf);font-size:13px;color:var(--muted);margin-top:3px;}
+.counter-ctrl{display:flex;align-items:center;gap:10px;}
+.counter-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--s1);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:1px;}
+.counter-val{font-family:var(--mn);font-size:22px;font-weight:500;color:var(--ember);text-align:center;min-width:44px;}
+.counter-unit{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;color:var(--muted);text-align:center;margin-top:1px;}
 </style>
 </head>
 <body>
@@ -277,7 +305,8 @@ html,body{
   </div>
   <div class="sess-tabs" id="sess-tabs"></div>
   <div class="wo-rules" id="wo-rules"></div>
-  <div class="wo-section">
+  <div id="wo-counter" style="display:none"></div>
+  <div id="wo-warmup-wrap" class="wo-section">
     <div class="wo-section-label">Warmup · 8 min</div>
     <div id="wo-warmup"></div>
   </div>
@@ -285,10 +314,23 @@ html,body{
     <div class="wo-section-label" id="wo-ex-label">Exercises</div>
     <div id="wo-exercises"></div>
   </div>
-  <div class="wo-section" style="padding-bottom:48px">
+  <div id="wo-cooldown-wrap" class="wo-section" style="padding-bottom:48px">
     <div class="wo-section-label">Cooldown · 15 min</div>
     <div id="wo-cooldown"></div>
   </div>
+</div>
+
+<!-- ── JOURNAL OVERLAY ── -->
+<div class="overlay" id="journal-overlay">
+  <div class="ov-header">
+    <div class="ov-title">Journal</div>
+    <button class="ov-close" onclick="closeJournal()">Close</button>
+  </div>
+  <div class="j-tabs">
+    <button class="j-tab active" id="j-opening-btn" onclick="setJournalTab('opening')">OPENING</button>
+    <button class="j-tab" id="j-closing-btn" onclick="setJournalTab('closing')">CLOSING</button>
+  </div>
+  <div class="j-body" id="j-body"></div>
 </div>
 
 <script>
@@ -296,12 +338,13 @@ html,body{
 
 const FLOORS = [
   { id:'f1', label:'Movement',           sub:'10-min corrective warmup',                          color:'ember', workout:true },
-  { id:'f2', label:'Veraxus',            sub:'One 60-min build session',                          color:'gold' },
-  { id:'f3', label:'Research',           sub:'One company page or idea written down',              color:'gold' },
-  { id:'f4', label:'Reading — morning',  sub:'One page · Seneca / Meditations / Tao Te Ching',   color:'gold' },
-  { id:'f5', label:'Reading — evening',  sub:'One page · The Odyssey',                            color:'gold' },
-  { id:'f6', label:'Family',             sub:'One fully-present moment per kid',                  color:'gold' },
-  { id:'f7', label:'Protein',            sub:'Smoothie + one intentional protein meal',           color:'sage' },
+  { id:'f2', label:'Journal',            sub:'Opening questions · Closing affirmations',           color:'gold',  journal:true },
+  { id:'f3', label:'Veraxus',            sub:'One 60-min build session',                          color:'gold' },
+  { id:'f4', label:'Research',           sub:'One company page or idea written down',              color:'gold' },
+  { id:'f5', label:'Reading — morning',  sub:'One page · Seneca / Meditations / Tao Te Ching',   color:'gold' },
+  { id:'f6', label:'Reading — evening',  sub:'One page · The Odyssey',                            color:'gold' },
+  { id:'f7', label:'Family',             sub:'One fully-present moment per kid',                  color:'gold' },
+  { id:'f8', label:'Protein',            sub:'Smoothie + one intentional protein meal',           color:'sage' },
 ];
 
 const REWARDS = [
@@ -403,6 +446,79 @@ const SESSIONS = [
        subs:[]},
     ]
   },
+  { id:'D', label:'Beach Circuit', type:'Conditioning', day:'Tue/Thu', circuit:true,
+    rules:['2 FULL LAPS','CIRCUIT → 800M RUN → REPEAT','SPRINT FINISHER × 5','FINISH IN THE OCEAN'],
+    exercises:[
+      {id:'D1',name:'Flow Push-Ups',       reps:'12',      tempo:'Controlled', load:'BW',
+       cues:['Downward dog → push-up → upward dog → reset','Right QL: if it grips under fatigue, drop to standard push-up','Full range — hips to floor on up-dog'],
+       subs:[{n:'Standard Push-Ups',d:'No flow, same rep quality'}]},
+      {id:'D2',name:'Bear Crawl',          reps:'40m',     tempo:'Controlled', load:'BW',
+       cues:['20m out, 20m back — knees 1 inch off ground','Opposite hand and foot move together','Can drop in Round 2 without compromising the session'],
+       subs:[{n:'Crab Walk',d:'Posterior chain emphasis'}]},
+      {id:'D3',name:'Single-Leg RDL',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
+       cues:['Right leg leads — always','3s down, own the bottom','Circuit 2: if hinge locks, drop to bilateral RDL right-side emphasis'],
+       subs:[{n:'Bilateral RDL',d:'Right-side emphasis if hinge degrades'}]},
+      {id:'D4',name:'Reverse Lunges',      reps:'8 each',  tempo:'Controlled', load:'BW',
+       cues:['Knee tracks over toe — upright torso','Sand consistently leaves right hip loose — confirmed across sessions'],
+       subs:[{n:'Forward Lunges',d:'Easier balance demand'}]},
+      {id:'D5',name:'Lateral Lunge',       reps:'8 each',  tempo:'Controlled', load:'BW',
+       cues:['Controlled tempo — no momentum','Hips level throughout','Sand only — hard surface remains higher risk'],
+       subs:[{n:'Lateral Step Touch',d:'Lower impact, same pattern'}]},
+      {id:'D6',name:'Glute Med ISO Hold',  reps:'10 × 3s', tempo:'Isometric',  load:'BW',
+       cues:['Side-lying — 10 reps × 3s hold each side','Right side first','Squeeze at top — not just range of motion'],
+       subs:[{n:'Clamshells',d:'Same target, lighter demand'}]},
+      {id:'D7',name:'Glute Bridge ISO',    reps:'2 × 30s', tempo:'Isometric',  load:'BW',
+       cues:['Full hip extension — right glute must fire','2 holds × 30s','Breathe slowly through each hold'],
+       subs:[{n:'Single-Leg Glute Bridge',d:'Right side leads'}]},
+      {id:'D8',name:'Bird Dog Prone',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
+       cues:['Spine neutral — reach long, don\'t lift high','Right side: feel the glute, not the QL','Pause at extension each rep'],
+       subs:[]},
+      {id:'D9',name:'Flat Sprints',        reps:'3 × 30m', tempo:'Max effort',  load:'BW',
+       cues:['True max effort — 30m only','Full walk-back recovery between reps','Find the flattest strip of sand'],
+       subs:[{n:'Hill Sprints',d:'If flat sand unavailable'}]},
+      {id:'D10',name:'Sand Run',           reps:'~800m',   tempo:'Easy pace',  load:'BW',
+       cues:['After each circuit — conversational pace only','Active hip loosening — not cardio work','2 laps = 2 runs'],
+       subs:[]},
+      {id:'D11',name:'Dune Sprint Finisher',reps:'5 rounds',tempo:'Max effort', load:'BW',
+       cues:['Glen Beach dunes — ~30s max effort up','1 exercise at the bottom, walk back = full recovery','5 rounds — WHOOP strain 5.7 in under 9 min'],
+       subs:[{n:'Flat Sprints × 5',d:'30m repeats if no dunes'}]},
+      {id:'D12',name:'Ocean Dip',          reps:'2-3 min', tempo:'Immersion',  load:'—',
+       cues:['Full immersion — head under','Breathe: 4 in, 8 out','Reduces hip inflammation before it builds','If done: no ice bath required Sunday'],
+       subs:[{n:'Cold Shower',d:'If ocean not accessible'}]},
+    ]
+  },
+  { id:'E', label:'Climbing', type:'Gym + Bouldering', day:'Sat', climbing:true,
+    rules:['BOULDERING FIRST','WEAKER HAND LEADS','RIGHT HIP WARM-UP NON-NEGOTIABLE','ANTAGONIST EVERY SESSION'],
+    exercises:[
+      {id:'E1',name:'Activation — Cardio + CARs',    reps:'15 min',        info:true,
+       cues:['5 min rower or jog — get warm','Shoulder CARs × 10 each direction + T-spine rotations','2 × 15 band pull-aparts + scap pull-ups','4–5 easy traverses or VB–V1 to finish'],
+       subs:[]},
+      {id:'E2',name:'Hip Openers — Right Side',       reps:'5 min',         info:true,
+       cues:['Right TFL/QL extra time — climbing reinforces hip flexor dominance','Standing hip CARs — right leads × 5','Right hip flexor stretch + lateral leg swings','Non-negotiable before any loading'],
+       subs:[]},
+      {id:'E3',name:'Bouldering',                     reps:'35 min',        info:true,
+       cues:['Highest neural demand — always first while fresh','Rest 2–3 min between hard attempts','B1–2: 60–75% onsight — silent feet, straight arms, hip rotation','B3: 2 limit-grade projects + 4–5 flash problems','B4: 50% effort — deload'],
+       subs:[]},
+      {id:'E4',name:'Routes — Belay Climbs',           reps:'35 min',        info:true,
+       cues:['Move here once power output drops','B1–2: 3 climbs at onsight grade — no falls, continuous movement','B3–4: 4 climbs, last at onsight+1 or pumpy traverse','B4 deload: 2 easy enjoyable routes'],
+       subs:[]},
+      {id:'E5',name:'Pull-ups',         sets:3,reps:'5',  tempo:'2-1-2',load:'BW → Weighted',rest:120,
+       cues:['Full dead hang at bottom every rep','B1: 3×5 BW · B2: 4×5 weighted · B3: 4×3 weighted · B4: 2×5 easy'],
+       subs:[{n:'Band-Assisted Pull-ups',d:'Control the negative'},{n:'Ring Rows',d:'If pull-ups not yet available'}]},
+      {id:'E6',name:'Antagonist Push',  sets:3,reps:'10', tempo:'2-0-2',load:'BW',           rest:90,
+       cues:['Prevents hunched climber posture — do not skip','B1: Push-ups 3×10 · B2: 3×12 · B3: Archer push-ups 3×6 · B4: Skip'],
+       subs:[{n:'Incline Push-ups',d:'If archer too advanced'}]},
+      {id:'E7',name:'Single-arm Dead Hangs',sets:3,reps:'20s / 10s',tempo:'Passive',load:'BW',rest:90,
+       cues:['WEAKER hand first — match reps, never exceed with stronger side','B1: Bilateral 3×20s · B2+: Single-arm 3×10s each (weaker first)','Let shoulder pack — no shrugging'],
+       subs:[{n:'Assisted Single-arm Hang',d:'Other hand lightly grips wrist'}]},
+      {id:'E8',name:'Core',             sets:3,reps:'30s', tempo:'Controlled',load:'BW',     rest:60,
+       cues:['B1: Hollow hold 3×30s','B2: Ring rows 3×8 + hollow hold','B3: Toes-to-bar 3×8 + hangboard 3×7s on / 3s off (20mm edge)','B4: Skip — deload'],
+       subs:[{n:'Plank',d:'If hollow hold compromises form'}]},
+      {id:'E9',name:'Cool-down',                       reps:'10 min',        info:true,
+       cues:['Forearm flossing — both arms','Lat/pec stretch','Hip flexor + QL stretch — right side extra time','Finger mobility — tendon glides'],
+       subs:[]},
+    ]
+  },
 ];
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
@@ -468,6 +584,13 @@ function renderFloors(){
       btn.onclick=function(){openWorkout();};
       c.appendChild(btn);
     }
+    if(floor.journal){
+      var jbtn=document.createElement('div');
+      jbtn.className='view-btn';
+      jbtn.textContent='Open journal →';
+      jbtn.onclick=function(){openJournal();};
+      c.appendChild(jbtn);
+    }
   });
 }
 
@@ -512,39 +635,82 @@ function renderWorkout(){
   }).join('');
 
   var sess=SESSIONS[currentSessIdx];
-  document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
-  document.getElementById('wo-ex-label').textContent=sess.type+' · '+sess.exercises.length+' exercises';
+  var isCircuit=sess.circuit===true;
+  var isClimbing=sess.climbing===true;
+  var isSpecial=isCircuit||isClimbing;
 
-  renderWOItems('wo-warmup',WARMUP,'warmup');
-  renderWOItems('wo-cooldown',COOLDOWN,'cooldown');
+  document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
+  document.getElementById('wo-warmup-wrap').style.display=isSpecial?'none':'block';
+  document.getElementById('wo-cooldown-wrap').style.display=isSpecial?'none':'block';
+
+  // Counter for circuit (laps) or climbing (programme week)
+  var counterEl=document.getElementById('wo-counter');
+  if(isCircuit){
+    var laps=parseInt(load('circuit_laps')||'0');
+    counterEl.style.display='block';
+    counterEl.innerHTML='<div class="counter-row">'
+      +'<div class="counter-info"><div class="counter-label">2 Laps · ~40 min</div><div class="counter-sub">Circuit → 800m run → repeat</div></div>'
+      +'<div class="counter-ctrl">'
+      +'<button class="counter-btn" onclick="adjLaps(-1)">−</button>'
+      +'<div><div class="counter-val">'+laps+'</div><div class="counter-unit">LAPS</div></div>'
+      +'<button class="counter-btn" onclick="adjLaps(1)">+</button>'
+      +'</div></div>';
+    document.getElementById('wo-ex-label').textContent='Circuit · 9 moves · then run';
+  } else if(isClimbing){
+    var climbWk=parseInt(load('climb_week')||'1');
+    counterEl.style.display='block';
+    counterEl.innerHTML='<div class="counter-row">'
+      +'<div class="counter-info"><div class="counter-label">8-Week Programme · 120 min</div><div class="counter-sub">'+climbBlockInfo(climbWk)+'</div></div>'
+      +'<div class="counter-ctrl">'
+      +'<button class="counter-btn" onclick="adjClimbWk(-1)">−</button>'
+      +'<div><div class="counter-val">W'+climbWk+'</div><div class="counter-unit">of 8</div></div>'
+      +'<button class="counter-btn" onclick="adjClimbWk(1)">+</button>'
+      +'</div></div>';
+    document.getElementById('wo-ex-label').textContent='Gym + Bouldering · 120 min';
+  } else {
+    counterEl.style.display='none';
+    document.getElementById('wo-ex-label').textContent=sess.type+' · '+sess.exercises.length+' exercises';
+    renderWOItems('wo-warmup',WARMUP,'warmup');
+    renderWOItems('wo-cooldown',COOLDOWN,'cooldown');
+  }
 
   var dk=todayStr();
   var eh='';
   sess.exercises.forEach(function(ex){
+    var isInfo=isCircuit||(isClimbing&&ex.info===true);
     var ss=ex.superset?'<span class="ex-ss">SS '+ex.superset+'</span>':ex.supersetWith?'<span class="ex-ss">SS '+ex.supersetWith+'</span>':'';
     eh+='<div class="ex-card" id="ex-'+ex.id+'">'
       +'<div class="ex-head" onclick="document.getElementById(\'ex-'+ex.id+'\').classList.toggle(\'open\')">'
       +'<span class="ex-id">'+ex.id+'</span>'
       +'<span class="ex-name">'+ex.name+'</span>'+ss
-      +'<span class="ex-load">'+ex.load+'</span></div>'
-      +'<div class="ex-body">'
-      +'<div class="ex-stats">'
-      +'<div class="ex-stat"><div class="ex-stat-l">Load</div><div class="ex-stat-v">'+ex.load+'</div></div>'
-      +'<div class="ex-stat"><div class="ex-stat-l">Reps</div><div class="ex-stat-v">'+ex.reps+'</div></div>'
-      +'<div class="ex-stat"><div class="ex-stat-l">Tempo</div><div class="ex-stat-v">'+ex.tempo+'</div></div>'
-      +'<div class="ex-stat"><div class="ex-stat-l">Rest</div><div class="ex-stat-v">'+ex.rest+'s</div></div>'
-      +'</div>'
-      +'<div class="ex-cues">'+ex.cues.map(function(c){return '<div class="ex-cue">'+c+'</div>';}).join('')+'</div>'
-      +'<div class="ex-sets">';
-    for(var s=1;s<=ex.sets;s++){
-      var sk='kos3_str_'+dk+'_'+ex.id+'_s'+s;
-      var sd=(function(k){try{return localStorage.getItem(k)==='1';}catch(e){return false;}})(sk);
-      eh+='<div class="set-box'+(sd?' done':'')+'" onclick="lsToggleStr(this,\''+sk+'\')">'+s+'</div>';
+      +'<span class="ex-load">'+(ex.load||'')+'</span></div>'
+      +'<div class="ex-body">';
+    if(isInfo){
+      eh+='<div class="ex-stats" style="grid-template-columns:1fr 1fr">'
+        +'<div class="ex-stat"><div class="ex-stat-l">Duration</div><div class="ex-stat-v">'+ex.reps+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Effort</div><div class="ex-stat-v">'+(ex.tempo||'—')+'</div></div>'
+        +'</div>';
+    } else {
+      eh+='<div class="ex-stats">'
+        +'<div class="ex-stat"><div class="ex-stat-l">Load</div><div class="ex-stat-v">'+(ex.load||'—')+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Reps</div><div class="ex-stat-v">'+ex.reps+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Tempo</div><div class="ex-stat-v">'+(ex.tempo||'—')+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Rest</div><div class="ex-stat-v">'+ex.rest+'s</div></div>'
+        +'</div>';
     }
-    eh+='</div>'
-      +'<div class="rest-btn" onclick="startRest(this,'+ex.rest+')" id="rest-'+ex.id+'">'
-      +'<div class="rest-fill" style="width:0%"></div>'
-      +'<span style="position:relative;z-index:1">Start '+ex.rest+'s rest</span></div>';
+    eh+='<div class="ex-cues">'+ex.cues.map(function(c){return '<div class="ex-cue">'+c+'</div>';}).join('')+'</div>';
+    if(!isInfo){
+      eh+='<div class="ex-sets">';
+      for(var s=1;s<=ex.sets;s++){
+        var sk='kos3_str_'+dk+'_'+ex.id+'_s'+s;
+        var sd=(function(k){try{return localStorage.getItem(k)==='1';}catch(e){return false;}})(sk);
+        eh+='<div class="set-box'+(sd?' done':'')+'" onclick="lsToggleStr(this,\''+sk+'\')">'+s+'</div>';
+      }
+      eh+='</div>'
+        +'<div class="rest-btn" onclick="startRest(this,'+ex.rest+')" id="rest-'+ex.id+'">'
+        +'<div class="rest-fill" style="width:0%"></div>'
+        +'<span style="position:relative;z-index:1">Start '+ex.rest+'s rest</span></div>';
+    }
     if(ex.subs&&ex.subs.length){
       eh+='<div class="ex-subs"><div class="ex-subs-title">Substitutions</div>';
       ex.subs.forEach(function(s){eh+='<div class="ex-sub"><strong style="color:var(--text)">'+s.n+'</strong> — '+s.d+'</div>';});
@@ -553,6 +719,16 @@ function renderWorkout(){
     eh+='</div></div>';
   });
   document.getElementById('wo-exercises').innerHTML=eh;
+}
+
+function adjLaps(d){var v=Math.max(0,parseInt(load('circuit_laps')||'0')+d);save('circuit_laps',String(v));renderWorkout();}
+function adjClimbWk(d){var v=Math.min(8,Math.max(1,parseInt(load('climb_week')||'1')+d));save('climb_week',String(v));renderWorkout();}
+function climbBlockInfo(w){
+  if(w<=2)return 'Block 1 — Movement Base';
+  if(w<=4)return 'Block 2 — Strength Base';
+  if(w<=6)return 'Block 3 — Power';
+  if(w===7)return 'Block 4 — Peak';
+  return 'Block 4 — Deload';
 }
 
 function renderWOItems(containerId,items,prefix){
@@ -594,6 +770,69 @@ function startRest(btn,secs){
       setTimeout(function(){fill.style.width='0%';label.textContent='Start '+secs+'s rest';},2000);}
   },1000);
 }
+
+// ── JOURNAL ──────────────────────────────────────────────────────────────────
+
+var OPENING_QUESTIONS=[
+  'What am I grateful for today?',
+  'What are my intentions for today?',
+  'What mood do I want to create?',
+  'What are my three priorities?',
+  'What are my key actions?',
+  'What obstacles might arise — and how will I meet them?',
+  'Who can I appreciate or connect with today?',
+  'What is the one thing to focus on above all else?'
+];
+var CLOSING_AFFIRMATIONS=[
+  'I am a business builder, investor, adventurer and lifelong learner.',
+  'I have designed two highly successful businesses in 12 years.',
+  'I create positive outcomes for my business partners.',
+  'I move freely — climb, surf, lift, swing, run and swim.',
+  'I have a magnetic personality — confidence, intelligence, kindness.',
+  'I am exactly where I\'m meant to be.'
+];
+
+var journalTab='opening';
+
+function openJournal(){renderJournal();document.getElementById('journal-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeJournal(){document.getElementById('journal-overlay').classList.remove('open');document.body.style.overflow='';}
+function setJournalTab(t){journalTab=t;renderJournal();}
+
+function renderJournal(){
+  document.getElementById('j-opening-btn').classList.toggle('active',journalTab==='opening');
+  document.getElementById('j-closing-btn').classList.toggle('active',journalTab==='closing');
+  var dk=todayStr();
+  var h='';
+  if(journalTab==='opening'){
+    OPENING_QUESTIONS.forEach(function(q,i){
+      var key='kos3_jq_'+i+'_'+dk;var saved='';
+      try{saved=localStorage.getItem(key)||'';}catch(e){}
+      h+='<div class="j-q">'
+        +'<div class="j-q-num">0'+(i+1)+'</div>'
+        +'<div class="j-q-text">'+q+'</div>'
+        +'<textarea class="j-textarea" data-key="'+key+'" oninput="saveJQ(this)" placeholder="...">'
+        +saved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+        +'</div>';
+    });
+  } else {
+    var affirmKey='kos3_affirm_'+dk;var affirmed=false;
+    try{affirmed=localStorage.getItem(affirmKey)==='1';}catch(e){}
+    h+='<div class="j-mantra"><div class="j-mantra-label">Daily Mantra</div>'
+      +'<div class="j-mantra-text">I am relentless, disciplined and focused.<br>Every day, I move closer to my potential.</div></div>';
+    CLOSING_AFFIRMATIONS.forEach(function(a,i){
+      h+='<div class="j-affirm">'
+        +'<div class="j-affirm-num">'+(i+1)+'</div>'
+        +'<div class="j-affirm-text">'+a+'</div>'
+        +'</div>';
+    });
+    h+='<button class="affirm-btn'+(affirmed?' done':'')+'" onclick="toggleAffirm(\''+affirmKey+'\')">'
+      +(affirmed?'✓ Affirmed today':'Affirm')+'</button>';
+  }
+  document.getElementById('j-body').innerHTML=h;
+}
+
+function saveJQ(el){var key=el.getAttribute('data-key');if(key)try{localStorage.setItem(key,el.value);}catch(e){}}
+function toggleAffirm(key){var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 
