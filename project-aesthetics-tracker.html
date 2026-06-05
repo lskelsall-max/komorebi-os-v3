@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Aesthetics — Komorebi</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0e0e;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --gold: #b8933a;
+    --gold-light: #d4ab55;
+    --muted: #8a8070;
+    --rule: #d4cfc4;
+    --success: #4a7c59;
+    --white: #faf8f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .header-left h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .header-left h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .header-left .subtitle {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .header-right .date {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .header-right .phase {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+
+  /* MOTTO */
+  .motto {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 16px;
+    border-left: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* COMMITMENT TRACKER */
+  .commitment {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .commitment:last-child {
+    border-bottom: none;
+  }
+
+  .commitment-info {}
+
+  .commitment-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 3px;
+  }
+
+  .commitment-detail {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: transparent;
+    position: relative;
+    font-size: 9px;
+    color: transparent;
+  }
+
+  .dot:hover {
+    border-color: var(--gold);
+    background: var(--cream);
+  }
+
+  .dot.done {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .dot.done::after {
+    content: '✓';
+    font-size: 11px;
+    color: var(--paper);
+  }
+
+  .commitment-count {
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  .count-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .count-num span {
+    color: var(--gold);
+  }
+
+  .count-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* INTERVENTIONS */
+  .intervention {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .intervention:last-child { border-bottom: none; }
+
+  .intervention-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 400;
+  }
+
+  .intervention-detail {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .intervention-cost {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .intervention-toggle {
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    position: relative;
+    background: transparent;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .intervention-toggle::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--ink);
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .intervention-toggle.done {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .intervention-toggle.done::after {
+    background: var(--paper);
+    left: 18px;
+  }
+
+  /* BUDGET */
+  .budget-bar-wrap {
+    margin-top: 8px;
+  }
+
+  .budget-numbers {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .budget-spent {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+  }
+
+  .budget-spent span { color: var(--gold); }
+
+  .budget-total {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--muted);
+    align-self: flex-end;
+    padding-bottom: 6px;
+  }
+
+  .budget-bar {
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .budget-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  .budget-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .budget-item {
+    padding: 12px;
+    background: var(--cream);
+    border-radius: 2px;
+  }
+
+  .budget-item-name {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .budget-item-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  /* DAILY HABITS */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .habit-row:last-child { border-bottom: none; }
+
+  .habit-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+  }
+
+  .habit-streak {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .habit-check {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: transparent;
+    font-size: 14px;
+    color: transparent;
+  }
+
+  .habit-check:hover { background: var(--cream); }
+
+  .habit-check.done {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* NOTES */
+  .notes-area {
+    width: 100%;
+    background: var(--cream);
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    padding: 12px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--ink);
+    resize: none;
+    outline: none;
+    min-height: 80px;
+  }
+
+  .notes-area::placeholder { color: var(--muted); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .save-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .save-btn:hover { background: var(--gold); }
+
+  .save-msg {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--success);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  /* PHASE TIMELINE */
+  .timeline {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    margin-bottom: 8px;
+    border: 1px solid var(--rule);
+  }
+
+  .timeline-phase {
+    background: var(--paper);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .timeline-phase:hover { background: var(--cream); }
+
+  .timeline-phase.active { background: var(--ink); }
+
+  .timeline-phase-num {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .timeline-phase.active .timeline-phase-num { color: var(--gold); }
+
+  .timeline-phase-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .timeline-phase.active .timeline-phase-name { color: var(--paper); }
+
+  .timeline-phase-period {
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .timeline-phase.active .timeline-phase-period { color: rgba(245,240,232,0.5); }
+
+  @media (max-width: 480px) {
+    .header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .header-right { text-align: left; }
+    .header-left h1 { font-size: 32px; }
+    .budget-breakdown { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; }
+    .intervention { grid-template-columns: 1fr auto; }
+    .intervention-cost { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Project <em>Aesthetics</em></h1>
+      <div class="subtitle">Komorebi Holdings — Personal Protocol</div>
+    </div>
+    <div class="header-right">
+      <div class="date" id="current-date"></div>
+      <div class="phase">Phase I — Jawline & Neck</div>
+    </div>
+  </div>
+
+  <!-- MOTTO -->
+  <div class="motto">"No surrender. Victory at all costs."</div>
+
+  <!-- PHASE TIMELINE -->
+  <div class="section">
+    <div class="section-label">Phases</div>
+    <div class="timeline">
+      <div class="timeline-phase active">
+        <div class="timeline-phase-num">Phase I</div>
+        <div class="timeline-phase-name">Jaw & Neck</div>
+        <div class="timeline-phase-period">Months 1–6</div>
+      </div>
+      <div class="timeline-phase">
+        <div class="timeline-phase-num">Phase II</div>
+        <div class="timeline-phase-name">Hair Restoration</div>
+        <div class="timeline-phase-period">Months 6–12</div>
+      </div>
+      <div class="timeline-phase">
+        <div class="timeline-phase-num">Phase III</div>
+        <div class="timeline-phase-name">Dental</div>
+        <div class="timeline-phase-period">Months 12–18</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE COMMITMENTS -->
+  <div class="section">
+    <div class="section-label">10-Week Commitments</div>
+
+    <div class="commitment" data-key="microneedling" data-total="5">
+      <div class="commitment-info">
+        <div class="commitment-name">Microneedling</div>
+        <div class="commitment-detail">Nina — monthly cadence — collagen rebuild + skin quality</div>
+        <div class="dots" id="dots-microneedling"></div>
+      </div>
+      <div class="commitment-count">
+        <div class="count-num"><span id="done-microneedling">0</span>/5</div>
+        <div class="count-label">Sessions</div>
+      </div>
+    </div>
+
+    <div class="commitment" data-key="physio" data-total="10">
+      <div class="commitment-info">
+        <div class="commitment-name">Physiotherapy</div>
+        <div class="commitment-detail">Right hip, spine, structural asymmetry — weekly</div>
+        <div class="dots" id="dots-physio"></div>
+      </div>
+      <div class="commitment-count">
+        <div class="count-num"><span id="done-physio">0</span>/10</div>
+        <div class="count-label">Sessions</div>
+      </div>
+    </div>
+
+    <div class="commitment" data-key="therapy" data-total="10">
+      <div class="commitment-info">
+        <div class="commitment-name">Therapy</div>
+        <div class="commitment-detail">Mind, emotional resilience, attitude reset — weekly</div>
+        <div class="dots" id="dots-therapy"></div>
+      </div>
+      <div class="commitment-count">
+        <div class="count-num"><span id="done-therapy">0</span>/10</div>
+        <div class="count-label">Sessions</div>
+      </div>
+    </div>
+
+    <div class="commitment" data-key="surf" data-total="10">
+      <div class="commitment-info">
+        <div class="commitment-name">Surf Lessons</div>
+        <div class="commitment-detail">Joy, physicality, identity — weekly</div>
+        <div class="dots" id="dots-surf"></div>
+      </div>
+      <div class="commitment-count">
+        <div class="count-num"><span id="done-surf">0</span>/10</div>
+        <div class="count-label">Lessons</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDICAL INTERVENTIONS -->
+  <div class="section">
+    <div class="section-label">Medical Interventions — Phase I</div>
+
+    <div class="intervention" data-ikey="lipo">
+      <div>
+        <div class="intervention-name">Submental Liposuction</div>
+        <div class="intervention-detail">Dr Erasmus — cornerstone procedure — permanent</div>
+      </div>
+      <div class="intervention-cost">R16,000</div>
+      <div class="intervention-toggle" onclick="toggleIntervention(this)"></div>
+    </div>
+
+    <div class="intervention" data-ikey="morpheus">
+      <div>
+        <div class="intervention-name">Morpheus8</div>
+        <div class="intervention-detail">Skin tightening post-lipo — 2 sessions</div>
+      </div>
+      <div class="intervention-cost">R10,000</div>
+      <div class="intervention-toggle" onclick="toggleIntervention(this)"></div>
+    </div>
+
+    <div class="intervention" data-ikey="teartrough">
+      <div>
+        <div class="intervention-name">Tear Trough Filler</div>
+        <div class="intervention-detail">Dr Erasmus — under-eye volume restoration</div>
+      </div>
+      <div class="intervention-cost">R6,000</div>
+      <div class="intervention-toggle" onclick="toggleIntervention(this)"></div>
+    </div>
+
+    <div class="intervention" data-ikey="masseter">
+      <div>
+        <div class="intervention-name">Masseter Botox</div>
+        <div class="intervention-detail">Dr Erasmus — jawline definition from muscle angle</div>
+      </div>
+      <div class="intervention-cost">R3,000</div>
+      <div class="intervention-toggle" onclick="toggleIntervention(this)"></div>
+    </div>
+
+    <div class="intervention" data-ikey="botox">
+      <div>
+        <div class="intervention-name">Botox — Forehead & Crow's Feet</div>
+        <div class="intervention-detail">Dr Erasmus — ongoing × 2 sessions</div>
+      </div>
+      <div class="intervention-cost">R8,000</div>
+      <div class="intervention-toggle" onclick="toggleIntervention(this)"></div>
+    </div>
+
+  </div>
+
+  <!-- BUDGET -->
+  <div class="section">
+    <div class="section-label">Phase I Budget — R100,000</div>
+    <div class="budget-bar-wrap">
+      <div class="budget-numbers">
+        <div class="budget-spent">R<span id="budget-spent">0</span></div>
+        <div class="budget-total">of R100,000</div>
+      </div>
+      <div class="budget-bar">
+        <div class="budget-fill" id="budget-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="budget-breakdown">
+      <div class="budget-item">
+        <div class="budget-item-name">Committed</div>
+        <div class="budget-item-amount">R55,500</div>
+      </div>
+      <div class="budget-item">
+        <div class="budget-item-name">Remaining Reserve</div>
+        <div class="budget-item-amount" id="budget-remaining">R44,500</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY HABITS -->
+  <div class="section">
+    <div class="section-label">Daily Protocol — Today</div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">5am Wake</div>
+        <div class="habit-streak" id="streak-wake">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'wake')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">Cold Compression — Eyes</div>
+        <div class="habit-streak" id="streak-cold">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'cold')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">2L Hydration</div>
+        <div class="habit-streak" id="streak-hydration">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'hydration')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">Low Salt — under 2,000mg</div>
+        <div class="habit-streak" id="streak-salt">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'salt')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">FitMind</div>
+        <div class="habit-streak" id="streak-fitmind">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'fitmind')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">Gua Sha</div>
+        <div class="habit-streak" id="streak-guasha">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'guasha')"></div>
+    </div>
+
+    <div class="habit-row">
+      <div>
+        <div class="habit-name">Collagen Peptides</div>
+        <div class="habit-streak" id="streak-collagen">Streak: 0 days</div>
+      </div>
+      <div class="habit-check" onclick="toggleHabit(this, 'collagen')"></div>
+    </div>
+
+  </div>
+
+  <!-- NOTES -->
+  <div class="section">
+    <div class="section-label">Session Notes</div>
+    <textarea class="notes-area" id="session-notes" placeholder="Log observations, reactions, next steps..."></textarea>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">Komorebi — Personal OS</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="save-msg" id="save-msg">Saved.</div>
+      <button class="save-btn" onclick="saveAll()">Save Progress</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // STATE
+  const state = {
+    commitments: { microneedling: [], physio: [], therapy: [], surf: [] },
+    interventions: {},
+    habits: {},
+    streaks: {},
+    notes: ''
+  };
+
+  // DATE
+  const now = new Date();
+  document.getElementById('current-date').textContent =
+    now.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+
+  // LOAD
+  function loadState() {
+    const saved = localStorage.getItem('project-aesthetics');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      Object.assign(state, parsed);
+    }
+  }
+
+  // SAVE
+  function saveAll() {
+    state.notes = document.getElementById('session-notes').value;
+    localStorage.setItem('project-aesthetics', JSON.stringify(state));
+    const msg = document.getElementById('save-msg');
+    msg.style.opacity = 1;
+    setTimeout(() => msg.style.opacity = 0, 2000);
+  }
+
+  // BUILD DOTS
+  function buildDots() {
+    const commitments = document.querySelectorAll('.commitment');
+    commitments.forEach(c => {
+      const key = c.dataset.key;
+      const total = parseInt(c.dataset.total);
+      const container = document.getElementById('dots-' + key);
+      container.innerHTML = '';
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (state.commitments[key].includes(i) ? ' done' : '');
+        dot.title = 'Session ' + (i + 1);
+        dot.onclick = () => toggleDot(key, i, dot);
+        container.appendChild(dot);
+      }
+      updateCount(key);
+    });
+  }
+
+  function toggleDot(key, index, el) {
+    const arr = state.commitments[key];
+    if (arr.includes(index)) {
+      state.commitments[key] = arr.filter(i => i !== index);
+      el.classList.remove('done');
+    } else {
+      state.commitments[key] = [...arr, index];
+      el.classList.add('done');
+    }
+    updateCount(key);
+    saveAll();
+  }
+
+  function updateCount(key) {
+    document.getElementById('done-' + key).textContent = state.commitments[key].length;
+  }
+
+  // INTERVENTIONS
+  function toggleIntervention(el) {
+    el.classList.toggle('done');
+    const key = el.closest('.intervention').dataset.ikey;
+    state.interventions[key] = el.classList.contains('done');
+    updateBudget();
+    saveAll();
+  }
+
+  function restoreInterventions() {
+    document.querySelectorAll('.intervention').forEach(row => {
+      const key = row.dataset.ikey;
+      const toggle = row.querySelector('.intervention-toggle');
+      if (state.interventions[key]) toggle.classList.add('done');
+    });
+  }
+
+  // BUDGET
+  const costs = { lipo: 16000, morpheus: 10000, teartrough: 6000, masseter: 3000, botox: 8000 };
+  const committed = 55500;
+
+  function updateBudget() {
+    const spent = Object.entries(state.interventions)
+      .filter(([k, v]) => v)
+      .reduce((sum, [k]) => sum + (costs[k] || 0), 0);
+    const pct = Math.min((spent / 100000) * 100, 100);
+    document.getElementById('budget-spent').textContent = spent.toLocaleString();
+    document.getElementById('budget-fill').style.width = pct + '%';
+    document.getElementById('budget-remaining').textContent =
+      'R' + Math.max(0, 100000 - committed).toLocaleString();
+  }
+
+  // HABITS
+  function toggleHabit(el, key) {
+    el.classList.toggle('done');
+    el.textContent = el.classList.contains('done') ? '✓' : '';
+    const today = new Date().toDateString();
+    if (!state.habits[key]) state.habits[key] = [];
+    if (state.habits[key].includes(today)) {
+      state.habits[key] = state.habits[key].filter(d => d !== today);
+      el.classList.remove('done');
+      el.textContent = '';
+    } else {
+      state.habits[key].push(today);
+      el.classList.add('done');
+      el.textContent = '✓';
+    }
+    updateStreak(key);
+    saveAll();
+  }
+
+  function updateStreak(key) {
+    const el = document.getElementById('streak-' + key);
+    if (!el) return;
+    const dates = (state.habits[key] || []).map(d => new Date(d));
+    dates.sort((a, b) => b - a);
+    let streak = 0;
+    let check = new Date();
+    check.setHours(0,0,0,0);
+    for (let d of dates) {
+      const dd = new Date(d);
+      dd.setHours(0,0,0,0);
+      if (dd.getTime() === check.getTime()) {
+        streak++;
+        check.setDate(check.getDate() - 1);
+      } else break;
+    }
+    el.textContent = 'Streak: ' + streak + ' day' + (streak !== 1 ? 's' : '');
+  }
+
+  function restoreHabits() {
+    const today = new Date().toDateString();
+    const keys = ['wake','cold','hydration','salt','fitmind','guasha','collagen'];
+    keys.forEach(key => {
+      const checks = document.querySelectorAll('.habit-check');
+      checks.forEach(el => {
+        const fn = el.getAttribute('onclick');
+        if (fn && fn.includes("'" + key + "'")) {
+          if (state.habits[key] && state.habits[key].includes(today)) {
+            el.classList.add('done');
+            el.textContent = '✓';
+          }
+        }
+      });
+      updateStreak(key);
+    });
+  }
+
+  // NOTES
+  function restoreNotes() {
+    document.getElementById('session-notes').value = state.notes || '';
+  }
+
+  // INIT
+  loadState();
+  buildDots();
+  restoreInterventions();
+  restoreHabits();
+  updateBudget();
+  restoreNotes();
+
+  // Auto-save notes on change
+  document.getElementById('session-notes').addEventListener('input', () => {
+    state.notes = document.getElementById('session-notes').value;
+    localStorage.setItem('project-aesthetics', JSON.stringify(state));
+  });
+</script>
+</body>
+</html>

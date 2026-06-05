@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Daily Stack">
+<meta name="theme-color" content="#080806">
+<title>Daily Stack</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080806;
+  --s1: #0d0d0a;
+  --s2: #111110;
+  --s3: #161613;
+  --s4: #1c1c18;
+  --border: #1e1e1a;
+  --borderM: #2a2a25;
+  --text: #e4e0d4;
+  --muted: #888480;
+  --dim: #444440;
+  --xdim: #252520;
+  --gold: #c8a455;
+  --goldS: #a07c35;
+  --goldF: rgba(200,164,85,0.09);
+  --ember: #b06030;
+  --emberF: rgba(176,96,48,0.09);
+  --sage: #5a7858;
+  --sageF: rgba(90,120,88,0.09);
+  --sf: 'Cormorant Garamond', serif;
+  --mn: 'Space Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--mn);
+  min-height:100vh;
+  min-height:-webkit-fill-available;
+  overscroll-behavior:none;
+}
+
+/* ── LAYOUT ── */
+.app{
+  max-width:430px;
+  margin:0 auto;
+  min-height:100vh;
+  min-height:-webkit-fill-available;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,8,6,0.97);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:max(env(safe-area-inset-top),12px) 20px 12px;
+}
+.header-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;
+}
+.logo{
+  font-family:var(--sf);
+  font-size:20px;font-weight:500;letter-spacing:0.1em;
+}
+.logo span{color:var(--gold);}
+.time-badge{
+  font-family:var(--mn);font-size:10px;
+  color:var(--dim);letter-spacing:0.08em;
+}
+
+/* session tabs */
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  border-radius:2px;overflow:hidden;
+}
+.tab{
+  padding:10px 8px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--mn);font-size:8px;letter-spacing:0.18em;
+  color:var(--dim);
+  transition:all 0.2s;
+  position:relative;
+}
+.tab.active-am{background:var(--goldF);color:var(--gold);}
+.tab.active-pm{background:var(--emberF);color:var(--ember);}
+.tab-dot{
+  display:inline-block;width:5px;height:5px;
+  border-radius:50%;margin-right:6px;
+  vertical-align:middle;
+}
+
+/* mode selector — 5am vs 7am */
+.mode-bar{
+  display:flex;gap:6px;margin-top:10px;
+}
+.mode-btn{
+  flex:1;padding:7px 6px;
+  background:none;border:1px solid var(--border);
+  cursor:pointer;font-family:var(--mn);
+  font-size:8px;letter-spacing:0.15em;
+  color:var(--dim);transition:all 0.2s;border-radius:1px;
+}
+.mode-btn.active{
+  background:var(--goldF);
+  border-color:rgba(200,164,85,0.35);
+  color:var(--gold);
+}
+
+/* ── PROGRESS RING ── */
+.progress-wrap{
+  padding:20px 20px 8px;
+  display:flex;align-items:center;gap:18px;
+}
+.ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:var(--s4);}
+.ring-fg{fill:none;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease;}
+.ring-text{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.ring-pct{font-family:var(--sf);font-size:22px;font-weight:500;line-height:1;}
+.ring-label{font-family:var(--mn);font-size:7px;color:var(--dim);letter-spacing:0.12em;margin-top:2px;}
+.progress-info{flex:1;}
+.progress-title{
+  font-family:var(--sf);font-size:18px;font-weight:500;
+  letter-spacing:0.04em;margin-bottom:4px;
+}
+.progress-sub{
+  font-family:var(--mn);font-size:8px;
+  color:var(--dim);letter-spacing:0.12em;margin-bottom:8px;
+}
+.streak-row{display:flex;align-items:center;gap:8px;}
+.streak-badge{
+  font-family:var(--mn);font-size:8px;
+  padding:3px 10px;border-radius:1px;
+  letter-spacing:0.12em;
+}
+
+/* ── STEPS ── */
+.steps{padding:4px 16px 100px;}
+
+.step{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:15px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:opacity 0.2s;
+  -webkit-user-select:none;user-select:none;
+}
+.step:active{opacity:0.7;}
+.step:last-child{border-bottom:none;}
+
+.step-num{
+  font-family:var(--mn);font-size:8px;
+  color:var(--xdim);flex-shrink:0;
+  margin-top:4px;letter-spacing:0.05em;
+  min-width:18px;
+}
+
+.check{
+  width:26px;height:26px;flex-shrink:0;
+  border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s;
+  margin-top:1px;
+}
+.check.done-am{
+  background:var(--gold);
+  border-color:var(--gold);
+}
+.check.done-pm{
+  background:var(--ember);
+  border-color:var(--ember);
+}
+.check-mark{
+  color:#080806;font-size:12px;font-weight:700;
+  opacity:0;transform:scale(0.5);
+  transition:all 0.2s;
+}
+.check.done-am .check-mark,
+.check.done-pm .check-mark{
+  opacity:1;transform:scale(1);
+}
+
+.step-body{flex:1;}
+.step-label{
+  font-family:var(--sf);font-size:18px;
+  font-weight:400;letter-spacing:0.03em;
+  line-height:1.2;color:var(--text);
+  transition:color 0.2s;
+  margin-bottom:3px;
+}
+.step.checked .step-label{color:var(--dim);}
+.step-meta{
+  display:flex;align-items:center;gap:8px;
+}
+.step-time{
+  font-family:var(--mn);font-size:8px;
+  color:var(--xdim);letter-spacing:0.08em;
+}
+.step-mins{
+  font-family:var(--mn);font-size:8px;
+  padding:2px 7px;border-radius:1px;
+  letter-spacing:0.1em;
+}
+.step-note{
+  font-family:var(--sf);font-size:13px;
+  font-style:italic;color:var(--dim);
+  margin-top:5px;line-height:1.5;
+}
+.step.checked .step-note{color:var(--xdim);}
+
+/* ── COMPLETE SCREEN ── */
+.complete{
+  flex:1;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px 24px;
+  text-align:center;
+  animation:fadeUp 0.4s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.complete-glyph{
+  font-family:var(--sf);font-size:64px;
+  margin-bottom:16px;
+  line-height:1;
+}
+.complete-title{
+  font-family:var(--sf);font-size:28px;
+  font-weight:300;font-style:italic;
+  letter-spacing:0.06em;margin-bottom:8px;
+}
+.complete-sub{
+  font-family:var(--mn);font-size:8px;
+  color:var(--dim);letter-spacing:0.18em;
+  margin-bottom:24px;
+}
+.complete-mantra{
+  font-family:var(--sf);font-size:14px;
+  font-style:italic;color:var(--dim);
+  line-height:1.8;margin-bottom:32px;
+  max-width:280px;
+}
+.reset-btn{
+  background:none;
+  border:1px solid var(--borderM);
+  color:var(--dim);font-family:var(--mn);
+  font-size:8px;letter-spacing:0.15em;
+  padding:10px 20px;cursor:pointer;
+}
+
+/* ── ANCHOR ── */
+.anchor-strip{
+  padding:12px 20px;
+  border-top:1px solid var(--border);
+  display:flex;gap:8px;flex-wrap:wrap;
+  background:var(--bg);
+}
+.anchor-pill{
+  font-family:var(--sf);font-size:11px;
+  font-style:italic;
+  padding:3px 10px;
+  border:1px solid rgba(200,164,85,0.2);
+  background:var(--goldF);color:var(--goldS);
+  letter-spacing:0.04em;
+}
+
+/* ── BOTTOM NAV SPACE ── */
+.safe-bottom{height:max(env(safe-area-inset-bottom),16px);}
+
+/* blink */
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+.blink{animation:blink 2s ease-in-out infinite;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">DAILY <span>STACK</span></div>
+      <div class="time-badge" id="clock">--:--</div>
+    </div>
+    <div class="tabs">
+      <button class="tab" id="tab-am" onclick="setSession('am')">
+        <span class="tab-dot" style="background:var(--gold)"></span>MORNING
+      </button>
+      <button class="tab" id="tab-pm" onclick="setSession('pm')">
+        <span class="tab-dot" style="background:var(--ember)"></span>EVENING
+      </button>
+    </div>
+    <div class="mode-bar" id="mode-bar">
+      <button class="mode-btn" id="mode-5" onclick="setMode('5am')">5AM CLUB</button>
+      <button class="mode-btn" id="mode-7" onclick="setMode('7am')">7AM START</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div id="body-wrap" style="flex:1;display:flex;flex-direction:column;overflow-y:auto;">
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="ring-wrap">
+        <svg width="72" height="72" viewBox="0 0 72 72">
+          <circle class="ring-bg" cx="36" cy="36" r="30" stroke-width="4"/>
+          <circle class="ring-fg" id="ring" cx="36" cy="36" r="30" stroke-width="4"
+            stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-pct" id="pct-num" style="color:var(--gold)">0%</div>
+          <div class="ring-label">DONE</div>
+        </div>
+      </div>
+      <div class="progress-info">
+        <div class="progress-title" id="session-title">Morning Stack</div>
+        <div class="progress-sub" id="session-sub">5AM · 11 STEPS · ~55 MINS</div>
+        <div class="streak-row">
+          <div class="streak-badge" id="streak-badge" style="background:var(--goldF);color:var(--gold);">
+            0 DAY STREAK
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEPS LIST -->
+    <div class="steps" id="steps-list"></div>
+
+  </div>
+
+  <!-- ANCHOR STRIP -->
+  <div class="anchor-strip">
+    <div class="anchor-pill">SURF</div>
+    <div class="anchor-pill">VERAXUS</div>
+    <div class="anchor-pill">KOMOREBI CAPITAL</div>
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const STACKS = {
+  am_5am: {
+    title: 'Morning Stack',
+    sub: '5AM · 10 STEPS · ~55 MINS',
+    color: 'am',
+    accent: 'var(--gold)',
+    steps: [
+      { label:'Wake — no phone',        time:'05:00', mins:'2 min',  note:'Leave phone face-down. Feet on floor immediately.' },
+      { label:'Stretch + GTG',           time:'05:02', mins:'10 min', note:'Roller along spine, right hip release, lats. Then: push-ups, bird dogs, hip bridge iso, wrist affirmations.' },
+      { label:'TM Meditation',          time:'05:12', mins:'20 min', note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.' },
+      { label:'Affirmations',           time:'05:32', mins:'5 min',  note:'Read aloud. All six. Mean every word.' },
+      { label:'Morning journal',        time:'05:37', mins:'10 min', note:'Read the 8 questions. Close the app. Write by hand.' },
+      { label:'Philosophy / wisdom',    time:'05:47', mins:'5 min',  note:'One Good to Great concept. One Stoic passage. Sit with it.' },
+      { label:'Smoothie + supplements', time:'05:52', mins:'5 min',  note:'Protein, greens, creatine, Alpha GPC, D3/K2.' },
+      { label:'Sunlight',               time:'05:57', mins:'5 min',  note:'Outside. No sunglasses. Balcony, garden, or walk.' },
+      { label:'Jump in pool',           time:'06:02', mins:'2 min',  note:'Cold water. Full immersion. Breathe through it.' },
+      { label:'Kids prep · start day',  time:'06:05', mins:'—',      note:'Fully present. Phone away until 08:00 work block.' },
+    ]
+  },
+  am_7am: {
+    title: 'Morning Stack',
+    sub: '7AM · 10 STEPS · ~55 MINS',
+    color: 'am',
+    accent: 'var(--gold)',
+    steps: [
+      { label:'Wake — no phone',        time:'07:00', mins:'2 min',  note:'Leave phone face-down. Feet on floor immediately.' },
+      { label:'Stretch + GTG',           time:'07:02', mins:'10 min', note:'Roller along spine, right hip release, lats. Then: push-ups, bird dogs, hip bridge iso, wrist affirmations.' },
+      { label:'TM Meditation',          time:'07:12', mins:'20 min', note:'So Hum mantra. Eyes closed, effortless. Non-negotiable.' },
+      { label:'Affirmations',           time:'07:32', mins:'5 min',  note:'Read aloud. All six. Mean every word.' },
+      { label:'Morning journal',        time:'07:37', mins:'10 min', note:'Read the 8 questions. Close the app. Write by hand.' },
+      { label:'Philosophy / wisdom',    time:'07:47', mins:'5 min',  note:'One Good to Great concept. One Stoic passage. Sit with it.' },
+      { label:'Smoothie + supplements', time:'07:52', mins:'5 min',  note:'Protein, greens, creatine, Alpha GPC, D3/K2.' },
+      { label:'Sunlight',               time:'07:57', mins:'5 min',  note:'Outside. No sunglasses. Walk if possible.' },
+      { label:'Jump in pool',           time:'08:02', mins:'2 min',  note:'Cold water. Full immersion. Breathe through it.' },
+      { label:'Start day',              time:'08:05', mins:'—',      note:'90/90/1 begins now. First 90 minutes on #1 priority only.' },
+    ]
+  },
+  pm: {
+    title: 'Evening Stack',
+    sub: '6:30PM · 9 STEPS · ~45 MINS',
+    color: 'pm',
+    accent: 'var(--ember)',
+    steps: [
+      { label:'Last meal done',         time:'18:00', mins:'—',      note:'Food cutoff. Nothing after this. Gut and sleep quality.' },
+      { label:'Devices away',           time:'18:30', mins:'—',      note:'Phone face-down or in another room. Hard stop.' },
+      { label:'Family time',            time:'18:30', mins:'30 min', note:'Hector and Bella. No phone, no TV. Fully present.' },
+      { label:'Gua sha + skincare',     time:'19:00', mins:'5 min',  note:'Steel roller. Rosehip oil. Phyto Corrective. SPF off.' },
+      { label:'Hot shower',             time:'19:05', mins:'10 min', note:'Warm water drops core temp afterward — aids sleep onset.' },
+      { label:'Pennebaker journal',     time:'19:15', mins:'5 min',  note:'Name the stressor. No editing, no solving. Just write.' },
+      { label:'Ashwagandha + Mg',       time:'19:20', mins:'—',      note:'KSM-66 300mg + Magnesium glycinate 400mg with water.' },
+      { label:'Read fiction in bed',    time:'20:30', mins:'30 min', note:'Physical book only. No screens. Let the mind wander.' },
+      { label:'Lights out',             time:'21:30', mins:'—',      note:'8 hours to 05:30. Sleep is the compound interest of health.' },
+    ]
+  }
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+let session = 'am';
+let mode    = '5am';
+
+function stackKey() {
+  return session === 'pm' ? 'pm' : `am_${mode}`;
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function storageKey(idx) {
+  return `ds-${stackKey()}-${idx}-${todayStr()}`;
+}
+
+function isChecked(idx) {
+  return !!localStorage.getItem(storageKey(idx));
+}
+
+function toggleItem(idx) {
+  const key = storageKey(idx);
+  if (localStorage.getItem(key)) {
+    localStorage.removeItem(key);
+  } else {
+    localStorage.setItem(key, '1');
+  }
+  render();
+}
+
+function getStreak(sk) {
+  let streak = 0;
+  const d = new Date();
+  for (let i = 0; i < 90; i++) {
+    const dateStr = new Date(d.getTime() - i*86400000).toISOString().slice(0,10);
+    // Check if all steps were completed that day
+    const stack = STACKS[sk === 'am' ? `am_5am` : 'pm'];
+    const allDone = stack.steps.every((_,idx) =>
+      localStorage.getItem(`ds-${sk === 'am' ? 'am_5am' : 'pm'}-${idx}-${dateStr}`) ||
+      localStorage.getItem(`ds-${sk === 'am' ? 'am_7am' : 'pm'}-${idx}-${dateStr}`)
+    );
+    if (i === 0 && !allDone) { streak = 0; break; }
+    if (!allDone) break;
+    streak++;
+  }
+  return streak;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function render() {
+  const sk   = stackKey();
+  const data = STACKS[sk];
+  const steps = data.steps;
+  const checkedCount = steps.filter((_,i) => isChecked(i)).length;
+  const total = steps.length;
+  const pct = Math.round((checkedCount / total) * 100);
+  const allDone = checkedCount === total;
+  const color = session === 'pm' ? 'var(--ember)' : 'var(--gold)';
+  const colorClass = session === 'pm' ? 'done-pm' : 'done-am';
+
+  // tabs
+  document.getElementById('tab-am').className = 'tab' + (session === 'am' ? ' active-am' : '');
+  document.getElementById('tab-pm').className = 'tab' + (session === 'pm' ? ' active-pm' : '');
+
+  // mode bar
+  const modeBar = document.getElementById('mode-bar');
+  modeBar.style.display = session === 'pm' ? 'none' : 'flex';
+  document.getElementById('mode-5').className = 'mode-btn' + (mode === '5am' ? ' active' : '');
+  document.getElementById('mode-7').className = 'mode-btn' + (mode === '7am' ? ' active' : '');
+
+  // ring
+  const circumference = 188.5;
+  const offset = circumference - (pct / 100) * circumference;
+  const ring = document.getElementById('ring');
+  ring.style.strokeDashoffset = offset;
+  ring.style.stroke = color;
+
+  // pct number
+  const pctEl = document.getElementById('pct-num');
+  pctEl.textContent = pct + '%';
+  pctEl.style.color = color;
+
+  // info
+  document.getElementById('session-title').textContent = data.title;
+  document.getElementById('session-sub').textContent   = data.sub;
+
+  // streak
+  const streak = getStreak(session);
+  const sb = document.getElementById('streak-badge');
+  sb.textContent = streak + ' DAY STREAK';
+  sb.style.background = session === 'pm' ? 'var(--emberF)' : 'var(--goldF)';
+  sb.style.color = color;
+
+  const body = document.getElementById('body-wrap');
+
+  if (allDone) {
+    const mantras = {
+      am: '"The 5am Club is not a morning routine.<br>It is the foundation of a life."',
+      pm: '"Rest is not the absence of work.<br>It is the architecture of it."'
+    };
+    body.innerHTML = `
+      <div class="complete">
+        <div class="complete-glyph" style="color:${color}">✦</div>
+        <div class="complete-title" style="color:${color}">${session === 'am' ? 'Stack complete.' : 'Day closed.'}</div>
+        <div class="complete-sub">${checkedCount}/${total} · ${pct}%</div>
+        <div class="complete-mantra">${mantras[session]}</div>
+        <div style="font-family:var(--mn);font-size:8px;color:var(--xdim);letter-spacing:0.18em;margin-bottom:32px;">
+          SURF · VERAXUS · KOMOREBI CAPITAL
+        </div>
+        <button class="reset-btn" onclick="resetStack()">RESET ↺</button>
+      </div>
+    `;
+    return;
+  }
+
+  // steps
+  let html = `<div class="progress-wrap" style="display:none"></div><div class="steps" id="steps-list">`;
+  steps.forEach((s, i) => {
+    const checked = isChecked(i);
+    html += `
+      <div class="step ${checked ? 'checked' : ''}" onclick="toggleItem(${i})">
+        <div class="step-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="check ${checked ? colorClass : ''}">
+          <span class="check-mark">✓</span>
+        </div>
+        <div class="step-body">
+          <div class="step-label">${s.label}</div>
+          <div class="step-meta">
+            <span class="step-time">${s.time}</span>
+            <span class="step-mins" style="background:${checked?'transparent':session==='pm'?'var(--emberF)':'var(--goldF)'};color:${checked?'var(--xdim)':color}">${s.mins}</span>
+          </div>
+          <div class="step-note">${s.note}</div>
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  body.innerHTML = html;
+}
+
+function resetStack() {
+  const sk = stackKey();
+  const total = STACKS[sk].steps.length;
+  for (let i = 0; i < total; i++) {
+    localStorage.removeItem(storageKey(i));
+  }
+  render();
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+
+function setSession(s) {
+  session = s;
+  render();
+}
+
+function setMode(m) {
+  mode = m;
+  render();
+}
+
+// ── CLOCK ─────────────────────────────────────────────────────────────────────
+
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── AUTO-SESSION ──────────────────────────────────────────────────────────────
+
+function autoSession() {
+  const h = new Date().getHours();
+  if (h >= 18) { session = 'pm'; }
+  else { session = 'am'; }
+  if (h < 6) { mode = '5am'; }
+  else if (h >= 7) { mode = '7am'; }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+autoSession();
+render();
+</script>
+</body>
+</html>
