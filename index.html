@@ -509,110 +509,6 @@ const COOLDOWN = [
 ];
 
 const SESSIONS = [
-  { id:'A', label:'Session A', type:'Push', day:'Mon',
-    rules:['RIGHT LEADS','POSITION FIRST','NO GRIND','HEEL LIFT — RIGHT SHOE'],
-    exercises:[
-      {id:'A1',name:'Incline DB Press',         sets:4,reps:'5',   tempo:'3-1-1',   load:'16kg',        rest:120,
-       cues:['Right side leads every set','Pack lats into bench','Pause at bottom — own the position','Stop at first slow rep'],
-       subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor'},{n:'Wall-Supported Press',d:'Sit against wall, enforces upright torso'}]},
-      {id:'A2',name:'Push Press — KB Single Arm',sets:4,reps:'3', tempo:'Explosive',load:'8kg',         rest:120,
-       cues:['Heel lift in right shoe','Right glute squeeze before dip','Small dip — legs drive','Full lockout 1s at top','Right arm first'],
-       subs:[{n:'Seated DB Shoulder Press',d:'Removes LLD issue'},{n:'Half-Kneeling KB Press',d:'Right knee down'}]},
-      {id:'A3',name:'Supported Lateral Raise',   sets:3,reps:'6',  tempo:'2-1-2',   load:'4kg',         rest:90, superset:'A4',
-       cues:['Chest on incline bench','Lead with elbow not wrist','2s eccentric','No shrug'],
-       subs:[{n:'Side-Lying Lateral Raise',d:'Pure isolation'},{n:'Seated Lateral Raise',d:'Slight forward lean'}]},
-      {id:'A4',name:'Band Pull-Apart',           sets:3,reps:'10', tempo:'Controlled',load:'Light band', rest:90, supersetWith:'A3',
-       cues:['Superset with A3 — no rest','Thumbs behind ears','Feel right rear delt','Corrective — not optional'],
-       subs:[]},
-      {id:'A5',name:'Banded Pull-Up (Assisted)', sets:2,reps:'5',  tempo:'2-1-2',   load:'Band assist', rest:90,
-       cues:['Pack lats before pulling','Dead hang at bottom each rep','Right side leads'],
-       subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Single Arm Band Row',d:'Right leads'}]},
-      {id:'A6',name:'Tricep Pushdown — Band',    sets:3,reps:'8',  tempo:'2-1-2',   load:'Medium band', rest:90,
-       cues:['Elbows pinned','Full extension at bottom','Slow eccentric','Right arm first if unilateral'],
-       subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, anywhere'}]},
-    ]
-  },
-  { id:'B', label:'Session B', type:'Pull', day:'Wed',
-    rules:['RIGHT LEADS','ELBOW TO HIP','OWN THE CONTRACTION','NO GRIND'],
-    exercises:[
-      {id:'B1',name:'Single Arm DB Row',   sets:4,reps:'5', tempo:'2-1-2', load:'20kg',        rest:120,
-       cues:['Right arm leads','Elbow to hip — not hand to shoulder','Pause and contract at top','No torso rotation','If QL fires before lat — stop'],
-       subs:[{n:'Band Row (anchored)',d:'Same cues apply'},{n:'Incline DB Row',d:'Removes spinal loading'}]},
-      {id:'B2',name:'Band Face Pull',      sets:3,reps:'8', tempo:'2-2-2', load:'Medium band',  rest:90,
-       cues:['Anchor at upper chest height','Thumbs behind ears','External rotation emphasis','Right rear delt must work'],
-       subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'},{n:'Prone DB Rear Delt Raise',d:'Face down on incline'}]},
-      {id:'B3',name:'Incline DB Curl',     sets:3,reps:'6', tempo:'2-1-3', load:'8kg',          rest:90,
-       cues:['Sit back on incline','3s eccentric','Shoulder pinned','Right arm first','No swing'],
-       subs:[{n:'Standing DB Curl',d:'Strict form'},{n:'Band Curl',d:'Resistance increases at peak'}]},
-      {id:'B4',name:'Dead Hang',           sets:3,reps:'30s',tempo:'Passive',load:'Bodyweight', rest:60, isDuration:true,
-       cues:['Structural maintenance','Full passive decompression','Feel right spine lengthening','Breathe slowly'],
-       subs:[{n:'Supported Hang',d:'Slight knee bend'},{n:'Doorframe Hang',d:'Grip top of doorframe'}]},
-      {id:'B5',name:'Bird Dog Row',        sets:3,reps:'5', tempo:'3-1-2', load:'8kg',          rest:90,
-       cues:['Start in bird dog position','Row while holding extension','Stability first','Right arm rows, right leg extends'],
-       subs:[{n:'Plank DB Row',d:'Less range but stable'},{n:'Kneeling Single Arm Row',d:'Both knees down'}]},
-    ]
-  },
-  { id:'C', label:'Session C', type:'Hinge + Lower', day:'Fri',
-    rules:['RIGHT LEADS','HIP HINGE NOT SQUAT','GLUTE AT TOP','POSITION FIRST'],
-    exercises:[
-      {id:'C1',name:'KB Swing',              sets:5,reps:'5', tempo:'Explosive', load:'20kg',              rest:120,
-       cues:['Hip hinge — not a squat','Explosive hip snap','Right glute squeeze at top','Dead stop between reps if needed','Stop if lower back takes over'],
-       subs:[{n:'KB Deadlift',d:'Same hinge, no swing'},{n:'Romanian Deadlift — DB',d:'Slow eccentric hinge'}]},
-      {id:'C2',name:'Single Leg RDL',        sets:4,reps:'5', tempo:'3-1-2', load:'12.5kg contralateral',  rest:120,
-       cues:['Right leg leads','Contralateral load','3s down, own the bottom','Stop if QL fires before hamstring','Slight knee bend'],
-       subs:[{n:'SL RDL — Bodyweight',d:'Build motor pattern first'},{n:'Hip Hinge to Wall',d:'Groove the pattern'}]},
-      {id:'C3',name:'Goblet Squat Hold',     sets:3,reps:'20s',tempo:'Static',  load:'8kg',               rest:90, isDuration:true,
-       cues:['Posterior pelvic tilt','Elbows inside knees','Feel right hip decompressing','Breathe slowly','Corrective as much as strength'],
-       subs:[{n:'Bodyweight Squat Hold',d:'Arms forward for counterbalance'},{n:'Box Squat Hold',d:'Controls depth'}]},
-      {id:'C4',name:'Slant Board Calf Raise',sets:3,reps:'8', tempo:'3-1-3', load:'BW / 8kg',             rest:90,
-       cues:['Right leads','3s eccentric','Full range — heel below board','Ankle mobility = hip mobility'],
-       subs:[{n:'Step Edge Calf Raise',d:'Same range principle'},{n:'Seated Calf Raise',d:'Loads soleus more'}]},
-      {id:'C5',name:'Glute Bridge Iso',      sets:3,reps:'5 × 5s',tempo:'Isometric',load:'Bodyweight',    rest:60,
-       cues:['Right glute must fire first','If it doesn\'t — reset','5s hold, full contraction','Feel anterior hip opening','Closes every lower session'],
-       subs:[]},
-    ]
-  },
-  { id:'D', label:'Beach Circuit', type:'Conditioning', day:'Tue/Thu', circuit:true,
-    rules:['2 FULL LAPS','CIRCUIT → 800M RUN → REPEAT','SPRINT FINISHER × 5','FINISH IN THE OCEAN'],
-    exercises:[
-      {id:'D1',name:'Flow Push-Ups',       reps:'12',      tempo:'Controlled', load:'BW',
-       cues:['Downward dog → push-up → upward dog → reset','Right QL: if it grips under fatigue, drop to standard push-up','Full range — hips to floor on up-dog'],
-       subs:[{n:'Standard Push-Ups',d:'No flow, same rep quality'}]},
-      {id:'D2',name:'Bear Crawl',          reps:'40m',     tempo:'Controlled', load:'BW',
-       cues:['20m out, 20m back — knees 1 inch off ground','Opposite hand and foot move together','Can drop in Round 2 without compromising the session'],
-       subs:[{n:'Crab Walk',d:'Posterior chain emphasis'}]},
-      {id:'D3',name:'Single-Leg RDL',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
-       cues:['Right leg leads — always','3s down, own the bottom','Circuit 2: if hinge locks, drop to bilateral RDL right-side emphasis'],
-       subs:[{n:'Bilateral RDL',d:'Right-side emphasis if hinge degrades'}]},
-      {id:'D4',name:'Reverse Lunges',      reps:'8 each',  tempo:'Controlled', load:'BW',
-       cues:['Knee tracks over toe — upright torso','Sand consistently leaves right hip loose — confirmed across sessions'],
-       subs:[{n:'Forward Lunges',d:'Easier balance demand'}]},
-      {id:'D5',name:'Lateral Lunge',       reps:'8 each',  tempo:'Controlled', load:'BW',
-       cues:['Controlled tempo — no momentum','Hips level throughout','Sand only — hard surface remains higher risk'],
-       subs:[{n:'Lateral Step Touch',d:'Lower impact, same pattern'}]},
-      {id:'D6',name:'Glute Med ISO Hold',  reps:'10 × 3s', tempo:'Isometric',  load:'BW',
-       cues:['Side-lying — 10 reps × 3s hold each side','Right side first','Squeeze at top — not just range of motion'],
-       subs:[{n:'Clamshells',d:'Same target, lighter demand'}]},
-      {id:'D7',name:'Glute Bridge ISO',    reps:'2 × 30s', tempo:'Isometric',  load:'BW',
-       cues:['Full hip extension — right glute must fire','2 holds × 30s','Breathe slowly through each hold'],
-       subs:[{n:'Single-Leg Glute Bridge',d:'Right side leads'}]},
-      {id:'D8',name:'Bird Dog Prone',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
-       cues:['Spine neutral — reach long, don\'t lift high','Right side: feel the glute, not the QL','Pause at extension each rep'],
-       subs:[]},
-      {id:'D9',name:'Flat Sprints',        reps:'3 × 30m', tempo:'Max effort',  load:'BW',
-       cues:['True max effort — 30m only','Full walk-back recovery between reps','Find the flattest strip of sand'],
-       subs:[{n:'Hill Sprints',d:'If flat sand unavailable'}]},
-      {id:'D10',name:'Sand Run',           reps:'~800m',   tempo:'Easy pace',  load:'BW',
-       cues:['After each circuit — conversational pace only','Active hip loosening — not cardio work','2 laps = 2 runs'],
-       subs:[]},
-      {id:'D11',name:'Dune Sprint Finisher',reps:'5 rounds',tempo:'Max effort', load:'BW',
-       cues:['Glen Beach dunes — ~30s max effort up','1 exercise at the bottom, walk back = full recovery','5 rounds — WHOOP strain 5.7 in under 9 min'],
-       subs:[{n:'Flat Sprints × 5',d:'30m repeats if no dunes'}]},
-      {id:'D12',name:'Ocean Dip',          reps:'2-3 min', tempo:'Immersion',  load:'—',
-       cues:['Full immersion — head under','Breathe: 4 in, 8 out','Reduces hip inflammation before it builds','If done: no ice bath required Sunday'],
-       subs:[{n:'Cold Shower',d:'If ocean not accessible'}]},
-    ]
-  },
   { id:'DB', label:'Daily Blueprint', type:'Unlock · Align · Build', day:'Daily', blueprint:true,
     rules:['POSITION BEFORE LOAD','STOP AT 4 OF 5 — REPS IN RESERVE','RIGHT LEADS AND GOES FIRST','SAME SHAPE DAILY'],
     exercises:[
@@ -715,6 +611,142 @@ const SESSIONS = [
       {id:'DB19',name:'Hammer Curl', block:'build', buildBlock:'C', sets:3, reps:'8 each', tempo:'2-1-3', load:'DB', rest:90,
        cues:['Right arm leads','Neutral grip throughout — no supination','3s eccentric','Shoulder pinned — no swing'],
        subs:[{n:'Band Hammer Curl',d:'Using looped band at side'}]},
+    ]
+  },
+  { id:'F', label:'Cardio', type:'Swim · Hike', day:'Weekly', cardio:true,
+    rules:['Z1-2 = NASAL BREATHING TEST','POLARISED — NEVER Z3','NORWEGIAN = FULL EFFORT','HIKE = ACTIVE RECOVERY'],
+    exercises:[
+      // Session A — Z1-2 Swim
+      {id:'F1',name:'Zone 1-2 Aerobic Swim', cardioBlock:'A', info:true,
+       reps:'45 min', tempo:'Z1-2 · Easy',
+       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout — no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns — let HR drop fully'],
+       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags — keep moving, keep Z1-2'}]},
+      // Session B — Norwegian 4×4
+      {id:'F2a',name:'Warm-Up Swim', cardioBlock:'B', info:true,
+       reps:'10 min', tempo:'Z1 · Easy',
+       cues:['Continuous easy swim — get warm before loading','Drills if available: catch-up, fingertip drag','HR below 65% max — genuinely easy'],
+       subs:[]},
+      {id:'F2',name:'4×4 Norwegian Intervals', cardioBlock:'B', sets:4, reps:'4 min', tempo:'Z4 · Hard', load:'Max sustainable', rest:180, isDuration:true,
+       cues:['Full effort for 4 minutes — controlled, not chaotic','3 min passive rest / easy swim between each interval','HR: at or just below lactate threshold — Z4','Right shoulder: watch position under fatigue — form first'],
+       subs:[{n:'4×3 min',d:'Reduce to 3 min if stroke degrades'},{n:'3×4 min',d:'First session — build into the protocol'}]},
+      {id:'F2b',name:'Cool-Down Swim', cardioBlock:'B', info:true,
+       reps:'5 min', tempo:'Z1 · Easy',
+       cues:['Easy continuous swim — HR back below 60%','Shoulder: roll and shrug gently through cool-down','No flip turns — open turn, breathe fully'],
+       subs:[]},
+      // Session C — Z1-2 Swim
+      {id:'F3',name:'Zone 1-2 Aerobic Swim', cardioBlock:'C', info:true,
+       reps:'45 min', tempo:'Z1-2 · Easy',
+       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout — no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns — let HR drop fully'],
+       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags — keep moving, keep Z1-2'}]},
+      // Session D — Hike
+      {id:'F4',name:'3-Hour Hike', cardioBlock:'D', info:true,
+       reps:'3 hours', tempo:'Z1-2 · Easy',
+       cues:['Active recovery — this is not a hard effort','Z1-2 pace: sustainable for the full duration without HR spike','Right hip: watch loading on steep descents — no grinding','Hike doubles as mental decompression — minimal phone'],
+       subs:[{n:'2-Hour Hike',d:'If 3 hours not available — still full credit'}]},
+    ]
+  },
+  { id:'A', label:'Session A', type:'Push', day:'Mon',
+    rules:['RIGHT LEADS','POSITION FIRST','NO GRIND','HEEL LIFT — RIGHT SHOE'],
+    exercises:[
+      {id:'A1',name:'Incline DB Press',         sets:4,reps:'5',   tempo:'3-1-1',   load:'16kg',        rest:120,
+       cues:['Right side leads every set','Pack lats into bench','Pause at bottom — own the position','Stop at first slow rep'],
+       subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor'},{n:'Wall-Supported Press',d:'Sit against wall, enforces upright torso'}]},
+      {id:'A2',name:'Push Press — KB Single Arm',sets:4,reps:'3', tempo:'Explosive',load:'8kg',         rest:120,
+       cues:['Heel lift in right shoe','Right glute squeeze before dip','Small dip — legs drive','Full lockout 1s at top','Right arm first'],
+       subs:[{n:'Seated DB Shoulder Press',d:'Removes LLD issue'},{n:'Half-Kneeling KB Press',d:'Right knee down'}]},
+      {id:'A3',name:'Supported Lateral Raise',   sets:3,reps:'6',  tempo:'2-1-2',   load:'4kg',         rest:90, superset:'A4',
+       cues:['Chest on incline bench','Lead with elbow not wrist','2s eccentric','No shrug'],
+       subs:[{n:'Side-Lying Lateral Raise',d:'Pure isolation'},{n:'Seated Lateral Raise',d:'Slight forward lean'}]},
+      {id:'A4',name:'Band Pull-Apart',           sets:3,reps:'10', tempo:'Controlled',load:'Light band', rest:90, supersetWith:'A3',
+       cues:['Superset with A3 — no rest','Thumbs behind ears','Feel right rear delt','Corrective — not optional'],
+       subs:[]},
+      {id:'A5',name:'Banded Pull-Up (Assisted)', sets:2,reps:'5',  tempo:'2-1-2',   load:'Band assist', rest:90,
+       cues:['Pack lats before pulling','Dead hang at bottom each rep','Right side leads'],
+       subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Single Arm Band Row',d:'Right leads'}]},
+      {id:'A6',name:'Tricep Pushdown — Band',    sets:3,reps:'8',  tempo:'2-1-2',   load:'Medium band', rest:90,
+       cues:['Elbows pinned','Full extension at bottom','Slow eccentric','Right arm first if unilateral'],
+       subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, anywhere'}]},
+    ]
+  },
+  { id:'B', label:'Session B', type:'Pull', day:'Wed',
+    rules:['RIGHT LEADS','ELBOW TO HIP','OWN THE CONTRACTION','NO GRIND'],
+    exercises:[
+      {id:'B1',name:'Single Arm DB Row',   sets:4,reps:'5', tempo:'2-1-2', load:'20kg',        rest:120,
+       cues:['Right arm leads','Elbow to hip — not hand to shoulder','Pause and contract at top','No torso rotation','If QL fires before lat — stop'],
+       subs:[{n:'Band Row (anchored)',d:'Same cues apply'},{n:'Incline DB Row',d:'Removes spinal loading'}]},
+      {id:'B2',name:'Band Face Pull',      sets:3,reps:'8', tempo:'2-2-2', load:'Medium band',  rest:90,
+       cues:['Anchor at upper chest height','Thumbs behind ears','External rotation emphasis','Right rear delt must work'],
+       subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'},{n:'Prone DB Rear Delt Raise',d:'Face down on incline'}]},
+      {id:'B3',name:'Incline DB Curl',     sets:3,reps:'6', tempo:'2-1-3', load:'8kg',          rest:90,
+       cues:['Sit back on incline','3s eccentric','Shoulder pinned','Right arm first','No swing'],
+       subs:[{n:'Standing DB Curl',d:'Strict form'},{n:'Band Curl',d:'Resistance increases at peak'}]},
+      {id:'B4',name:'Dead Hang',           sets:3,reps:'30s',tempo:'Passive',load:'Bodyweight', rest:60, isDuration:true,
+       cues:['Structural maintenance','Full passive decompression','Feel right spine lengthening','Breathe slowly'],
+       subs:[{n:'Supported Hang',d:'Slight knee bend'},{n:'Doorframe Hang',d:'Grip top of doorframe'}]},
+      {id:'B5',name:'Bird Dog Row',        sets:3,reps:'5', tempo:'3-1-2', load:'8kg',          rest:90,
+       cues:['Start in bird dog position','Row while holding extension','Stability first','Right arm rows, right leg extends'],
+       subs:[{n:'Plank DB Row',d:'Less range but stable'},{n:'Kneeling Single Arm Row',d:'Both knees down'}]},
+    ]
+  },
+  { id:'C', label:'Session C', type:'Hinge + Lower', day:'Fri',
+    rules:['RIGHT LEADS','HIP HINGE NOT SQUAT','GLUTE AT TOP','POSITION FIRST'],
+    exercises:[
+      {id:'C1',name:'KB Swing',              sets:5,reps:'5', tempo:'Explosive', load:'20kg',              rest:120,
+       cues:['Hip hinge — not a squat','Explosive hip snap','Right glute squeeze at top','Dead stop between reps if needed','Stop if lower back takes over'],
+       subs:[{n:'KB Deadlift',d:'Same hinge, no swing'},{n:'Romanian Deadlift — DB',d:'Slow eccentric hinge'}]},
+      {id:'C2',name:'Single Leg RDL',        sets:4,reps:'5', tempo:'3-1-2', load:'12.5kg contralateral',  rest:120,
+       cues:['Right leg leads','Contralateral load','3s down, own the bottom','Stop if QL fires before hamstring','Slight knee bend'],
+       subs:[{n:'SL RDL — Bodyweight',d:'Build motor pattern first'},{n:'Hip Hinge to Wall',d:'Groove the pattern'}]},
+      {id:'C3',name:'Goblet Squat Hold',     sets:3,reps:'20s',tempo:'Static',  load:'8kg',               rest:90, isDuration:true,
+       cues:['Posterior pelvic tilt','Elbows inside knees','Feel right hip decompressing','Breathe slowly','Corrective as much as strength'],
+       subs:[{n:'Bodyweight Squat Hold',d:'Arms forward for counterbalance'},{n:'Box Squat Hold',d:'Controls depth'}]},
+      {id:'C4',name:'Slant Board Calf Raise',sets:3,reps:'8', tempo:'3-1-3', load:'BW / 8kg',             rest:90,
+       cues:['Right leads','3s eccentric','Full range — heel below board','Ankle mobility = hip mobility'],
+       subs:[{n:'Step Edge Calf Raise',d:'Same range principle'},{n:'Seated Calf Raise',d:'Loads soleus more'}]},
+      {id:'C5',name:'Glute Bridge Iso',      sets:3,reps:'5 × 5s',tempo:'Isometric',load:'Bodyweight',    rest:60,
+       cues:['Right glute must fire first','If it doesn\'t — reset','5s hold, full contraction','Feel anterior hip opening','Closes every lower session'],
+       subs:[]},
+    ]
+  },
+  { id:'D', label:'Beach Circuit', type:'Conditioning', day:'Tue/Thu', circuit:true,
+    rules:['2 FULL LAPS','CIRCUIT → 800M RUN → REPEAT','SPRINT FINISHER × 5','FINISH IN THE OCEAN'],
+    exercises:[
+      {id:'D1',name:'Flow Push-Ups',       reps:'12',      tempo:'Controlled', load:'BW',
+       cues:['Downward dog → push-up → upward dog → reset','Right QL: if it grips under fatigue, drop to standard push-up','Full range — hips to floor on up-dog'],
+       subs:[{n:'Standard Push-Ups',d:'No flow, same rep quality'}]},
+      {id:'D2',name:'Bear Crawl',          reps:'40m',     tempo:'Controlled', load:'BW',
+       cues:['20m out, 20m back — knees 1 inch off ground','Opposite hand and foot move together','Can drop in Round 2 without compromising the session'],
+       subs:[{n:'Crab Walk',d:'Posterior chain emphasis'}]},
+      {id:'D3',name:'Single-Leg RDL',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
+       cues:['Right leg leads — always','3s down, own the bottom','Circuit 2: if hinge locks, drop to bilateral RDL right-side emphasis'],
+       subs:[{n:'Bilateral RDL',d:'Right-side emphasis if hinge degrades'}]},
+      {id:'D4',name:'Reverse Lunges',      reps:'8 each',  tempo:'Controlled', load:'BW',
+       cues:['Knee tracks over toe — upright torso','Sand consistently leaves right hip loose — confirmed across sessions'],
+       subs:[{n:'Forward Lunges',d:'Easier balance demand'}]},
+      {id:'D5',name:'Lateral Lunge',       reps:'8 each',  tempo:'Controlled', load:'BW',
+       cues:['Controlled tempo — no momentum','Hips level throughout','Sand only — hard surface remains higher risk'],
+       subs:[{n:'Lateral Step Touch',d:'Lower impact, same pattern'}]},
+      {id:'D6',name:'Glute Med ISO Hold',  reps:'10 × 3s', tempo:'Isometric',  load:'BW',
+       cues:['Side-lying — 10 reps × 3s hold each side','Right side first','Squeeze at top — not just range of motion'],
+       subs:[{n:'Clamshells',d:'Same target, lighter demand'}]},
+      {id:'D7',name:'Glute Bridge ISO',    reps:'2 × 30s', tempo:'Isometric',  load:'BW',
+       cues:['Full hip extension — right glute must fire','2 holds × 30s','Breathe slowly through each hold'],
+       subs:[{n:'Single-Leg Glute Bridge',d:'Right side leads'}]},
+      {id:'D8',name:'Bird Dog Prone',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
+       cues:['Spine neutral — reach long, don\'t lift high','Right side: feel the glute, not the QL','Pause at extension each rep'],
+       subs:[]},
+      {id:'D9',name:'Flat Sprints',        reps:'3 × 30m', tempo:'Max effort',  load:'BW',
+       cues:['True max effort — 30m only','Full walk-back recovery between reps','Find the flattest strip of sand'],
+       subs:[{n:'Hill Sprints',d:'If flat sand unavailable'}]},
+      {id:'D10',name:'Sand Run',           reps:'~800m',   tempo:'Easy pace',  load:'BW',
+       cues:['After each circuit — conversational pace only','Active hip loosening — not cardio work','2 laps = 2 runs'],
+       subs:[]},
+      {id:'D11',name:'Dune Sprint Finisher',reps:'5 rounds',tempo:'Max effort', load:'BW',
+       cues:['Glen Beach dunes — ~30s max effort up','1 exercise at the bottom, walk back = full recovery','5 rounds — WHOOP strain 5.7 in under 9 min'],
+       subs:[{n:'Flat Sprints × 5',d:'30m repeats if no dunes'}]},
+      {id:'D12',name:'Ocean Dip',          reps:'2-3 min', tempo:'Immersion',  load:'—',
+       cues:['Full immersion — head under','Breathe: 4 in, 8 out','Reduces hip inflammation before it builds','If done: no ice bath required Sunday'],
+       subs:[{n:'Cold Shower',d:'If ocean not accessible'}]},
     ]
   },
   { id:'E', label:'Climbing', type:'Gym + Bouldering', day:'Sat', climbing:true,
@@ -936,7 +968,8 @@ function renderWorkout(){
   var isCircuit=sess.circuit===true;
   var isClimbing=sess.climbing===true;
   var isBlueprint=sess.blueprint===true;
-  var isSpecial=isCircuit||isClimbing||isBlueprint;
+  var isCardio=sess.cardio===true;
+  var isSpecial=isCircuit||isClimbing||isBlueprint||isCardio;
 
   document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
   document.getElementById('wo-warmup-wrap').style.display=isSpecial?'none':'block';
@@ -966,6 +999,18 @@ function renderWorkout(){
       +'<button class="counter-btn" onclick="adjClimbWk(1)">+</button>'
       +'</div></div>';
     document.getElementById('wo-ex-label').textContent='Gym + Bouldering · 120 min';
+  } else if(isCardio){
+    var cRot=parseInt(load('cardio_session')||'1');
+    var cardioLabels=['','A · Z1-2 Swim · 45 min','B · Norwegian 4×4 · ~40 min','C · Z1-2 Swim · 45 min','D · Hike · 3 hours'];
+    counterEl.style.display='block';
+    counterEl.innerHTML='<div class="counter-row">'
+      +'<div class="counter-info"><div class="counter-label">Weekly Cardio · Polarised</div><div class="counter-sub">'+cardioLabels[cRot]+'</div></div>'
+      +'<div class="counter-ctrl">'
+      +'<button class="counter-btn" onclick="adjCardioSession(-1)">−</button>'
+      +'<div><div class="counter-val">'+['','A','B','C','D'][cRot]+'</div><div class="counter-unit">session</div></div>'
+      +'<button class="counter-btn" onclick="adjCardioSession(1)">+</button>'
+      +'</div></div>';
+    document.getElementById('wo-ex-label').textContent='Cardio · '+cardioLabels[cRot];
   } else if(isBlueprint){
     var dbRot=parseInt(load('db_rotation')||'1');
     var dbBuildLabels=['','Build A — Lower','Build B — Push + Arms','Build C — Pull + Posterior'];
@@ -989,10 +1034,15 @@ function renderWorkout(){
   var dbRot2=isBlueprint?parseInt(load('db_rotation')||'1'):0;
   var buildMap={1:'A',2:'B',3:'C'};
   var currentBuild=isBlueprint?buildMap[dbRot2]:'';
+  var cRot2=isCardio?parseInt(load('cardio_session')||'1'):0;
+  var cardioBlockMap={1:'A',2:'B',3:'C',4:'D'};
+  var currentCardioBlock=isCardio?cardioBlockMap[cRot2]:'';
   var lastBlock='';
   var lastSubBlock='';
   var eh='';
   sess.exercises.forEach(function(ex){
+    // Cardio: skip exercises not in current session
+    if(isCardio&&ex.cardioBlock&&ex.cardioBlock!==currentCardioBlock)return;
     // Blueprint: skip build exercises not in current rotation
     if(isBlueprint&&ex.buildBlock&&ex.buildBlock!==currentBuild)return;
     // Blueprint: insert block headers on transition
@@ -1007,7 +1057,7 @@ function renderWorkout(){
       lastSubBlock=ex.subBlock;
       eh+='<div class="ex-sub-hdr">'+ex.subBlock+'</div>';
     }
-    var isInfo=isCircuit||((isClimbing||isBlueprint)&&ex.info===true);
+    var isInfo=isCircuit||((isClimbing||isBlueprint||isCardio)&&ex.info===true);
     var ss=ex.superset?'<span class="ex-ss">SS '+ex.superset+'</span>':ex.supersetWith?'<span class="ex-ss">SS '+ex.supersetWith+'</span>':'';
     eh+='<div class="ex-card" id="ex-'+ex.id+'">'
       +'<div class="ex-head" onclick="document.getElementById(\'ex-'+ex.id+'\').classList.toggle(\'open\')">'
@@ -1054,6 +1104,7 @@ function renderWorkout(){
 function adjLaps(d){var v=Math.max(0,parseInt(load('circuit_laps')||'0')+d);save('circuit_laps',String(v));renderWorkout();}
 function adjClimbWk(d){var v=Math.min(8,Math.max(1,parseInt(load('climb_week')||'1')+d));save('climb_week',String(v));renderWorkout();}
 function adjDBRotation(d){var v=parseInt(load('db_rotation')||'1')+d;if(v<1)v=3;if(v>3)v=1;save('db_rotation',String(v));renderWorkout();}
+function adjCardioSession(d){var v=parseInt(load('cardio_session')||'1')+d;if(v<1)v=4;if(v>4)v=1;save('cardio_session',String(v));renderWorkout();}
 function climbBlockInfo(w){
   if(w<=2)return 'Block 1 — Movement Base';
   if(w<=4)return 'Block 2 — Strength Base';
