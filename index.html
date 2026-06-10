@@ -183,6 +183,8 @@ html,body{
 }
 
 .ex-card{border:1px solid var(--border);border-radius:1px;margin-bottom:5px;overflow:hidden;}
+.ex-block-hdr{font-family:var(--mn);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);padding:18px 0 8px;opacity:0.85;}
+.ex-sub-hdr{font-family:var(--mn);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:12px 0 4px;opacity:0.7;}
 .ex-head{
   display:flex;align-items:center;padding:13px 14px;
   background:var(--s1);cursor:pointer;gap:10px;
@@ -572,6 +574,112 @@ const SESSIONS = [
        subs:[{n:'Cold Shower',d:'If ocean not accessible'}]},
     ]
   },
+  { id:'DB', label:'Daily Blueprint', type:'Unlock · Align · Build', day:'Daily', blueprint:true,
+    rules:['POSITION BEFORE LOAD','STOP AT 4 OF 5 — REPS IN RESERVE','RIGHT LEADS AND GOES FIRST','SAME SHAPE DAILY'],
+    exercises:[
+      // Block 1 — Unlock · Pliability
+      {id:'DBu1',name:'Pliability — Right Guard Chain', block:'unlock', subBlock:'Pliability', info:true,
+       reps:'4–5 min', tempo:'Soft tool · 3–4/10',
+       cues:['Order: adductors → lat/pec → calf → accessible psoas/QL','Soft tool, lateral, off the soft flank — never direct','3–4/10 pressure only — downregulate, don\'t dig','Soft tissue before the rehab work, not after'],
+       subs:[]},
+      // Block 1 — Unlock · Stretch / Open
+      {id:'DBu2',name:'Adductor Stretch — Standing', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right side first — right side leads','Posterior pelvic tilt — don\'t let lumbar extend','Breathe slowly into the inner thigh','First sensation only — not the deepest point'],
+       subs:[]},
+      {id:'DBu3',name:'Adductor Stretch — Half-Kneeling', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['R leg out, heel in line with L knee','Upright torso — no forward lean','Breathe into the right inner thigh','Right side first'],
+       subs:[]},
+      {id:'DBu4',name:'Hip Flexor / Psoas Stretch — Kneeling Lunge', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right leg back, left knee forward','Posterior pelvic tilt — tuck tailbone','Feel the right hip flexor under length','Neutral spine throughout — no lumbar extension'],
+       subs:[]},
+      {id:'DBu5',name:'Hip Flexor Stretch — Arms Up', block:'unlock', subBlock:'Stretch · Open', info:true,
+       reps:'Confirm with Lamberti', tempo:'Passive',
+       cues:['Dose to be confirmed with Lamberti','Right side first when prescribed','Maintain posterior pelvic tilt throughout'],
+       subs:[]},
+      {id:'DBu6',name:'Mermaid Stretch — R Leg Off Table', block:'unlock', subBlock:'Stretch · Open', info:true,
+       reps:'Confirm with Lamberti', tempo:'Passive',
+       cues:['Dose to be confirmed with Lamberti','Right leg off table — right side leads','Maintain spinal position per Lamberti instruction'],
+       subs:[]},
+      {id:'DBu7',name:'Gastrocnemius Stretch — Single Leg', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right leg first','Heel flat on floor — no rolling out','Knee straight — gastroc, not soleus','Ankle mobility directly feeds hip mobility'],
+       subs:[]},
+      // Block 1 — Unlock · Activate / Strengthen
+      {id:'DBu8',name:'Hip External Rotation — Sitting with Band', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'6', tempo:'2-1-2', load:'Band', rest:30,
+       cues:['Sitting — band around knees','Drive knee out against band — feel glute med','Right side first','Controlled return — don\'t let band snap back'],
+       subs:[]},
+      {id:'DBu9',name:'Donkey Kick — Hands and Knees', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'5', tempo:'2-1-2', load:'BW', rest:30,
+       cues:['Right leg first','Spine neutral — no rotation, no QL compensation','Kick to hip height — no higher','Squeeze glute at top, not the lower back'],
+       subs:[]},
+      {id:'DBu10',name:'Staggered Stand-to-Sit', block:'unlock', subBlock:'Activate · Strengthen', sets:3, reps:'6', tempo:'Controlled', load:'BW', rest:30,
+       cues:['Press toes down through the movement','Right leg leads — right side gets more demand','Control the descent — eccentric is the work','No collapsing into the seat'],
+       subs:[]},
+      {id:'DBu11',name:'Towel Calf Heel Raises — R Foot on Towel', block:'unlock', subBlock:'Activate · Strengthen', sets:5, reps:'10s', tempo:'Isometric', load:'BW', rest:20, isDuration:true,
+       cues:['Right foot on towel — creates asymmetry for right-side adaptation','Press through forefoot — full calf contraction','10s hold per rep','Links calf loading to right-side LLD compensation'],
+       subs:[]},
+      {id:'DBu12',name:'Calf Heel Raise — Single Leg', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'4', tempo:'3-1-3', load:'BW', rest:30,
+       cues:['Right leg first','3s up — 1s hold — 3s down','Full range: heel below platform level','Ankle mobility feeds hip mobility'],
+       subs:[]},
+      // Block 1 — Unlock · Trunk / Scapula
+      {id:'DBu13',name:'Push-Up Plus — On Knees', block:'unlock', subBlock:'Trunk · Scapula', sets:4, reps:'4', tempo:'2-1-2', load:'BW', rest:30,
+       cues:['At top of push-up: push extra — protract scapula fully','Feel serratus anterior engaging','Elbows stay slightly bent at "plus" position','Spine neutral — no sag or pike'],
+       subs:[]},
+      {id:'DBu14',name:'Plank with Pelvic Rotations', block:'unlock', subBlock:'Trunk · Scapula', sets:4, reps:'4', tempo:'Controlled', load:'BW', rest:30,
+       cues:['R pelvis back to neutral only — not past neutral','Do not rotate into extension on the right side','Feel right glute and right oblique working together','Anterior/posterior tilt: right side to neutral is the target'],
+       subs:[]},
+      // Block 2 — Align
+      {id:'DB4',name:'Dead Hang — Iso', block:'align', sets:3, reps:'20s', tempo:'Passive', load:'BW', rest:30, isDuration:true,
+       cues:['Full passive decompression — let everything go','Shoulders pack naturally — no active pull','Breathe slowly, feel right spine lengthening','Not grip training — structural reset'],
+       subs:[{n:'Supported Hang',d:'Slight knee bend for reduced load'}]},
+      {id:'DB5',name:'Hip Thrust — Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
+       cues:['Right glute fires first — if not, reset and try again','Full hip extension at top before beginning hold','Posterior pelvic tilt maintained throughout','Feel anterior hip opening on each breath'],
+       subs:[{n:'Single-Leg Glute Bridge Iso',d:'Right side leads'}]},
+      {id:'DB6',name:'Split-Squat — Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
+       cues:['Right leg forward — always','Knee above ankle, upright torso, level hips','Feel hip flexor of rear leg under mild stretch','Stay still — alignment is the work'],
+       subs:[{n:'Wall-Supported Split-Squat',d:'Fingertips on wall for balance only'}]},
+      {id:'DB7',name:'Pallof Hold', block:'align', sets:3, reps:'10s each', tempo:'Isometric', load:'Light band', rest:30, isDuration:true,
+       cues:['Band anchored at chest height — arms fully extended','Resist rotation: do not let the band win','Right side first','Breathe slowly — no bracing collapse at end of hold'],
+       subs:[{n:'Dead Bug Hold',d:'No band required — same anti-rotation demand'}]},
+      // Block 3 — Build Rotation A (Lower)
+      {id:'DB8',name:'Hip Thrust — Bilateral', block:'build', buildBlock:'A', sets:3, reps:'8', tempo:'3-1-2', load:'BW → Loaded', rest:90,
+       cues:['Right glute fires first — every rep','Full hip extension — 1s pause at top','3s eccentric — own the descent','Progress to barbell when form is consistent'],
+       subs:[{n:'Glute Bridge',d:'Floor-based, same cues'}]},
+      {id:'DB9',name:'Seated Leg Curl', block:'build', buildBlock:'A', sets:3, reps:'8', tempo:'3-1-3', load:'Machine', rest:90,
+       cues:['3s eccentric — non-negotiable','Right leg: match full range of motion of left','No swinging — control the load completely','Feel hamstring at full length at top of each rep'],
+       subs:[{n:'Nordic Curl',d:'High demand — only if accessible'},{n:'Band Leg Curl',d:'Lying, band at ankle'}]},
+      {id:'DB10',name:'Leg Extension', block:'build', buildBlock:'A', sets:3, reps:'10', tempo:'2-1-3', load:'Machine', rest:90,
+       cues:['Full extension — 1s pause at top','3s eccentric','Reduce load before sacrificing range','Right leg: ensure equal extension to left'],
+       subs:[{n:'Sissy Squat',d:'BW anterior chain loading, same knee-over-toe demand'}]},
+      {id:'DB11',name:'Cossack Squat — Quarter Depth', block:'build', buildBlock:'A', sets:3, reps:'6 each', tempo:'3-1-2', load:'BW', rest:60,
+       cues:['Right leads','Quarter depth only — hip mobility governs range, not ego','Heel planted on working leg — no rolling','Deepen gradually across sessions as adductor lengthens'],
+       subs:[{n:'Lateral Lunge',d:'Lower range demand — same adductor target'}]},
+      // Block 3 — Build Rotation B (Push + Arms)
+      {id:'DB12',name:'Single-Arm Chest Press', block:'build', buildBlock:'B', sets:3, reps:'8', tempo:'3-1-2', load:'DB', rest:90,
+       cues:['Right arm leads each set','Pack lats into bench before pressing','Pause at bottom — own the position','Stop at first grinding rep'],
+       subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor between reps'},{n:'Band Press',d:'Standing or seated'}]},
+      {id:'DB13',name:'Triceps Pushdown', block:'build', buildBlock:'B', sets:3, reps:'10', tempo:'2-1-2', load:'Band / Cable', rest:90,
+       cues:['Elbows pinned to sides — never drift','Full extension at bottom — 1s hold','Slow eccentric','Right arm first if unilateral'],
+       subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, no equipment'}]},
+      {id:'DB14',name:'Supported SL Stance Curl', block:'build', buildBlock:'B', sets:3, reps:'8 each', tempo:'2-1-3', load:'DB', rest:90,
+       cues:['Single-leg stance — right leg first','Support arm lightly on wall — balance not assist','3s eccentric — own the descent','Shoulder pinned — no swing'],
+       subs:[{n:'Standing DB Curl',d:'Bilateral stance, strict form'}]},
+      {id:'DB15',name:'Face Pull', block:'build', buildBlock:'B', sets:3, reps:'10', tempo:'2-2-2', load:'Band / Cable', rest:90,
+       cues:['Anchor at upper chest height','Thumbs behind ears at end position','External rotation emphasis','Right rear delt must work — if not, reset load'],
+       subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'}]},
+      // Block 3 — Build Rotation C (Pull + Posterior)
+      {id:'DB16',name:'Chest-Supported Row', block:'build', buildBlock:'C', sets:4, reps:'6', tempo:'2-1-3', load:'DB', rest:120,
+       cues:['Chest on incline bench — removes lower back from the equation','Elbow to hip — not hand to shoulder','Right arm leads','Own the contraction — pause at top'],
+       subs:[{n:'Band Row',d:'Same cues apply — anchor low'}]},
+      {id:'DB17',name:'Lat Pulldown', block:'build', buildBlock:'C', sets:3, reps:'8', tempo:'2-1-2', load:'Cable / Band', rest:90,
+       cues:['Pack lats before pulling','Lead with elbows','Feel full lat stretch at top — don\'t rush the return','Right side: ensure equal range of motion'],
+       subs:[{n:'Band Pulldown',d:'Anchored overhead'},{n:'Assisted Pull-up',d:'Band assist, same cues'}]},
+      {id:'DB18',name:'Rear Delt Raise', block:'build', buildBlock:'C', sets:3, reps:'10', tempo:'2-1-2', load:'DB / Band', rest:90,
+       cues:['Lead with elbow — not wrist','2s eccentric','No shrug throughout','Right rear delt must contract — not just right arm moving'],
+       subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Prone Rear Delt',d:'Face down on incline'}]},
+      {id:'DB19',name:'Hammer Curl', block:'build', buildBlock:'C', sets:3, reps:'8 each', tempo:'2-1-3', load:'DB', rest:90,
+       cues:['Right arm leads','Neutral grip throughout — no supination','3s eccentric','Shoulder pinned — no swing'],
+       subs:[{n:'Band Hammer Curl',d:'Using looped band at side'}]},
+    ]
+  },
   { id:'E', label:'Climbing', type:'Gym + Bouldering', day:'Sat', climbing:true,
     rules:['BOULDERING FIRST','WEAKER HAND LEADS','RIGHT HIP WARM-UP NON-NEGOTIABLE','ANTAGONIST EVERY SESSION'],
     exercises:[
@@ -722,7 +830,8 @@ function renderWorkout(){
   var sess=SESSIONS[currentSessIdx];
   var isCircuit=sess.circuit===true;
   var isClimbing=sess.climbing===true;
-  var isSpecial=isCircuit||isClimbing;
+  var isBlueprint=sess.blueprint===true;
+  var isSpecial=isCircuit||isClimbing||isBlueprint;
 
   document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
   document.getElementById('wo-warmup-wrap').style.display=isSpecial?'none':'block';
@@ -752,6 +861,18 @@ function renderWorkout(){
       +'<button class="counter-btn" onclick="adjClimbWk(1)">+</button>'
       +'</div></div>';
     document.getElementById('wo-ex-label').textContent='Gym + Bouldering · 120 min';
+  } else if(isBlueprint){
+    var dbRot=parseInt(load('db_rotation')||'1');
+    var dbBuildLabels=['','Build A — Lower','Build B — Push + Arms','Build C — Pull + Posterior'];
+    counterEl.style.display='block';
+    counterEl.innerHTML='<div class="counter-row">'
+      +'<div class="counter-info"><div class="counter-label">~54 min · 3 Blocks</div><div class="counter-sub">'+dbBuildLabels[dbRot]+'</div></div>'
+      +'<div class="counter-ctrl">'
+      +'<button class="counter-btn" onclick="adjDBRotation(-1)">−</button>'
+      +'<div><div class="counter-val">'+dbRot+'</div><div class="counter-unit">of 3</div></div>'
+      +'<button class="counter-btn" onclick="adjDBRotation(1)">+</button>'
+      +'</div></div>';
+    document.getElementById('wo-ex-label').textContent='Daily Blueprint · Unlock · Align · '+dbBuildLabels[dbRot];
   } else {
     counterEl.style.display='none';
     document.getElementById('wo-ex-label').textContent=sess.type+' · '+sess.exercises.length+' exercises';
@@ -760,9 +881,28 @@ function renderWorkout(){
   }
 
   var dk=todayStr();
+  var dbRot2=isBlueprint?parseInt(load('db_rotation')||'1'):0;
+  var buildMap={1:'A',2:'B',3:'C'};
+  var currentBuild=isBlueprint?buildMap[dbRot2]:'';
+  var lastBlock='';
+  var lastSubBlock='';
   var eh='';
   sess.exercises.forEach(function(ex){
-    var isInfo=isCircuit||(isClimbing&&ex.info===true);
+    // Blueprint: skip build exercises not in current rotation
+    if(isBlueprint&&ex.buildBlock&&ex.buildBlock!==currentBuild)return;
+    // Blueprint: insert block headers on transition
+    if(isBlueprint&&ex.block!==lastBlock){
+      lastBlock=ex.block;
+      lastSubBlock='';
+      var bhdrs={unlock:'Block 1 — Unlock · ~18 min · Daily',align:'Block 2 — Align · ~14 min · Daily',build:'Block 3 — Build · ~22 min'};
+      eh+='<div class="ex-block-hdr">'+(bhdrs[ex.block]||ex.block)+'</div>';
+    }
+    // Blueprint: insert sub-block headers on transition
+    if(isBlueprint&&ex.subBlock&&ex.subBlock!==lastSubBlock){
+      lastSubBlock=ex.subBlock;
+      eh+='<div class="ex-sub-hdr">'+ex.subBlock+'</div>';
+    }
+    var isInfo=isCircuit||((isClimbing||isBlueprint)&&ex.info===true);
     var ss=ex.superset?'<span class="ex-ss">SS '+ex.superset+'</span>':ex.supersetWith?'<span class="ex-ss">SS '+ex.supersetWith+'</span>':'';
     eh+='<div class="ex-card" id="ex-'+ex.id+'">'
       +'<div class="ex-head" onclick="document.getElementById(\'ex-'+ex.id+'\').classList.toggle(\'open\')">'
@@ -808,6 +948,7 @@ function renderWorkout(){
 
 function adjLaps(d){var v=Math.max(0,parseInt(load('circuit_laps')||'0')+d);save('circuit_laps',String(v));renderWorkout();}
 function adjClimbWk(d){var v=Math.min(8,Math.max(1,parseInt(load('climb_week')||'1')+d));save('climb_week',String(v));renderWorkout();}
+function adjDBRotation(d){var v=parseInt(load('db_rotation')||'1')+d;if(v<1)v=3;if(v>3)v=1;save('db_rotation',String(v));renderWorkout();}
 function climbBlockInfo(w){
   if(w<=2)return 'Block 1 — Movement Base';
   if(w<=4)return 'Block 2 — Strength Base';
