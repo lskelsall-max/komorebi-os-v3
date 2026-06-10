@@ -316,6 +316,27 @@ html,body{
 }
 .mx-save-btn:active{opacity:0.6;}
 .mx-save-btn.saved{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+
+/* ── AESTHETICS OVERLAY ── */
+.ae-body{padding:0 24px 48px;}
+.ae-intro{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--muted);padding:20px 0 18px;border-bottom:1px solid var(--border);margin-bottom:6px;line-height:1.75;}
+.ae-section{padding:16px 0;border-bottom:1px solid var(--border);}
+.ae-section:last-child{border-bottom:none;}
+.ae-section-hdr{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.ae-body-text{font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:12px;}
+.ae-footer-text{font-family:var(--sf);font-size:14px;font-style:italic;color:var(--dim);line-height:1.75;margin-top:4px;}
+.ae-rule{margin-bottom:14px;}
+.ae-rule-title{font-family:var(--sf);font-size:15px;font-weight:500;color:var(--text);display:block;margin-bottom:4px;}
+.ae-rule-body{font-family:var(--sf);font-size:14px;font-weight:300;color:var(--muted);line-height:1.75;}
+.ae-tag{font-family:var(--mn);font-size:7px;letter-spacing:0.06em;color:var(--muted);flex-shrink:0;text-align:right;max-width:110px;line-height:1.5;}
+.ae-phase-body{font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+.ae-meta{margin-top:4px;}
+.ae-meta-row{margin-bottom:10px;}
+.ae-meta-label{font-family:var(--mn);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:3px;}
+.ae-meta-val{font-family:var(--sf);font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;}
+.ae-hard-gate{background:var(--goldF);border:1px solid rgba(200,164,85,0.18);border-radius:1px;padding:10px 12px;margin:8px 0;}
+.ae-open-q{background:var(--s1);border:1px solid var(--border);border-radius:1px;padding:10px 12px;margin:8px 0;}
+.ae-final{font-family:var(--mn);font-size:10px;letter-spacing:0.1em;color:var(--gold);margin-top:10px;line-height:2;}
 </style>
 </head>
 <body>
@@ -351,6 +372,15 @@ html,body{
       Read · Exercise · GTG · Build — 5× week
     </div>
     <div class="view-btn" style="color:var(--purple);background:var(--purpleF);border-color:rgba(155,142,196,0.28);margin:0 0 4px 0;" onclick="openMatrix()">Open matrix →</div>
+  </div>
+
+  <!-- ── PROJECT AESTHETICS ── -->
+  <div class="track" style="border-bottom:none">
+    <div class="track-label" style="color:var(--purple)">Project Aesthetics</div>
+    <div style="font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);padding-bottom:14px;">
+      Aesthetic &amp; Structural Roadmap &middot; 6 phases
+    </div>
+    <div class="view-btn" style="color:var(--purple);background:var(--purpleF);border-color:rgba(155,142,196,0.28);margin:0 0 4px 0;" onclick="openAesthetics()">Open roadmap →</div>
   </div>
 
   <!-- MANTRA -->
@@ -418,6 +448,15 @@ html,body{
     <button class="j-tab" id="j-closing-btn" onclick="setJournalTab('closing')">CLOSING</button>
   </div>
   <div class="j-body" id="j-body"></div>
+</div>
+
+<!-- ── AESTHETICS OVERLAY ── -->
+<div class="overlay" id="aesthetics-overlay">
+  <div class="ov-header">
+    <div class="ov-title">Project Aesthetics</div>
+    <button class="ov-close" onclick="closeAesthetics()">Close</button>
+  </div>
+  <div class="ae-body" id="ae-body"></div>
 </div>
 
 <script>
@@ -711,6 +750,74 @@ const SESSIONS = [
     ]
   },
 ];
+
+// ── AESTHETICS DATA ──────────────────────────────────────────────────────────
+
+const AESTHETICS = {
+  subtitle: 'A three-year map, not a contract. Ordering, not timeline. Held lightly. Pull back anytime.',
+  philosophy: {
+    intro: 'This document exists to do one thing: convert a diffuse, recurring want into a sequenced, autonomous decision set, so the wanting can stop running as an open loop and start running as a plan. Committing to the theory of the sequence is what frees the mind — not the execution. The map is the relief, not the destination.',
+    rules: [
+      { title:'Reversibility ascends.', body:'The sequence runs from fully reversible to permanent. Lower-risk, undoable work comes first; irreversible surgery comes last. This is not timidity — it is correct seamanship. You learn how your face responds to small, recoverable inputs before you commit to anything you cannot take back.' },
+      { title:'Every gate is a settled-hand decision.', body:'No item is executed from inside a flare of the dawn-audit loop. The test is never am I allowed — the answer to that is always yes. The test is: what am I asking this procedure to carry? If it carries a preference, proceed. If it carries your salvation, stop — no surgeon can pay that debt, and you will simply arrive at the next item with the same freight unpaid.' },
+      { title:'The clinician owns the clinical call.', body:'This roadmap sequences and frames. It does not prescribe. Each phase names the practitioner who actually decides suitability, technique, and go/no-go. My job is the order and the state you decide from. Theirs is the medicine.' },
+    ],
+    footer: 'The parallel foundations — sleep, stress, nutrition, rehab — are already in motion and are the substrate this entire roadmap rests on. Aesthetic work executed on an unstable base is forced loading. It pays out nothing, same as the hip did for fifteen years.',
+  },
+  phases: [
+    { id:'ph1', num:1, title:'Skin work', tag:'reversible · already in motion',
+      intro:'Microneedling and radiofrequency microneedling (Morpheus8). The most reversible and lowest-risk tier, and the correct foundation: skin quality and tone are the canvas every later decision reads against. Already underway via the planned Morpheus8 sequence.',
+      why:'Fully recoverable. Improves the substrate before any structural change is judged. Nothing here forecloses a later option.',
+      gate:'Practitioner cadence and skin recovery between sessions. Nothing more.',
+      owns:'Nina (microneedling), Dr Erasmus (RF / aesthetic strategy).',
+      carry:'Low stakes by design. This is the phase to practise the settled-hand discipline on, precisely because the cost of getting it wrong is near zero.',
+    },
+    { id:'ph2', num:2, title:'Dental', tag:'largely restorative · foundational to the lower face',
+      intro:'Dental work sits second deliberately. It is partly functional, partly foundational to lower-face proportion, and it informs everything downstream — bite, jaw projection, and the way the lower third of the face presents all shift with dental work. You do not want to commit to jaw filler against a lower-face structure you are about to change.',
+      why:'Foundational. Sequencing dental before jawline filler means the filler decision is made against the final structure, not a provisional one.',
+      gate:'Clinical assessment and treatment plan.',
+      owns:'Dr Marc Sher.',
+      carry:'Mostly restorative, so the freight is naturally lighter. Keep it that way.',
+    },
+    { id:'ph3', num:3, title:'Botox & filler, jawline', tag:'semi-reversible',
+      intro:'Neuromodulator (botox) is reversible — it metabolises in roughly three to four months. Filler is dissolvable (hyaluronidase) but behaves as semi-permanent in practice. This is the first tier where the "restore" framing partly drops away: jawline filler is augmentation toward an ideal, not restoration of something lost.',
+      why:'More committing than skin, less than anything permanent. Crucially, it sits after dental so the lower-face canvas is settled, and before FUE so the hairline/face-frame is not yet altered — meaning you can re-judge whether the jaw still warrants intervention once the frame changes.',
+      gate:'Settled-hand decision. This is the first item where the carry-test bites — augmentation toward an ideal you did not previously have is exactly the kind of want that can quietly start carrying salvation. Watch it.',
+      owns:'Dr Erasmus.',
+      carry:'Augmentation toward an ideal, not restoration of something lost. Watch whether this want is clean or carrying freight.',
+      openQ:'Whether to hold jaw filler until after FUE has settled, since the hairline reframes the whole face and may change what the jaw needs — or wants — to be.',
+    },
+    { id:'ph4', num:4, title:'FUE', tag:'permanent · the most defensible of the aesthetic items',
+      intro:'Follicular unit extraction, ~2.5–3k grafts, to restore the frontal hairline and reframe the face. Restoration of density that genuinely moved — the reference point is the Mauritius / PGA Catalunya period, mid-to-late 2025. The want here is clean: it was a real part of you, it left, you miss it.',
+      why:'Permanent, so it follows everything reversible. But it precedes the nose deliberately — the hairline reframes the entire face, and the nose should be judged against the final frame, not the current one.',
+      gate:'Settled-hand decision. Gated on medical stabilisation, not the calendar. See hard gate.',
+      owns:'FUE surgeon (TBC) + Dr Erasmus on the medical bridge.',
+      carry:'The cleanest want on the list. Let it stay clean — wanted, additive, survivable if the result is only 80%. If it starts carrying "this will finally make me okay," pause and take that to Kruger before booking.',
+      hardGate:'A stable medical baseline first. The non-5-ARI medical track — oral/topical minoxidil, dutasteride mesotherapy, PRP/exosomes, LLLT — is the bridge: its job is to arrest the loss and establish a stable density before a single graft is placed. FUE is gated on that stabilisation, not on the calendar.',
+    },
+    { id:'ph5', num:5, title:'Nose straightening', tag:'permanent surgery',
+      intro:'Septo/rhinoplasty to correct the bend and the asymmetry. Structural, real, fixable. The most surgical of the aesthetic items and second-most serious overall.',
+      why:'Permanent surgery with a months-long recovery, and — the deliberate sequencing point — it follows FUE so the nose is judged against a reframed face. There is a real chance the frame change alone shifts how much the nose bothers you. Decide the nose after you have lived with the new hairline for long enough to know.',
+      gate:'Settled-hand decision, made from a stable place — explicitly not from the dawn-audit loop.',
+      owns:'Facial plastic / ENT surgeon (TBC).',
+      carry:'This is the procedure most entangled with the case-built-against-the-face. Highest vigilance. The plainest version of the want — I\'d prefer my nose straighter and I\'m looking into it — is the only version safe to operate on.',
+    },
+    { id:'ph6', num:6, title:'Hip operation', tag:'not aesthetic · the most serious · own governed track',
+      intro:'Functional, not cosmetic, and the most serious intervention on the entire map — which is why it sits last in ordering despite being first in importance to a life lived freely. It does not belong to the aesthetic logic above; it runs on its own parallel, already-governed surgical track.',
+      why:'Not because it matters least — it matters most — but because it is the most serious and is already correctly sequenced elsewhere. Placing it here records it without absorbing it into aesthetic decision-making.',
+      gate:'The CT scanogram (open action item); the 8 July wall-test re-evaluation; Wendy\'s governance of all loading and capacity markers; the hip-preservation specialist (PAO / osteotomy assessment) held open in parallel. No part of the surgical decision is made from this roadmap.',
+      owns:'Wendy (capacity / rehab governance) + hip-preservation specialist (surgical assessment).',
+      carry:'Different in kind. This is about moving freely without pain, not about how a thing reads. The want is unimpeachable. The only discipline is sequence and data — operate from the scanogram and the specialist, never from desperation.',
+    },
+  ],
+  logic: {
+    body: 'If the whole map reduces to two principles, they are these:',
+    p1: { title:'Reversible before permanent.', body:'Skin → dental → botox/filler → FUE → nose → hip is a strict ascent up the irreversibility gradient. You always retain the maximum number of open options for the longest time.' },
+    p2: { title:'Frame before feature.', body:'The face is judged as a whole, not as a parts list. Dental settles the lower face before the jaw is filled. FUE reframes the whole face before the nose is judged. Each later, more permanent decision is made against the most complete version of the canvas — which means each one may turn out smaller, or unnecessary, than it looks from here.' },
+    openQ: 'Let the FUE fully settle before committing to the nose. A restored hairline changes the read of the entire face. It is genuinely possible the nose stops bothering you once the frame is back — and a rhinoplasty you didn\'t need is a permanent answer to a question that resolved itself. This costs nothing to wait on.',
+  },
+  pullback: ['This is a map, not a march. Any item can be paused, reordered, or removed at any point, and doing so is not failure — it is the autonomy the whole document exists to create. The commitment is to the theory of the sequence. The execution is always a fresh, settled decision, made when the gate is met and the hand is steady. Nothing here is owed to a timeline. Nothing here is a verdict on your worth.', 'The wanting is clean. The order is sound. The pace is yours.'],
+};
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
 
@@ -1098,6 +1205,65 @@ function mxToggle(week,day,act){
 function mxNav(dir){
   mxWeek=Math.min(Math.max(mxWeek+dir,1),MX_WEEKS);
   renderMatrix();
+}
+
+function openAesthetics(){renderAesthetics();document.getElementById('aesthetics-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeAesthetics(){document.getElementById('aesthetics-overlay').classList.remove('open');document.body.style.overflow='';}
+
+function renderAesthetics(){
+  var ae=AESTHETICS;
+  var h='';
+
+  // Subtitle
+  h+='<div class="ae-intro">'+ae.subtitle+'</div>';
+
+  // Governing Philosophy
+  h+='<div class="ae-section">';
+  h+='<div class="ae-section-hdr">Governing Philosophy</div>';
+  h+='<div class="ae-body-text">'+ae.philosophy.intro+'</div>';
+  ae.philosophy.rules.forEach(function(r,i){
+    h+='<div class="ae-rule"><span class="ae-rule-title">'+(i+1)+'. '+r.title+'</span><div class="ae-rule-body">'+r.body+'</div></div>';
+  });
+  h+='<div class="ae-footer-text">'+ae.philosophy.footer+'</div>';
+  h+='</div>';
+
+  // Phases
+  ae.phases.forEach(function(ph){
+    h+='<div class="ex-card" id="ae-'+ph.id+'">';
+    h+='<div class="ex-head" onclick="document.getElementById(\'ae-'+ph.id+'\').classList.toggle(\'open\')">';
+    h+='<span class="ex-id">'+ph.num+'</span>';
+    h+='<span class="ex-name">'+ph.title+'</span>';
+    h+='<span class="ae-tag">'+ph.tag+'</span>';
+    h+='</div>';
+    h+='<div class="ex-body">';
+    h+='<div class="ae-phase-body">'+ph.intro+'</div>';
+    h+='<div class="ae-meta">';
+    h+='<div class="ae-meta-row"><div class="ae-meta-label">Why here</div><div class="ae-meta-val">'+ph.why+'</div></div>';
+    h+='<div class="ae-meta-row"><div class="ae-meta-label">Gate</div><div class="ae-meta-val">'+ph.gate+'</div></div>';
+    h+='<div class="ae-meta-row"><div class="ae-meta-label">Owns the call</div><div class="ae-meta-val">'+ph.owns+'</div></div>';
+    h+='<div class="ae-meta-row"><div class="ae-meta-label">Carry-test</div><div class="ae-meta-val">'+ph.carry+'</div></div>';
+    if(ph.hardGate){h+='<div class="ae-hard-gate"><div class="ae-meta-label">Hard gate</div><div class="ae-meta-val">'+ph.hardGate+'</div></div>';}
+    if(ph.openQ){h+='<div class="ae-open-q"><div class="ae-meta-label">Open question</div><div class="ae-meta-val">'+ph.openQ+'</div></div>';}
+    h+='</div></div></div>';
+  });
+
+  // Sequencing Logic
+  h+='<div class="ae-section">';
+  h+='<div class="ae-section-hdr">Sequencing Logic</div>';
+  h+='<div class="ae-body-text">'+ae.logic.body+'</div>';
+  h+='<div class="ae-rule"><span class="ae-rule-title">'+ae.logic.p1.title+'</span><div class="ae-rule-body">'+ae.logic.p1.body+'</div></div>';
+  h+='<div class="ae-rule"><span class="ae-rule-title">'+ae.logic.p2.title+'</span><div class="ae-rule-body">'+ae.logic.p2.body+'</div></div>';
+  h+='<div class="ae-open-q"><div class="ae-meta-label">Open question worth holding</div><div class="ae-meta-val">'+ae.logic.openQ+'</div></div>';
+  h+='</div>';
+
+  // Pull-back Clause
+  h+='<div class="ae-section">';
+  h+='<div class="ae-section-hdr">The Pull-Back Clause</div>';
+  h+='<div class="ae-body-text">'+ae.pullback[0]+'</div>';
+  h+='<div class="ae-final">'+ae.pullback[1]+'</div>';
+  h+='</div>';
+
+  document.getElementById('ae-body').innerHTML=h;
 }
 
 function openMatrix(){
