@@ -46,15 +46,12 @@ html,body{
 }
 
 /* ── HEADER ── */
-.header{
-  padding:0 24px 28px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:0;
-}
+.header{padding:0 24px 24px;}
 .header-row{display:flex;justify-content:space-between;align-items:flex-start;}
 .header-date{
   font-family:var(--sf);font-size:38px;font-weight:300;
   letter-spacing:-0.01em;line-height:1;
+  transition:color 1s;
 }
 .header-day{
   font-family:var(--mn);font-size:8px;letter-spacing:0.2em;
@@ -62,17 +59,50 @@ html,body{
 }
 .clock{
   font-family:var(--mn);font-size:11px;color:var(--dim);
-  letter-spacing:0.06em;padding-top:6px;
+  letter-spacing:0.06em;padding-top:6px;text-align:right;
+}
+.phase{
+  font-family:var(--mn);font-size:7px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--dim);margin-top:5px;text-align:right;
+  transition:color 1s;
 }
 
-/* ── TRACK ── */
-.track{padding:28px 24px;border-bottom:1px solid var(--border);}
+/* Dawn / dusk / night tints */
+body.ph-dawn  .header-date,body.ph-dawn  .phase{color:var(--gold);}
+body.ph-dusk  .header-date,body.ph-dusk  .phase{color:var(--ember);}
+body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
+
+/* ── DAY PROGRESS HAIRLINE ── */
+.day-line{height:1px;background:var(--border);position:relative;overflow:hidden;}
+.day-line-fill{
+  position:absolute;left:0;top:0;height:100%;width:0%;
+  background:linear-gradient(90deg,var(--gold),var(--ember));
+  transition:width 0.4s ease;
+}
+
+/* ── PILLAR ── */
+.track{padding:26px 24px 18px;border-bottom:1px solid var(--border);transition:opacity 0.6s;}
+.track:last-of-type{border-bottom:none;}
 .track-label{
   font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
-  text-transform:uppercase;margin-bottom:22px;
+  text-transform:uppercase;margin-bottom:12px;
   display:flex;align-items:center;gap:12px;
 }
 .track-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.track-count{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--dim);}
+.track-now{
+  font-size:7px;letter-spacing:0.2em;color:inherit;
+  border:1px solid currentColor;border-radius:1px;padding:2px 7px;opacity:0.85;
+}
+.track.complete{opacity:0.55;}
+
+/* ── MANTRA ── */
+.mantra{
+  padding:34px 24px 4px;text-align:center;
+  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
+  color:var(--dim);text-transform:uppercase;transition:color 0.8s;
+}
+.mantra.lit{color:var(--gold);}
 
 /* ── CHECKLIST ── */
 .check-item{
@@ -92,10 +122,12 @@ html,body{
 .check-box.on-gold{background:var(--gold);border-color:var(--gold);}
 .check-box.on-ember{background:var(--ember);border-color:var(--ember);}
 .check-box.on-sage{background:var(--sage);border-color:var(--sage);}
+.check-box.on-purple{background:var(--purple);border-color:var(--purple);}
 .check-tick{font-size:10px;color:var(--bg);font-weight:700;opacity:0;transition:opacity 0.15s;}
 .check-box.on-gold .check-tick,
 .check-box.on-ember .check-tick,
-.check-box.on-sage .check-tick{opacity:1;}
+.check-box.on-sage .check-tick,
+.check-box.on-purple .check-tick{opacity:1;}
 
 .check-text{
   font-family:var(--sf);font-size:17px;font-weight:300;
@@ -118,24 +150,6 @@ html,body{
   margin:0 0 4px 34px;transition:opacity 0.2s;
 }
 .view-btn:active{opacity:0.6;}
-
-/* ── REWARDS ── */
-.reward-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:13px 0;border-bottom:1px solid var(--border);
-  cursor:pointer;-webkit-user-select:none;user-select:none;
-}
-.reward-item:last-child{border-bottom:none;}
-.reward-item:active{opacity:0.6;}
-.reward-text{
-  font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);
-}
-.reward-pips{display:flex;gap:5px;}
-.reward-pip{
-  width:18px;height:18px;border:1px solid var(--borderM);
-  border-radius:2px;background:none;transition:all 0.2s;
-}
-.reward-pip.done{background:var(--sage);border-color:var(--sage);}
 
 /* ── WORKOUT OVERLAY ── */
 .overlay{
@@ -227,35 +241,6 @@ html,body{
 .ex-subs-title{font-family:var(--mn);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
 .ex-sub{font-family:var(--sf);font-size:12px;color:var(--muted);margin-bottom:3px;line-height:1.5;}
 
-.wo-item{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:11px 0;border-bottom:1px solid var(--border);
-  cursor:pointer;-webkit-user-select:none;user-select:none;
-}
-.wo-item:last-child{border-bottom:none;}
-.wo-item:active{opacity:0.6;}
-.wo-item-name{font-family:var(--sf);font-size:16px;font-weight:300;flex:1;transition:color 0.2s;}
-.wo-item-dur{font-family:var(--mn);font-size:9px;color:var(--muted);letter-spacing:0.08em;padding-top:3px;}
-.wo-item.done .wo-item-name{color:var(--dim);}
-
-/* ── JOURNAL OVERLAY ── */
-.j-tabs{display:flex;gap:6px;padding:16px 24px;}
-.j-tab{flex:1;padding:10px 6px;background:none;border:1px solid var(--border);cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;font-family:var(--mn);font-size:9px;letter-spacing:0.15em;color:var(--muted);}
-.j-tab.active{background:var(--goldF);border-color:rgba(200,164,85,0.35);color:var(--gold);}
-.j-body{padding:0 24px 48px;}
-.j-q{padding:16px 0;border-bottom:1px solid var(--border);}
-.j-q-num{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:8px;}
-.j-q-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);margin-bottom:10px;line-height:1.35;}
-.j-textarea{width:100%;min-height:52px;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:11px;padding:10px 12px;resize:none;outline:none;line-height:1.6;border-radius:1px;}
-.j-affirm{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:14px;}
-.j-affirm-num{font-family:var(--mn);font-size:9px;color:var(--gold);min-width:16px;padding-top:3px;}
-.j-affirm-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);line-height:1.4;}
-.j-mantra{padding:20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);text-align:center;border-radius:1px;}
-.j-mantra-label{font-family:var(--mn);font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.j-mantra-text{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--text);line-height:1.6;}
-.affirm-btn{display:block;width:100%;margin-top:24px;padding:12px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
-.affirm-btn.done{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
-
 /* ── COUNTER UI ── */
 .counter-row{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 4px;}
 .counter-info .counter-label{font-family:var(--mn);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
@@ -265,78 +250,6 @@ html,body{
 .counter-val{font-family:var(--mn);font-size:22px;font-weight:500;color:var(--ember);text-align:center;min-width:44px;}
 .counter-unit{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;color:var(--muted);text-align:center;margin-top:1px;}
 
-/* ── MATRIX OVERLAY ── */
-.mx-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);}
-.mx-nav-btn{font-family:var(--mn);font-size:20px;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px 12px;line-height:1;}
-.mx-nav-btn:active{opacity:0.5;}
-.mx-nav-center{text-align:center;}
-.mx-nav-title{font-family:var(--sf);font-size:20px;font-weight:300;}
-.mx-nav-sub{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;color:var(--muted);margin-top:3px;}
-
-.mx-grid{padding:20px 24px 8px;}
-.mx-days-header{display:grid;grid-template-columns:82px repeat(5,1fr);gap:5px;margin-bottom:6px;}
-.mx-day-label{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--muted);text-align:center;text-transform:uppercase;}
-
-.mx-row{display:grid;grid-template-columns:82px repeat(5,1fr);gap:5px;margin-bottom:5px;align-items:center;}
-.mx-act-info{padding-right:4px;}
-.mx-act-label{font-family:var(--mn);font-size:8px;letter-spacing:0.08em;text-transform:uppercase;line-height:1.3;}
-.mx-act-sub{font-family:var(--mn);font-size:7px;color:var(--muted);margin-top:2px;}
-
-.mx-cell{
-  aspect-ratio:1;border:1px solid var(--border);border-radius:1px;
-  background:var(--s1);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mn);font-size:11px;transition:all 0.15s;
-  -webkit-user-select:none;user-select:none;
-}
-.mx-cell:active{transform:scale(0.84);}
-.mx-cell.done-gold{background:var(--gold);border-color:var(--gold);color:var(--bg);}
-.mx-cell.done-ember{background:var(--ember);border-color:var(--ember);color:var(--bg);}
-.mx-cell.done-sage{background:var(--sage);border-color:var(--sage);color:var(--bg);}
-.mx-cell.done-purple{background:var(--purple);border-color:var(--purple);color:var(--bg);}
-
-.mx-strip-wrap{padding:0 24px 4px;}
-.mx-strip-label{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-.mx-strip{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;}
-.mx-wk{
-  height:26px;border:1px solid var(--border);border-radius:1px;background:var(--s1);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mn);font-size:7px;color:var(--dim);transition:all 0.15s;
-}
-.mx-wk:active{opacity:0.6;}
-.mx-wk.mx-wk-cur{border-color:var(--gold);color:var(--gold);}
-.mx-wk.mx-wk-full{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
-.mx-wk.mx-wk-part{background:var(--s2);border-color:var(--borderM);color:var(--muted);}
-.mx-wk.mx-wk-selected{border-color:var(--ember);color:var(--ember);}
-
-.mx-save-btn{
-  display:block;width:calc(100% - 48px);margin:16px 24px 48px;
-  padding:14px;background:none;border:1px solid var(--borderM);
-  font-family:var(--mn);font-size:9px;letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--text);cursor:pointer;border-radius:1px;transition:all 0.2s;
-}
-.mx-save-btn:active{opacity:0.6;}
-.mx-save-btn.saved{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
-
-/* ── AESTHETICS OVERLAY ── */
-.ae-body{padding:0 24px 48px;}
-.ae-intro{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--muted);padding:20px 0 18px;border-bottom:1px solid var(--border);margin-bottom:6px;line-height:1.75;}
-.ae-section{padding:16px 0;border-bottom:1px solid var(--border);}
-.ae-section:last-child{border-bottom:none;}
-.ae-section-hdr{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
-.ae-body-text{font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:12px;}
-.ae-footer-text{font-family:var(--sf);font-size:14px;font-style:italic;color:var(--dim);line-height:1.75;margin-top:4px;}
-.ae-rule{margin-bottom:14px;}
-.ae-rule-title{font-family:var(--sf);font-size:15px;font-weight:500;color:var(--text);display:block;margin-bottom:4px;}
-.ae-rule-body{font-family:var(--sf);font-size:14px;font-weight:300;color:var(--muted);line-height:1.75;}
-.ae-tag{font-family:var(--mn);font-size:7px;letter-spacing:0.06em;color:var(--muted);flex-shrink:0;text-align:right;max-width:110px;line-height:1.5;}
-.ae-phase-body{font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:14px;}
-.ae-meta{margin-top:4px;}
-.ae-meta-row{margin-bottom:10px;}
-.ae-meta-label{font-family:var(--mn);font-size:7px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);opacity:0.75;margin-bottom:3px;}
-.ae-meta-val{font-family:var(--sf);font-size:14px;font-weight:300;color:var(--muted);line-height:1.7;}
-.ae-hard-gate{background:var(--goldF);border:1px solid rgba(200,164,85,0.18);border-radius:1px;padding:10px 12px;margin:8px 0;}
-.ae-open-q{background:var(--s1);border:1px solid var(--border);border-radius:1px;padding:10px 12px;margin:8px 0;}
-.ae-final{font-family:var(--mn);font-size:10px;letter-spacing:0.1em;color:var(--gold);margin-top:10px;line-height:2;}
 </style>
 </head>
 <body>
@@ -349,163 +262,68 @@ html,body{
         <div class="header-date" id="hDate">—</div>
         <div class="header-day" id="hDay">—</div>
       </div>
-      <div class="clock" id="clock">—:—</div>
+      <div>
+        <div class="clock" id="clock">—:—</div>
+        <div class="phase" id="phase">—</div>
+      </div>
     </div>
   </div>
 
-  <!-- ── DAILY PROTOCOL ── -->
-  <div class="track">
-    <div class="track-label" style="color:var(--gold)">Daily Protocol</div>
-    <div id="floors"></div>
-  </div>
+  <!-- DAY PROGRESS -->
+  <div class="day-line"><div class="day-line-fill" id="day-fill"></div></div>
 
-  <!-- ── WEEKLY REWARDS ── -->
-  <div class="track" style="border-bottom:none">
-    <div class="track-label" style="color:var(--sage)">Weekly Rewards</div>
-    <div id="rewards"></div>
-  </div>
-
-  <!-- ── 12-WEEK MATRIX ── -->
-  <div class="track" style="border-bottom:none">
-    <div class="track-label" style="color:var(--purple)">12-Week Matrix</div>
-    <div style="font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);padding-bottom:14px;">
-      Read · Exercise · GTG · Build — 5× week
-    </div>
-    <div class="view-btn" style="color:var(--purple);background:var(--purpleF);border-color:rgba(155,142,196,0.28);margin:0 0 4px 0;" onclick="openMatrix()">Open matrix →</div>
-  </div>
-
-  <!-- ── PROJECT AESTHETICS ── -->
-  <div class="track" style="border-bottom:none">
-    <div class="track-label" style="color:var(--purple)">Project Aesthetics</div>
-    <div style="font-family:var(--sf);font-size:15px;font-weight:300;color:var(--muted);padding-bottom:14px;">
-      Aesthetic &amp; Structural Roadmap &middot; 6 phases
-    </div>
-    <div class="view-btn" style="color:var(--purple);background:var(--purpleF);border-color:rgba(155,142,196,0.28);margin:0 0 4px 0;" onclick="openAesthetics()">Open roadmap →</div>
-  </div>
+  <!-- ── PILLARS ── -->
+  <div id="pillars"></div>
 
   <!-- MANTRA -->
-  <div style="padding:32px 24px 4px;text-align:center;">
-    <div style="font-family:var(--mn);font-size:8px;letter-spacing:0.22em;color:var(--dim);text-transform:uppercase;">
-      Surf &middot; Code &middot; Eat &middot; Sleep &middot; Repeat
-    </div>
-  </div>
+  <div class="mantra" id="mantra">Surf &middot; Code &middot; Eat &middot; Sleep &middot; Repeat</div>
 
 </div>
 
 <!-- ── WORKOUT OVERLAY ── -->
 <div class="overlay" id="workout-overlay">
   <div class="ov-header">
-    <div class="ov-title">Strength Protocol</div>
+    <div class="ov-title">Training</div>
     <button class="ov-close" onclick="closeWorkout()">Close</button>
   </div>
   <div class="sess-tabs" id="sess-tabs"></div>
   <div class="wo-rules" id="wo-rules"></div>
   <div id="wo-counter" style="display:none"></div>
-  <div id="wo-warmup-wrap" class="wo-section">
-    <div class="wo-section-label">Warmup · 8 min</div>
-    <div id="wo-warmup"></div>
-  </div>
-  <div class="wo-section">
+  <div class="wo-section" style="padding-bottom:48px">
     <div class="wo-section-label" id="wo-ex-label">Exercises</div>
     <div id="wo-exercises"></div>
   </div>
-  <div id="wo-cooldown-wrap" class="wo-section" style="padding-bottom:48px">
-    <div class="wo-section-label">Cooldown · 15 min</div>
-    <div id="wo-cooldown"></div>
-  </div>
-</div>
-
-<!-- ── MATRIX OVERLAY ── -->
-<div class="overlay" id="matrix-overlay">
-  <div class="ov-header">
-    <div class="ov-title">12-Week Matrix</div>
-    <button class="ov-close" onclick="closeMatrix()">Close</button>
-  </div>
-  <div class="mx-nav">
-    <button class="mx-nav-btn" onclick="mxNav(-1)">←</button>
-    <div class="mx-nav-center">
-      <div class="mx-nav-title" id="mx-week-title">Week 1 of 12</div>
-      <div class="mx-nav-sub" id="mx-week-sub">Current week</div>
-    </div>
-    <button class="mx-nav-btn" onclick="mxNav(1)">→</button>
-  </div>
-  <div class="mx-grid" id="mx-grid"></div>
-  <div class="mx-strip-wrap">
-    <div class="mx-strip-label">All 12 weeks</div>
-    <div class="mx-strip" id="mx-strip"></div>
-  </div>
-  <button class="mx-save-btn" id="mx-save-btn" onclick="mxSave()">Save</button>
-</div>
-
-<!-- ── JOURNAL OVERLAY ── -->
-<div class="overlay" id="journal-overlay">
-  <div class="ov-header">
-    <div class="ov-title">Journal</div>
-    <button class="ov-close" onclick="closeJournal()">Close</button>
-  </div>
-  <div class="j-tabs">
-    <button class="j-tab active" id="j-opening-btn" onclick="setJournalTab('opening')">OPENING</button>
-    <button class="j-tab" id="j-closing-btn" onclick="setJournalTab('closing')">CLOSING</button>
-  </div>
-  <div class="j-body" id="j-body"></div>
-</div>
-
-<!-- ── AESTHETICS OVERLAY ── -->
-<div class="overlay" id="aesthetics-overlay">
-  <div class="ov-header">
-    <div class="ov-title">Project Aesthetics</div>
-    <button class="ov-close" onclick="closeAesthetics()">Close</button>
-  </div>
-  <div class="ae-body" id="ae-body"></div>
 </div>
 
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
-const FLOORS = [
-  { id:'f1', label:'Movement',           sub:'10-min corrective warmup',                          color:'ember', workout:true },
-  { id:'f2', label:'Journal',            sub:'Opening questions · Closing affirmations',           color:'gold',  journal:true },
-  { id:'f3', label:'Veraxus',            sub:'One 60-min build session',                          color:'gold' },
-  { id:'f4', label:'Research',           sub:'One company page or idea written down',              color:'gold' },
-  { id:'f5', label:'Reading — morning',  sub:'One page · Seneca / Meditations / Tao Te Ching',   color:'gold' },
-  { id:'f6', label:'Reading — evening',  sub:'One page · The Odyssey',                            color:'gold' },
-  { id:'f7', label:'Family',             sub:'One fully-present moment per kid',                  color:'gold' },
-  { id:'f8', label:'Protein',            sub:'Smoothie + one intentional protein meal',           color:'sage' },
-];
-
-const REWARDS = [
-  { id:'r1', label:'Surf · Climb · Golf', target:1 },
-  { id:'r2', label:'Sauna',               target:2 },
-  { id:'r3', label:'Ice bath / Ocean dip',target:2 },
-  { id:'r4', label:'Strength session',    target:3 },
-  { id:'r5', label:'Cardio session',      target:3 },
-];
-
-const CORRECTIVES = [
-  { id:'c1', label:'Spine roller',                    note:'Full length · 2 min' },
-  { id:'c2', label:'Right hip release',               note:'Hip flexor + psoas · 90s' },
-  { id:'c3', label:'Bird dogs',                       note:'5 each side · spine neutral' },
-  { id:'c4', label:'Hip bridge iso — right leads',    note:'5 × 5s hold' },
-  { id:'c5', label:'Dead hang',                       note:'Full decompression · 30s' },
-];
-
-const DAY_SESSIONS = { 1:'A', 3:'B', 5:'C' };
-
-const WARMUP = [
-  {id:'w1',name:'Dead Hang',              note:'Full decompression. Let everything go.',            dur:'30s'},
-  {id:'w2',name:'Supine Psoas Stretch',   note:'Posterior pelvic tilt. Breathe into the right.',   dur:'60s'},
-  {id:'w3',name:'Glute Bridge Iso',       note:'Right leads. 5s hold each.',                       dur:'5 × 5s'},
-  {id:'w4',name:'Wall Hip CARs',          note:'Right first. Full range, zero compensation.',       dur:'5 each'},
-  {id:'w5',name:'Bird Dog',               note:'Spine neutral. No rotation. Pause at extension.',   dur:'5 each'},
-  {id:'w6',name:'Band Pull-Apart',        note:'Warm the rear delts. Right shoulder back.',         dur:'15 reps'},
-];
-
-const COOLDOWN = [
-  {id:'cd1',name:'Wall Hip CARs',         note:'Slow. Full range. Right side.',                    dur:'5 each'},
-  {id:'cd2',name:'Supine Psoas Stretch',  note:'Decompress what you loaded.',                      dur:'60s'},
-  {id:'cd3',name:'Dead Hang',             note:'Final spinal decompression.',                      dur:'30s'},
-  {id:'cd4',name:'Meditation',            note:'Eyes closed, effortless. Non-negotiable.',         dur:'10–15 min'},
-  {id:'cd5',name:'Cold Shower',           note:'Finish cold. Own the discomfort.',                 dur:'Until cold'},
+const PILLARS = [
+  { id:'morning', label:'Morning Wake-up', color:'gold', from:0, to:10, items:[
+    { id:'m1', label:'Supplements' },
+    { id:'m2', label:'Smoothie' },
+    { id:'m3', label:'Sunshine', sub:'10 min' },
+    { id:'m4', label:'Cold Plunge', sub:'2–3 min' },
+    { id:'m5', label:'Reading: Wisdom', sub:'Seneca · Meditations · Tao' },
+  ]},
+  { id:'rehab', label:'Rehab / Swim', color:'ember', from:10, to:12, items:[
+    { id:'rh1', label:'The Daily Blueprint', sub:'Unlock · Align · Build — ~54 min', workout:true, sess:'DB' },
+    { id:'rh2', label:'Cardio', sub:'Swim · Hike — polarised', workout:true, sess:'F' },
+  ]},
+  { id:'veraxus', label:'Veraxus', color:'sage', from:12, to:16, items:[
+    { id:'v1', label:'Schema / Build', sub:'One deep session' },
+    { id:'v2', label:'Demo / Sell', sub:'One outward step' },
+  ]},
+  { id:'admin', label:'Admin', color:'gold', from:16, to:18, items:[
+    { id:'a1', label:'KDA Exit', sub:'One concrete step' },
+    { id:'a2', label:'SARS', sub:'One concrete step' },
+  ]},
+  { id:'evening', label:'Evening Wind-down', color:'purple', from:18, to:24, items:[
+    { id:'e1', label:'Food cut-off', sub:'6 pm' },
+    { id:'e2', label:'Devices away', sub:'6:30 pm' },
+    { id:'e3', label:'Hot shower / bath' },
+    { id:'e4', label:'Reading: Fiction', sub:'The Odyssey' },
+  ]},
 ];
 
 const SESSIONS = [
@@ -645,234 +463,15 @@ const SESSIONS = [
        subs:[{n:'2-Hour Hike',d:'If 3 hours not available — still full credit'}]},
     ]
   },
-  { id:'A', label:'Session A', type:'Push', day:'Mon',
-    rules:['RIGHT LEADS','POSITION FIRST','NO GRIND','HEEL LIFT — RIGHT SHOE'],
-    exercises:[
-      {id:'A1',name:'Incline DB Press',         sets:4,reps:'5',   tempo:'3-1-1',   load:'16kg',        rest:120,
-       cues:['Right side leads every set','Pack lats into bench','Pause at bottom — own the position','Stop at first slow rep'],
-       subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor'},{n:'Wall-Supported Press',d:'Sit against wall, enforces upright torso'}]},
-      {id:'A2',name:'Push Press — KB Single Arm',sets:4,reps:'3', tempo:'Explosive',load:'8kg',         rest:120,
-       cues:['Heel lift in right shoe','Right glute squeeze before dip','Small dip — legs drive','Full lockout 1s at top','Right arm first'],
-       subs:[{n:'Seated DB Shoulder Press',d:'Removes LLD issue'},{n:'Half-Kneeling KB Press',d:'Right knee down'}]},
-      {id:'A3',name:'Supported Lateral Raise',   sets:3,reps:'6',  tempo:'2-1-2',   load:'4kg',         rest:90, superset:'A4',
-       cues:['Chest on incline bench','Lead with elbow not wrist','2s eccentric','No shrug'],
-       subs:[{n:'Side-Lying Lateral Raise',d:'Pure isolation'},{n:'Seated Lateral Raise',d:'Slight forward lean'}]},
-      {id:'A4',name:'Band Pull-Apart',           sets:3,reps:'10', tempo:'Controlled',load:'Light band', rest:90, supersetWith:'A3',
-       cues:['Superset with A3 — no rest','Thumbs behind ears','Feel right rear delt','Corrective — not optional'],
-       subs:[]},
-      {id:'A5',name:'Banded Pull-Up (Assisted)', sets:2,reps:'5',  tempo:'2-1-2',   load:'Band assist', rest:90,
-       cues:['Pack lats before pulling','Dead hang at bottom each rep','Right side leads'],
-       subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Single Arm Band Row',d:'Right leads'}]},
-      {id:'A6',name:'Tricep Pushdown — Band',    sets:3,reps:'8',  tempo:'2-1-2',   load:'Medium band', rest:90,
-       cues:['Elbows pinned','Full extension at bottom','Slow eccentric','Right arm first if unilateral'],
-       subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, anywhere'}]},
-    ]
-  },
-  { id:'B', label:'Session B', type:'Pull', day:'Wed',
-    rules:['RIGHT LEADS','ELBOW TO HIP','OWN THE CONTRACTION','NO GRIND'],
-    exercises:[
-      {id:'B1',name:'Single Arm DB Row',   sets:4,reps:'5', tempo:'2-1-2', load:'20kg',        rest:120,
-       cues:['Right arm leads','Elbow to hip — not hand to shoulder','Pause and contract at top','No torso rotation','If QL fires before lat — stop'],
-       subs:[{n:'Band Row (anchored)',d:'Same cues apply'},{n:'Incline DB Row',d:'Removes spinal loading'}]},
-      {id:'B2',name:'Band Face Pull',      sets:3,reps:'8', tempo:'2-2-2', load:'Medium band',  rest:90,
-       cues:['Anchor at upper chest height','Thumbs behind ears','External rotation emphasis','Right rear delt must work'],
-       subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'},{n:'Prone DB Rear Delt Raise',d:'Face down on incline'}]},
-      {id:'B3',name:'Incline DB Curl',     sets:3,reps:'6', tempo:'2-1-3', load:'8kg',          rest:90,
-       cues:['Sit back on incline','3s eccentric','Shoulder pinned','Right arm first','No swing'],
-       subs:[{n:'Standing DB Curl',d:'Strict form'},{n:'Band Curl',d:'Resistance increases at peak'}]},
-      {id:'B4',name:'Dead Hang',           sets:3,reps:'30s',tempo:'Passive',load:'Bodyweight', rest:60, isDuration:true,
-       cues:['Structural maintenance','Full passive decompression','Feel right spine lengthening','Breathe slowly'],
-       subs:[{n:'Supported Hang',d:'Slight knee bend'},{n:'Doorframe Hang',d:'Grip top of doorframe'}]},
-      {id:'B5',name:'Bird Dog Row',        sets:3,reps:'5', tempo:'3-1-2', load:'8kg',          rest:90,
-       cues:['Start in bird dog position','Row while holding extension','Stability first','Right arm rows, right leg extends'],
-       subs:[{n:'Plank DB Row',d:'Less range but stable'},{n:'Kneeling Single Arm Row',d:'Both knees down'}]},
-    ]
-  },
-  { id:'C', label:'Session C', type:'Hinge + Lower', day:'Fri',
-    rules:['RIGHT LEADS','HIP HINGE NOT SQUAT','GLUTE AT TOP','POSITION FIRST'],
-    exercises:[
-      {id:'C1',name:'KB Swing',              sets:5,reps:'5', tempo:'Explosive', load:'20kg',              rest:120,
-       cues:['Hip hinge — not a squat','Explosive hip snap','Right glute squeeze at top','Dead stop between reps if needed','Stop if lower back takes over'],
-       subs:[{n:'KB Deadlift',d:'Same hinge, no swing'},{n:'Romanian Deadlift — DB',d:'Slow eccentric hinge'}]},
-      {id:'C2',name:'Single Leg RDL',        sets:4,reps:'5', tempo:'3-1-2', load:'12.5kg contralateral',  rest:120,
-       cues:['Right leg leads','Contralateral load','3s down, own the bottom','Stop if QL fires before hamstring','Slight knee bend'],
-       subs:[{n:'SL RDL — Bodyweight',d:'Build motor pattern first'},{n:'Hip Hinge to Wall',d:'Groove the pattern'}]},
-      {id:'C3',name:'Goblet Squat Hold',     sets:3,reps:'20s',tempo:'Static',  load:'8kg',               rest:90, isDuration:true,
-       cues:['Posterior pelvic tilt','Elbows inside knees','Feel right hip decompressing','Breathe slowly','Corrective as much as strength'],
-       subs:[{n:'Bodyweight Squat Hold',d:'Arms forward for counterbalance'},{n:'Box Squat Hold',d:'Controls depth'}]},
-      {id:'C4',name:'Slant Board Calf Raise',sets:3,reps:'8', tempo:'3-1-3', load:'BW / 8kg',             rest:90,
-       cues:['Right leads','3s eccentric','Full range — heel below board','Ankle mobility = hip mobility'],
-       subs:[{n:'Step Edge Calf Raise',d:'Same range principle'},{n:'Seated Calf Raise',d:'Loads soleus more'}]},
-      {id:'C5',name:'Glute Bridge Iso',      sets:3,reps:'5 × 5s',tempo:'Isometric',load:'Bodyweight',    rest:60,
-       cues:['Right glute must fire first','If it doesn\'t — reset','5s hold, full contraction','Feel anterior hip opening','Closes every lower session'],
-       subs:[]},
-    ]
-  },
-  { id:'D', label:'Beach Circuit', type:'Conditioning', day:'Tue/Thu', circuit:true,
-    rules:['2 FULL LAPS','CIRCUIT → 800M RUN → REPEAT','SPRINT FINISHER × 5','FINISH IN THE OCEAN'],
-    exercises:[
-      {id:'D1',name:'Flow Push-Ups',       reps:'12',      tempo:'Controlled', load:'BW',
-       cues:['Downward dog → push-up → upward dog → reset','Right QL: if it grips under fatigue, drop to standard push-up','Full range — hips to floor on up-dog'],
-       subs:[{n:'Standard Push-Ups',d:'No flow, same rep quality'}]},
-      {id:'D2',name:'Bear Crawl',          reps:'40m',     tempo:'Controlled', load:'BW',
-       cues:['20m out, 20m back — knees 1 inch off ground','Opposite hand and foot move together','Can drop in Round 2 without compromising the session'],
-       subs:[{n:'Crab Walk',d:'Posterior chain emphasis'}]},
-      {id:'D3',name:'Single-Leg RDL',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
-       cues:['Right leg leads — always','3s down, own the bottom','Circuit 2: if hinge locks, drop to bilateral RDL right-side emphasis'],
-       subs:[{n:'Bilateral RDL',d:'Right-side emphasis if hinge degrades'}]},
-      {id:'D4',name:'Reverse Lunges',      reps:'8 each',  tempo:'Controlled', load:'BW',
-       cues:['Knee tracks over toe — upright torso','Sand consistently leaves right hip loose — confirmed across sessions'],
-       subs:[{n:'Forward Lunges',d:'Easier balance demand'}]},
-      {id:'D5',name:'Lateral Lunge',       reps:'8 each',  tempo:'Controlled', load:'BW',
-       cues:['Controlled tempo — no momentum','Hips level throughout','Sand only — hard surface remains higher risk'],
-       subs:[{n:'Lateral Step Touch',d:'Lower impact, same pattern'}]},
-      {id:'D6',name:'Glute Med ISO Hold',  reps:'10 × 3s', tempo:'Isometric',  load:'BW',
-       cues:['Side-lying — 10 reps × 3s hold each side','Right side first','Squeeze at top — not just range of motion'],
-       subs:[{n:'Clamshells',d:'Same target, lighter demand'}]},
-      {id:'D7',name:'Glute Bridge ISO',    reps:'2 × 30s', tempo:'Isometric',  load:'BW',
-       cues:['Full hip extension — right glute must fire','2 holds × 30s','Breathe slowly through each hold'],
-       subs:[{n:'Single-Leg Glute Bridge',d:'Right side leads'}]},
-      {id:'D8',name:'Bird Dog Prone',      reps:'8 each',  tempo:'3-1-2',      load:'BW',
-       cues:['Spine neutral — reach long, don\'t lift high','Right side: feel the glute, not the QL','Pause at extension each rep'],
-       subs:[]},
-      {id:'D9',name:'Flat Sprints',        reps:'3 × 30m', tempo:'Max effort',  load:'BW',
-       cues:['True max effort — 30m only','Full walk-back recovery between reps','Find the flattest strip of sand'],
-       subs:[{n:'Hill Sprints',d:'If flat sand unavailable'}]},
-      {id:'D10',name:'Sand Run',           reps:'~800m',   tempo:'Easy pace',  load:'BW',
-       cues:['After each circuit — conversational pace only','Active hip loosening — not cardio work','2 laps = 2 runs'],
-       subs:[]},
-      {id:'D11',name:'Dune Sprint Finisher',reps:'5 rounds',tempo:'Max effort', load:'BW',
-       cues:['Glen Beach dunes — ~30s max effort up','1 exercise at the bottom, walk back = full recovery','5 rounds — WHOOP strain 5.7 in under 9 min'],
-       subs:[{n:'Flat Sprints × 5',d:'30m repeats if no dunes'}]},
-      {id:'D12',name:'Ocean Dip',          reps:'2-3 min', tempo:'Immersion',  load:'—',
-       cues:['Full immersion — head under','Breathe: 4 in, 8 out','Reduces hip inflammation before it builds','If done: no ice bath required Sunday'],
-       subs:[{n:'Cold Shower',d:'If ocean not accessible'}]},
-    ]
-  },
-  { id:'E', label:'Climbing', type:'Gym + Bouldering', day:'Sat', climbing:true,
-    rules:['BOULDERING FIRST','WEAKER HAND LEADS','RIGHT HIP WARM-UP NON-NEGOTIABLE','ANTAGONIST EVERY SESSION'],
-    exercises:[
-      {id:'E1',name:'Activation — Cardio + CARs',    reps:'15 min',        info:true,
-       cues:['5 min rower or jog — get warm','Shoulder CARs × 10 each direction + T-spine rotations','2 × 15 band pull-aparts + scap pull-ups','4–5 easy traverses or VB–V1 to finish'],
-       subs:[]},
-      {id:'E2',name:'Hip Openers — Right Side',       reps:'5 min',         info:true,
-       cues:['Right TFL/QL extra time — climbing reinforces hip flexor dominance','Standing hip CARs — right leads × 5','Right hip flexor stretch + lateral leg swings','Non-negotiable before any loading'],
-       subs:[]},
-      {id:'E3',name:'Bouldering',                     reps:'35 min',        info:true,
-       cues:['Highest neural demand — always first while fresh','Rest 2–3 min between hard attempts','B1–2: 60–75% onsight — silent feet, straight arms, hip rotation','B3: 2 limit-grade projects + 4–5 flash problems','B4: 50% effort — deload'],
-       subs:[]},
-      {id:'E4',name:'Routes — Belay Climbs',           reps:'35 min',        info:true,
-       cues:['Move here once power output drops','B1–2: 3 climbs at onsight grade — no falls, continuous movement','B3–4: 4 climbs, last at onsight+1 or pumpy traverse','B4 deload: 2 easy enjoyable routes'],
-       subs:[]},
-      {id:'E5',name:'Pull-ups',         sets:3,reps:'5',  tempo:'2-1-2',load:'BW → Weighted',rest:120,
-       cues:['Full dead hang at bottom every rep','B1: 3×5 BW · B2: 4×5 weighted · B3: 4×3 weighted · B4: 2×5 easy'],
-       subs:[{n:'Band-Assisted Pull-ups',d:'Control the negative'},{n:'Ring Rows',d:'If pull-ups not yet available'}]},
-      {id:'E6',name:'Antagonist Push',  sets:3,reps:'10', tempo:'2-0-2',load:'BW',           rest:90,
-       cues:['Prevents hunched climber posture — do not skip','B1: Push-ups 3×10 · B2: 3×12 · B3: Archer push-ups 3×6 · B4: Skip'],
-       subs:[{n:'Incline Push-ups',d:'If archer too advanced'}]},
-      {id:'E7',name:'Single-arm Dead Hangs',sets:3,reps:'20s / 10s',tempo:'Passive',load:'BW',rest:90,
-       cues:['WEAKER hand first — match reps, never exceed with stronger side','B1: Bilateral 3×20s · B2+: Single-arm 3×10s each (weaker first)','Let shoulder pack — no shrugging'],
-       subs:[{n:'Assisted Single-arm Hang',d:'Other hand lightly grips wrist'}]},
-      {id:'E8',name:'Core',             sets:3,reps:'30s', tempo:'Controlled',load:'BW',     rest:60,
-       cues:['B1: Hollow hold 3×30s','B2: Ring rows 3×8 + hollow hold','B3: Toes-to-bar 3×8 + hangboard 3×7s on / 3s off (20mm edge)','B4: Skip — deload'],
-       subs:[{n:'Plank',d:'If hollow hold compromises form'}]},
-      {id:'E9',name:'Cool-down',                       reps:'10 min',        info:true,
-       cues:['Forearm flossing — both arms','Lat/pec stretch','Hip flexor + QL stretch — right side extra time','Finger mobility — tendon glides'],
-       subs:[]},
-    ]
-  },
 ];
-
-// ── AESTHETICS DATA ──────────────────────────────────────────────────────────
-
-const AESTHETICS = {
-  subtitle: 'A three-year map, not a contract. Ordering, not timeline. Held lightly. Pull back anytime.',
-  philosophy: {
-    intro: 'This document exists to do one thing: convert a diffuse, recurring want into a sequenced, autonomous decision set, so the wanting can stop running as an open loop and start running as a plan. Committing to the theory of the sequence is what frees the mind — not the execution. The map is the relief, not the destination.',
-    rules: [
-      { title:'Reversibility ascends.', body:'The sequence runs from fully reversible to permanent. Lower-risk, undoable work comes first; irreversible surgery comes last. This is not timidity — it is correct seamanship. You learn how your face responds to small, recoverable inputs before you commit to anything you cannot take back.' },
-      { title:'Every gate is a settled-hand decision.', body:'No item is executed from inside a flare of the dawn-audit loop. The test is never am I allowed — the answer to that is always yes. The test is: what am I asking this procedure to carry? If it carries a preference, proceed. If it carries your salvation, stop — no surgeon can pay that debt, and you will simply arrive at the next item with the same freight unpaid.' },
-      { title:'The clinician owns the clinical call.', body:'This roadmap sequences and frames. It does not prescribe. Each phase names the practitioner who actually decides suitability, technique, and go/no-go. My job is the order and the state you decide from. Theirs is the medicine.' },
-    ],
-    footer: 'The parallel foundations — sleep, stress, nutrition, rehab — are already in motion and are the substrate this entire roadmap rests on. Aesthetic work executed on an unstable base is forced loading. It pays out nothing, same as the hip did for fifteen years.',
-  },
-  phases: [
-    { id:'ph1', num:1, title:'Skin work', tag:'reversible · already in motion',
-      intro:'Microneedling and radiofrequency microneedling (Morpheus8). The most reversible and lowest-risk tier, and the correct foundation: skin quality and tone are the canvas every later decision reads against. Already underway via the planned Morpheus8 sequence.',
-      why:'Fully recoverable. Improves the substrate before any structural change is judged. Nothing here forecloses a later option.',
-      gate:'Practitioner cadence and skin recovery between sessions. Nothing more.',
-      owns:'Nina (microneedling), Dr Erasmus (RF / aesthetic strategy).',
-      carry:'Low stakes by design. This is the phase to practise the settled-hand discipline on, precisely because the cost of getting it wrong is near zero.',
-    },
-    { id:'ph2', num:2, title:'Dental', tag:'largely restorative · foundational to the lower face',
-      intro:'Dental work sits second deliberately. It is partly functional, partly foundational to lower-face proportion, and it informs everything downstream — bite, jaw projection, and the way the lower third of the face presents all shift with dental work. You do not want to commit to jaw filler against a lower-face structure you are about to change.',
-      why:'Foundational. Sequencing dental before jawline filler means the filler decision is made against the final structure, not a provisional one.',
-      gate:'Clinical assessment and treatment plan.',
-      owns:'Dr Marc Sher.',
-      carry:'Mostly restorative, so the freight is naturally lighter. Keep it that way.',
-    },
-    { id:'ph3', num:3, title:'Botox & filler, jawline', tag:'semi-reversible',
-      intro:'Neuromodulator (botox) is reversible — it metabolises in roughly three to four months. Filler is dissolvable (hyaluronidase) but behaves as semi-permanent in practice. This is the first tier where the "restore" framing partly drops away: jawline filler is augmentation toward an ideal, not restoration of something lost.',
-      why:'More committing than skin, less than anything permanent. Crucially, it sits after dental so the lower-face canvas is settled, and before FUE so the hairline/face-frame is not yet altered — meaning you can re-judge whether the jaw still warrants intervention once the frame changes.',
-      gate:'Settled-hand decision. This is the first item where the carry-test bites — augmentation toward an ideal you did not previously have is exactly the kind of want that can quietly start carrying salvation. Watch it.',
-      owns:'Dr Erasmus.',
-      carry:'Augmentation toward an ideal, not restoration of something lost. Watch whether this want is clean or carrying freight.',
-      openQ:'Whether to hold jaw filler until after FUE has settled, since the hairline reframes the whole face and may change what the jaw needs — or wants — to be.',
-    },
-    { id:'ph4', num:4, title:'FUE', tag:'permanent · the most defensible of the aesthetic items',
-      intro:'Follicular unit extraction, ~2.5–3k grafts, to restore the frontal hairline and reframe the face. Restoration of density that genuinely moved — the reference point is the Mauritius / PGA Catalunya period, mid-to-late 2025. The want here is clean: it was a real part of you, it left, you miss it.',
-      why:'Permanent, so it follows everything reversible. But it precedes the nose deliberately — the hairline reframes the entire face, and the nose should be judged against the final frame, not the current one.',
-      gate:'Settled-hand decision. Gated on medical stabilisation, not the calendar. See hard gate.',
-      owns:'FUE surgeon (TBC) + Dr Erasmus on the medical bridge.',
-      carry:'The cleanest want on the list. Let it stay clean — wanted, additive, survivable if the result is only 80%. If it starts carrying "this will finally make me okay," pause and take that to Kruger before booking.',
-      hardGate:'A stable medical baseline first. The non-5-ARI medical track — oral/topical minoxidil, dutasteride mesotherapy, PRP/exosomes, LLLT — is the bridge: its job is to arrest the loss and establish a stable density before a single graft is placed. FUE is gated on that stabilisation, not on the calendar.',
-    },
-    { id:'ph5', num:5, title:'Nose straightening', tag:'permanent surgery',
-      intro:'Septo/rhinoplasty to correct the bend and the asymmetry. Structural, real, fixable. The most surgical of the aesthetic items and second-most serious overall.',
-      why:'Permanent surgery with a months-long recovery, and — the deliberate sequencing point — it follows FUE so the nose is judged against a reframed face. There is a real chance the frame change alone shifts how much the nose bothers you. Decide the nose after you have lived with the new hairline for long enough to know.',
-      gate:'Settled-hand decision, made from a stable place — explicitly not from the dawn-audit loop.',
-      owns:'Facial plastic / ENT surgeon (TBC).',
-      carry:'This is the procedure most entangled with the case-built-against-the-face. Highest vigilance. The plainest version of the want — I\'d prefer my nose straighter and I\'m looking into it — is the only version safe to operate on.',
-    },
-    { id:'ph6', num:6, title:'Hip operation', tag:'not aesthetic · the most serious · own governed track',
-      intro:'Functional, not cosmetic, and the most serious intervention on the entire map — which is why it sits last in ordering despite being first in importance to a life lived freely. It does not belong to the aesthetic logic above; it runs on its own parallel, already-governed surgical track.',
-      why:'Not because it matters least — it matters most — but because it is the most serious and is already correctly sequenced elsewhere. Placing it here records it without absorbing it into aesthetic decision-making.',
-      gate:'The CT scanogram (open action item); the 8 July wall-test re-evaluation; Wendy\'s governance of all loading and capacity markers; the hip-preservation specialist (PAO / osteotomy assessment) held open in parallel. No part of the surgical decision is made from this roadmap.',
-      owns:'Wendy (capacity / rehab governance) + hip-preservation specialist (surgical assessment).',
-      carry:'Different in kind. This is about moving freely without pain, not about how a thing reads. The want is unimpeachable. The only discipline is sequence and data — operate from the scanogram and the specialist, never from desperation.',
-    },
-  ],
-  logic: {
-    body: 'If the whole map reduces to two principles, they are these:',
-    p1: { title:'Reversible before permanent.', body:'Skin → dental → botox/filler → FUE → nose → hip is a strict ascent up the irreversibility gradient. You always retain the maximum number of open options for the longest time.' },
-    p2: { title:'Frame before feature.', body:'The face is judged as a whole, not as a parts list. Dental settles the lower face before the jaw is filled. FUE reframes the whole face before the nose is judged. Each later, more permanent decision is made against the most complete version of the canvas — which means each one may turn out smaller, or unnecessary, than it looks from here.' },
-    openQ: 'Let the FUE fully settle before committing to the nose. A restored hairline changes the read of the entire face. It is genuinely possible the nose stops bothering you once the frame is back — and a rhinoplasty you didn\'t need is a permanent answer to a question that resolved itself. This costs nothing to wait on.',
-  },
-  pullback: ['This is a map, not a march. Any item can be paused, reordered, or removed at any point, and doing so is not failure — it is the autonomy the whole document exists to create. The commitment is to the theory of the sequence. The execution is always a fresh, settled decision, made when the gate is met and the hand is steady. Nothing here is owed to a timeline. Nothing here is a verdict on your worth.', 'The wanting is clean. The order is sound. The pace is yours.'],
-};
 
 // ── STORAGE ──────────────────────────────────────────────────────────────────
 
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function save(key,val){try{localStorage.setItem('kos3_'+key,val);}catch(e){}}
 function load(key){try{return localStorage.getItem('kos3_'+key)||'';}catch(e){return '';}}
-function saveToday(key,val){try{localStorage.setItem('kos3_'+key+'_'+todayStr(),val);}catch(e){}}
-function loadToday(key){try{return localStorage.getItem('kos3_'+key+'_'+todayStr())||'';}catch(e){return '';}}
-function saveBool(key,val){try{localStorage.setItem('kos3_'+key,val?'1':'0');}catch(e){}}
-function loadBool(key){try{return localStorage.getItem('kos3_'+key)==='1';}catch(e){return false;}}
 function saveDailyBool(key,val){try{localStorage.setItem('kos3_'+key+'_'+todayStr(),val?'1':'0');}catch(e){}}
 function loadDailyBool(key){try{return localStorage.getItem('kos3_'+key+'_'+todayStr())==='1';}catch(e){return false;}}
-
-function weekKey(){
-  var d=new Date();
-  var day=d.getDay()||7;
-  var thu=new Date(d);thu.setDate(d.getDate()+4-day);
-  var yr=thu.getFullYear();
-  var wk=Math.ceil(((thu-new Date(yr,0,1))/864e5+1)/7);
-  return yr+'W'+String(wk).padStart(2,'0');
-}
-function saveWeekly(key,val){try{localStorage.setItem('kos3_wk_'+weekKey()+'_'+key,val);}catch(e){}}
-function loadWeekly(key){try{return localStorage.getItem('kos3_wk_'+weekKey()+'_'+key)||'0';}catch(e){return '0';}}
 
 // ── HEADER ───────────────────────────────────────────────────────────────────
 
@@ -883,77 +482,93 @@ function renderHeader(){
   document.getElementById('hDate').textContent=d.getDate()+' '+months[d.getMonth()];
   document.getElementById('hDay').textContent=days[d.getDay()];
 }
+function phaseFor(h){
+  if(h>=5&&h<10) return {cls:'ph-dawn', name:'Dawn'};
+  if(h>=10&&h<17)return {cls:'ph-day',  name:'Day'};
+  if(h>=17&&h<20)return {cls:'ph-dusk', name:'Dusk'};
+  return {cls:'ph-night',name:'Night'};
+}
+
 function updateClock(){
   var d=new Date();
   document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  var p=phaseFor(d.getHours());
+  if(!document.body.classList.contains(p.cls)){
+    document.body.classList.remove('ph-dawn','ph-day','ph-dusk','ph-night');
+    document.body.classList.add(p.cls);
+  }
+  document.getElementById('phase').textContent=p.name;
 }
 
-// ── FLOORS ───────────────────────────────────────────────────────────────────
+// ── PILLARS ──────────────────────────────────────────────────────────────────
 
-function renderFloors(){
-  var c=document.getElementById('floors');
-  c.innerHTML='';
-  FLOORS.forEach(function(floor){
-    var checked=loadDailyBool(floor.id);
-    var el=document.createElement('div');
-    el.className='check-item'+(checked?' done':'');
-    el.innerHTML='<div class="check-box'+(checked?' on-'+floor.color:'')+'"><span class="check-tick">✓</span></div>'
-      +'<div class="check-text">'+floor.label
-      +'<div class="check-sub">'+floor.sub+'</div></div>';
-    el.onclick=function(){
-      var now=!loadDailyBool(floor.id);
-      saveDailyBool(floor.id,now);
-      el.classList.toggle('done',now);
-      el.querySelector('.check-box').classList.toggle('on-'+floor.color,now);
-    };
-    c.appendChild(el);
-    if(floor.workout){
-      var btn=document.createElement('div');
-      btn.className='view-btn';
-      btn.textContent='View workout →';
-      btn.onclick=function(){openWorkout();};
-      c.appendChild(btn);
-    }
-    if(floor.journal){
-      var jbtn=document.createElement('div');
-      jbtn.className='view-btn';
-      jbtn.textContent='Open journal →';
-      jbtn.onclick=function(){openJournal();};
-      c.appendChild(jbtn);
-    }
-  });
+function currentPillarId(){
+  var h=new Date().getHours();
+  for(var i=0;i<PILLARS.length;i++){
+    if(h>=PILLARS[i].from&&h<PILLARS[i].to)return PILLARS[i].id;
+  }
+  return PILLARS[PILLARS.length-1].id;
 }
 
-// ── REWARDS ──────────────────────────────────────────────────────────────────
-
-function renderRewards(){
-  var c=document.getElementById('rewards');
+function renderPillars(){
+  var c=document.getElementById('pillars');
   c.innerHTML='';
-  REWARDS.forEach(function(r){
-    var count=parseInt(loadWeekly(r.id))||0;
-    var el=document.createElement('div');
-    el.className='reward-item';
-    var pips='';
-    for(var i=0;i<r.target;i++){pips+='<div class="reward-pip'+(i<count?' done':'')+'"></div>';}
-    el.innerHTML='<div class="reward-text">'+r.label+'</div>'
-      +'<div class="reward-pips">'+pips+'</div>';
-    (function(rid,rtarget){
+  var nowId=currentPillarId();
+  PILLARS.forEach(function(pillar){
+    var done=pillar.items.filter(function(it){return loadDailyBool(it.id);}).length;
+    var track=document.createElement('div');
+    track.className='track'+(done===pillar.items.length?' complete':'');
+    var label=document.createElement('div');
+    label.className='track-label';
+    label.style.color='var(--'+pillar.color+')';
+    label.innerHTML=pillar.label+(pillar.id===nowId?'<span class="track-now">now</span>':'');
+    var count=document.createElement('span');
+    count.className='track-count';
+    count.textContent=done+' / '+pillar.items.length;
+    label.appendChild(count);
+    track.appendChild(label);
+    pillar.items.forEach(function(item){
+      var checked=loadDailyBool(item.id);
+      var el=document.createElement('div');
+      el.className='check-item'+(checked?' done':'');
+      el.innerHTML='<div class="check-box'+(checked?' on-'+pillar.color:'')+'"><span class="check-tick">✓</span></div>'
+        +'<div class="check-text">'+item.label
+        +(item.sub?'<div class="check-sub">'+item.sub+'</div>':'')+'</div>';
       el.onclick=function(){
-        var cur=parseInt(loadWeekly(rid))||0;
-        var next=cur<rtarget?cur+1:0;
-        saveWeekly(rid,String(next));
-        renderRewards();
+        saveDailyBool(item.id,!loadDailyBool(item.id));
+        renderPillars();
       };
-    })(r.id,r.target);
-    c.appendChild(el);
+      track.appendChild(el);
+      if(item.workout){
+        var btn=document.createElement('div');
+        btn.className='view-btn';
+        btn.textContent=(item.sess==='F'?'Open cardio →':'Open the hour →');
+        btn.onclick=function(){openWorkout(item.sess);};
+        track.appendChild(btn);
+      }
+    });
+    c.appendChild(track);
   });
+  updateDayLine();
+}
+
+function updateDayLine(){
+  var total=0,done=0;
+  PILLARS.forEach(function(p){p.items.forEach(function(it){total++;if(loadDailyBool(it.id))done++;});});
+  document.getElementById('day-fill').style.width=(done/total*100)+'%';
+  document.getElementById('mantra').classList.toggle('lit',done===total);
 }
 
 // ── WORKOUT OVERLAY ──────────────────────────────────────────────────────────
 
 var currentSessIdx=0;
 
-function openWorkout(){renderWorkout();document.getElementById('workout-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function openWorkout(sessId){
+  if(sessId){
+    var idx=SESSIONS.findIndex(function(s){return s.id===sessId;});
+    if(idx>=0)currentSessIdx=idx;
+  }
+  renderWorkout();document.getElementById('workout-overlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeWorkout(){document.getElementById('workout-overlay').classList.remove('open');document.body.style.overflow='';}
 
 function renderWorkout(){
@@ -965,41 +580,13 @@ function renderWorkout(){
   }).join('');
 
   var sess=SESSIONS[currentSessIdx];
-  var isCircuit=sess.circuit===true;
-  var isClimbing=sess.climbing===true;
   var isBlueprint=sess.blueprint===true;
   var isCardio=sess.cardio===true;
-  var isSpecial=isCircuit||isClimbing||isBlueprint||isCardio;
 
   document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
-  document.getElementById('wo-warmup-wrap').style.display=isSpecial?'none':'block';
-  document.getElementById('wo-cooldown-wrap').style.display=isSpecial?'none':'block';
 
-  // Counter for circuit (laps) or climbing (programme week)
   var counterEl=document.getElementById('wo-counter');
-  if(isCircuit){
-    var laps=parseInt(load('circuit_laps')||'0');
-    counterEl.style.display='block';
-    counterEl.innerHTML='<div class="counter-row">'
-      +'<div class="counter-info"><div class="counter-label">2 Laps · ~40 min</div><div class="counter-sub">Circuit → 800m run → repeat</div></div>'
-      +'<div class="counter-ctrl">'
-      +'<button class="counter-btn" onclick="adjLaps(-1)">−</button>'
-      +'<div><div class="counter-val">'+laps+'</div><div class="counter-unit">LAPS</div></div>'
-      +'<button class="counter-btn" onclick="adjLaps(1)">+</button>'
-      +'</div></div>';
-    document.getElementById('wo-ex-label').textContent='Circuit · 9 moves · then run';
-  } else if(isClimbing){
-    var climbWk=parseInt(load('climb_week')||'1');
-    counterEl.style.display='block';
-    counterEl.innerHTML='<div class="counter-row">'
-      +'<div class="counter-info"><div class="counter-label">8-Week Programme · 120 min</div><div class="counter-sub">'+climbBlockInfo(climbWk)+'</div></div>'
-      +'<div class="counter-ctrl">'
-      +'<button class="counter-btn" onclick="adjClimbWk(-1)">−</button>'
-      +'<div><div class="counter-val">W'+climbWk+'</div><div class="counter-unit">of 8</div></div>'
-      +'<button class="counter-btn" onclick="adjClimbWk(1)">+</button>'
-      +'</div></div>';
-    document.getElementById('wo-ex-label').textContent='Gym + Bouldering · 120 min';
-  } else if(isCardio){
+  if(isCardio){
     var cRot=parseInt(load('cardio_session')||'1');
     var cardioLabels=['','A · Z1-2 Swim · 45 min','B · Norwegian 4×4 · ~40 min','C · Z1-2 Swim · 45 min','D · Hike · 3 hours'];
     counterEl.style.display='block';
@@ -1023,11 +610,6 @@ function renderWorkout(){
       +'<button class="counter-btn" onclick="adjDBRotation(1)">+</button>'
       +'</div></div>';
     document.getElementById('wo-ex-label').textContent='Daily Blueprint · Unlock · Align · '+dbBuildLabels[dbRot];
-  } else {
-    counterEl.style.display='none';
-    document.getElementById('wo-ex-label').textContent=sess.type+' · '+sess.exercises.length+' exercises';
-    renderWOItems('wo-warmup',WARMUP,'warmup');
-    renderWOItems('wo-cooldown',COOLDOWN,'cooldown');
   }
 
   var dk=todayStr();
@@ -1057,7 +639,7 @@ function renderWorkout(){
       lastSubBlock=ex.subBlock;
       eh+='<div class="ex-sub-hdr">'+ex.subBlock+'</div>';
     }
-    var isInfo=isCircuit||((isClimbing||isBlueprint||isCardio)&&ex.info===true);
+    var isInfo=ex.info===true;
     var ss=ex.superset?'<span class="ex-ss">SS '+ex.superset+'</span>':ex.supersetWith?'<span class="ex-ss">SS '+ex.supersetWith+'</span>':'';
     eh+='<div class="ex-card" id="ex-'+ex.id+'">'
       +'<div class="ex-head" onclick="document.getElementById(\'ex-'+ex.id+'\').classList.toggle(\'open\')">'
@@ -1101,41 +683,8 @@ function renderWorkout(){
   document.getElementById('wo-exercises').innerHTML=eh;
 }
 
-function adjLaps(d){var v=Math.max(0,parseInt(load('circuit_laps')||'0')+d);save('circuit_laps',String(v));renderWorkout();}
-function adjClimbWk(d){var v=Math.min(8,Math.max(1,parseInt(load('climb_week')||'1')+d));save('climb_week',String(v));renderWorkout();}
 function adjDBRotation(d){var v=parseInt(load('db_rotation')||'1')+d;if(v<1)v=3;if(v>3)v=1;save('db_rotation',String(v));renderWorkout();}
 function adjCardioSession(d){var v=parseInt(load('cardio_session')||'1')+d;if(v<1)v=4;if(v>4)v=1;save('cardio_session',String(v));renderWorkout();}
-function climbBlockInfo(w){
-  if(w<=2)return 'Block 1 — Movement Base';
-  if(w<=4)return 'Block 2 — Strength Base';
-  if(w<=6)return 'Block 3 — Power';
-  if(w===7)return 'Block 4 — Peak';
-  return 'Block 4 — Deload';
-}
-
-function renderWOItems(containerId,items,prefix){
-  var dk=todayStr();
-  var c=document.getElementById(containerId);
-  c.innerHTML='';
-  items.forEach(function(item){
-    var key='kos3_wo_'+prefix+'_'+dk+'_'+item.id;
-    var done=(function(k){try{return localStorage.getItem(k)==='1';}catch(e){return false;}})(key);
-    var el=document.createElement('div');
-    el.className='wo-item'+(done?' done':'');
-    el.innerHTML='<div class="check-box'+(done?' on-ember':'')+'"><span class="check-tick">✓</span></div>'
-      +'<div class="wo-item-name">'+item.name
-      +'<div class="check-sub">'+item.note+'</div></div>'
-      +'<div class="wo-item-dur">'+item.dur+'</div>';
-    el.onclick=function(){
-      var now=(function(k){try{return localStorage.getItem(k)!=='1';}catch(e){return true;}})(key);
-      try{localStorage.setItem(key,now?'1':'0');}catch(e){}
-      el.classList.toggle('done',now);
-      el.querySelector('.check-box').classList.toggle('on-ember',now);
-    };
-    c.appendChild(el);
-  });
-}
-
 function lsToggleStr(el,key){
   el.classList.toggle('done');
   try{localStorage.setItem(key,el.classList.contains('done')?'1':'0');}catch(e){}
@@ -1153,245 +702,12 @@ function startRest(btn,secs){
   },1000);
 }
 
-// ── JOURNAL ──────────────────────────────────────────────────────────────────
-
-var OPENING_QUESTIONS=[
-  'What am I grateful for today?',
-  'What are my intentions for today?',
-  'What mood do I want to create?',
-  'What are my three priorities?',
-  'What are my key actions?',
-  'What obstacles might arise — and how will I meet them?',
-  'Who can I appreciate or connect with today?',
-  'What is the one thing to focus on above all else?'
-];
-var CLOSING_AFFIRMATIONS=[
-  'I am a business builder, investor, adventurer and lifelong learner.',
-  'I have designed two highly successful businesses in 12 years.',
-  'I create positive outcomes for my business partners.',
-  'I move freely — climb, surf, lift, swing, run and swim.',
-  'I have a magnetic personality — confidence, intelligence, kindness.',
-  'I am exactly where I\'m meant to be.'
-];
-
-var journalTab='opening';
-
-function openJournal(){renderJournal();document.getElementById('journal-overlay').classList.add('open');document.body.style.overflow='hidden';}
-function closeJournal(){document.getElementById('journal-overlay').classList.remove('open');document.body.style.overflow='';}
-function setJournalTab(t){journalTab=t;renderJournal();}
-
-function renderJournal(){
-  document.getElementById('j-opening-btn').classList.toggle('active',journalTab==='opening');
-  document.getElementById('j-closing-btn').classList.toggle('active',journalTab==='closing');
-  var dk=todayStr();
-  var h='';
-  if(journalTab==='opening'){
-    OPENING_QUESTIONS.forEach(function(q,i){
-      var key='kos3_jq_'+i+'_'+dk;var saved='';
-      try{saved=localStorage.getItem(key)||'';}catch(e){}
-      h+='<div class="j-q">'
-        +'<div class="j-q-num">0'+(i+1)+'</div>'
-        +'<div class="j-q-text">'+q+'</div>'
-        +'<textarea class="j-textarea" data-key="'+key+'" oninput="saveJQ(this)" placeholder="...">'
-        +saved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
-        +'</div>';
-    });
-  } else {
-    var affirmKey='kos3_affirm_'+dk;var affirmed=false;
-    try{affirmed=localStorage.getItem(affirmKey)==='1';}catch(e){}
-    h+='<div class="j-mantra"><div class="j-mantra-label">Daily Mantra</div>'
-      +'<div class="j-mantra-text">I am relentless, disciplined and focused.<br>Every day, I move closer to my potential.</div></div>';
-    CLOSING_AFFIRMATIONS.forEach(function(a,i){
-      h+='<div class="j-affirm">'
-        +'<div class="j-affirm-num">'+(i+1)+'</div>'
-        +'<div class="j-affirm-text">'+a+'</div>'
-        +'</div>';
-    });
-    h+='<button class="affirm-btn'+(affirmed?' done':'')+'" onclick="toggleAffirm(\''+affirmKey+'\')">'
-      +(affirmed?'✓ Affirmed today':'Affirm')+'</button>';
-  }
-  document.getElementById('j-body').innerHTML=h;
-}
-
-function saveJQ(el){var key=el.getAttribute('data-key');if(key)try{localStorage.setItem(key,el.value);}catch(e){}}
-function toggleAffirm(key){var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
-
-// ── 12-WEEK MATRIX ───────────────────────────────────────────────────────────
-
-var MX_ACTS = [
-  { id:'r', label:'Read Investing', sub:'1 hr',  color:'gold'   },
-  { id:'e', label:'Exercise',       sub:'1 hr',  color:'ember'  },
-  { id:'g', label:'GTG',            sub:'3×',    color:'sage'   },
-  { id:'b', label:'Build',          sub:'5 hrs', color:'purple' },
-];
-var MX_DAYS = ['Mon','Tue','Wed','Thu','Fri'];
-var MX_WEEKS = 12;
-var mxWeek = 1;
-
-function mxStartMonday(){
-  var stored=load('mx_start');
-  if(stored)return new Date(stored);
-  var d=new Date();var day=d.getDay()||7;
-  d.setDate(d.getDate()-(day-1));d.setHours(0,0,0,0);
-  save('mx_start',d.toISOString().slice(0,10));
-  return d;
-}
-
-function mxCurrentWeek(){
-  var start=mxStartMonday();var now=new Date();now.setHours(0,0,0,0);
-  var diff=Math.floor((now-start)/(7*86400000));
-  return Math.min(Math.max(diff+1,1),MX_WEEKS);
-}
-
-function mxKey(week,day,act){return 'mx_W'+week+'_D'+day+'_'+act;}
-
-function mxGet(week,day,act){return loadBool(mxKey(week,day,act));}
-function mxSet(week,day,act,val){saveBool(mxKey(week,day,act),val);}
-
-function mxToggle(week,day,act){
-  mxSet(week,day,act,!mxGet(week,day,act));
-  renderMatrix();
-}
-
-function mxNav(dir){
-  mxWeek=Math.min(Math.max(mxWeek+dir,1),MX_WEEKS);
-  renderMatrix();
-}
-
-function openAesthetics(){renderAesthetics();document.getElementById('aesthetics-overlay').classList.add('open');document.body.style.overflow='hidden';}
-function closeAesthetics(){document.getElementById('aesthetics-overlay').classList.remove('open');document.body.style.overflow='';}
-
-function renderAesthetics(){
-  var ae=AESTHETICS;
-  var h='';
-
-  // Subtitle
-  h+='<div class="ae-intro">'+ae.subtitle+'</div>';
-
-  // Governing Philosophy
-  h+='<div class="ae-section">';
-  h+='<div class="ae-section-hdr">Governing Philosophy</div>';
-  h+='<div class="ae-body-text">'+ae.philosophy.intro+'</div>';
-  ae.philosophy.rules.forEach(function(r,i){
-    h+='<div class="ae-rule"><span class="ae-rule-title">'+(i+1)+'. '+r.title+'</span><div class="ae-rule-body">'+r.body+'</div></div>';
-  });
-  h+='<div class="ae-footer-text">'+ae.philosophy.footer+'</div>';
-  h+='</div>';
-
-  // Phases
-  ae.phases.forEach(function(ph){
-    h+='<div class="ex-card" id="ae-'+ph.id+'">';
-    h+='<div class="ex-head" onclick="document.getElementById(\'ae-'+ph.id+'\').classList.toggle(\'open\')">';
-    h+='<span class="ex-id">'+ph.num+'</span>';
-    h+='<span class="ex-name">'+ph.title+'</span>';
-    h+='<span class="ae-tag">'+ph.tag+'</span>';
-    h+='</div>';
-    h+='<div class="ex-body">';
-    h+='<div class="ae-phase-body">'+ph.intro+'</div>';
-    h+='<div class="ae-meta">';
-    h+='<div class="ae-meta-row"><div class="ae-meta-label">Why here</div><div class="ae-meta-val">'+ph.why+'</div></div>';
-    h+='<div class="ae-meta-row"><div class="ae-meta-label">Gate</div><div class="ae-meta-val">'+ph.gate+'</div></div>';
-    h+='<div class="ae-meta-row"><div class="ae-meta-label">Owns the call</div><div class="ae-meta-val">'+ph.owns+'</div></div>';
-    h+='<div class="ae-meta-row"><div class="ae-meta-label">Carry-test</div><div class="ae-meta-val">'+ph.carry+'</div></div>';
-    if(ph.hardGate){h+='<div class="ae-hard-gate"><div class="ae-meta-label">Hard gate</div><div class="ae-meta-val">'+ph.hardGate+'</div></div>';}
-    if(ph.openQ){h+='<div class="ae-open-q"><div class="ae-meta-label">Open question</div><div class="ae-meta-val">'+ph.openQ+'</div></div>';}
-    h+='</div></div></div>';
-  });
-
-  // Sequencing Logic
-  h+='<div class="ae-section">';
-  h+='<div class="ae-section-hdr">Sequencing Logic</div>';
-  h+='<div class="ae-body-text">'+ae.logic.body+'</div>';
-  h+='<div class="ae-rule"><span class="ae-rule-title">'+ae.logic.p1.title+'</span><div class="ae-rule-body">'+ae.logic.p1.body+'</div></div>';
-  h+='<div class="ae-rule"><span class="ae-rule-title">'+ae.logic.p2.title+'</span><div class="ae-rule-body">'+ae.logic.p2.body+'</div></div>';
-  h+='<div class="ae-open-q"><div class="ae-meta-label">Open question worth holding</div><div class="ae-meta-val">'+ae.logic.openQ+'</div></div>';
-  h+='</div>';
-
-  // Pull-back Clause
-  h+='<div class="ae-section">';
-  h+='<div class="ae-section-hdr">The Pull-Back Clause</div>';
-  h+='<div class="ae-body-text">'+ae.pullback[0]+'</div>';
-  h+='<div class="ae-final">'+ae.pullback[1]+'</div>';
-  h+='</div>';
-
-  document.getElementById('ae-body').innerHTML=h;
-}
-
-function openMatrix(){
-  mxWeek=mxCurrentWeek();
-  renderMatrix();
-  document.getElementById('matrix-overlay').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-
-function closeMatrix(){
-  document.getElementById('matrix-overlay').classList.remove('open');
-  document.body.style.overflow='';
-}
-
-function mxSave(){
-  var btn=document.getElementById('mx-save-btn');
-  btn.classList.add('saved');btn.textContent='✓ Saved';
-  setTimeout(function(){
-    btn.classList.remove('saved');btn.textContent='Save';
-    closeMatrix();
-  },900);
-}
-
-function renderMatrix(){
-  var curW=mxCurrentWeek();
-
-  // Nav
-  document.getElementById('mx-week-title').textContent='Week '+mxWeek+' of '+MX_WEEKS;
-  document.getElementById('mx-week-sub').textContent=
-    mxWeek===curW?'Current week':mxWeek<curW?'Past week':'Future week';
-
-  // Grid
-  var gh='<div class="mx-days-header"><div></div>';
-  MX_DAYS.forEach(function(d){gh+='<div class="mx-day-label">'+d+'</div>';});
-  gh+='</div>';
-  MX_ACTS.forEach(function(act){
-    gh+='<div class="mx-row">'
-      +'<div class="mx-act-info"><div class="mx-act-label" style="color:var(--'+act.color+')">'+act.label+'</div>'
-      +'<div class="mx-act-sub">'+act.sub+'</div></div>';
-    for(var d=0;d<5;d++){
-      var done=mxGet(mxWeek,d,act.id);
-      gh+='<div class="mx-cell'+(done?' done-'+act.color:'')+'" '
-        +'onclick="mxToggle('+mxWeek+','+d+',\''+act.id+'\')">'
-        +(done?'✓':'')+'</div>';
-    }
-    gh+='</div>';
-  });
-  document.getElementById('mx-grid').innerHTML=gh;
-
-  // 12-week strip
-  var sh='';
-  for(var w=1;w<=MX_WEEKS;w++){
-    var total=0,max=MX_ACTS.length*5;
-    MX_ACTS.forEach(function(act){
-      for(var d=0;d<5;d++){if(mxGet(w,d,act.id))total++;}
-    });
-    var cls='mx-wk';
-    if(w===mxWeek)cls+=' mx-wk-selected';
-    else if(w===curW)cls+=' mx-wk-cur';
-    else if(total===max)cls+=' mx-wk-full';
-    else if(total>0)cls+=' mx-wk-part';
-    sh+='<div class="'+cls+'" onclick="mxWeek='+w+';renderMatrix()">W'+w+'</div>';
-  }
-  document.getElementById('mx-strip').innerHTML=sh;
-}
-
 // ── INIT ─────────────────────────────────────────────────────────────────────
-
-var _dow=new Date().getDay();
-var _sessId=DAY_SESSIONS[_dow];
-if(_sessId)currentSessIdx=SESSIONS.findIndex(function(s){return s.id===_sessId;});
 
 renderHeader();
 updateClock();
 setInterval(updateClock,1000);
-renderFloors();
-renderRewards();
+renderPillars();
 </script>
 </body>
 </html>
