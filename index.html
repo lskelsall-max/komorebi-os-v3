@@ -82,6 +82,11 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 
 /* ── PILLAR ── */
 .track{padding:26px 24px 18px;border-bottom:1px solid var(--border);transition:opacity 0.6s;}
+.track.locked{opacity:0.3;pointer-events:none;}
+.gate-note{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold,#d4af37);padding:0 24px 14px;border-bottom:1px solid var(--border);}
+.insp-card{padding:18px 24px 0;}
+.insp-img{width:100%;max-height:300px;object-fit:cover;border-radius:12px;display:block;}
+.insp-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0.5;padding:8px 2px 0;}
 .track:last-of-type{border-bottom:none;}
 .track-label{
   font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
@@ -272,6 +277,9 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   <!-- DAY PROGRESS -->
   <div class="day-line"><div class="day-line-fill" id="day-fill"></div></div>
 
+  <!-- DAILY INSPIRATION -->
+  <div id="inspiration"></div>
+
   <!-- ── PILLARS ── -->
   <div id="pillars"></div>
 
@@ -298,6 +306,18 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
+const INSPIRATION=["1999d1e6-e8ff-49f3-8cef-e687c8c068d8.jpeg","IMG_0085.jpeg","IMG_0467.jpeg","IMG_0499.jpeg","IMG_0768.jpeg","IMG_1460.jpeg","IMG_1461.jpeg","IMG_1462.jpeg","IMG_1463.jpeg","IMG_1464.jpeg","IMG_1465.jpeg","IMG_1466.jpeg","IMG_1468 (1).jpeg","IMG_1468.jpeg","IMG_1469.jpeg","IMG_1470.jpeg","IMG_1471.jpeg","IMG_1473.jpeg","IMG_1474.jpeg","IMG_1475.jpeg","IMG_1476.jpeg","IMG_2447.jpeg","IMG_2544.jpeg","IMG_2852.jpeg","IMG_2882.jpeg","IMG_2889.jpeg","IMG_3917.jpeg","IMG_3918.jpeg","IMG_4124.jpeg","IMG_4125.jpeg","IMG_4127.jpeg","IMG_4129.jpeg","IMG_4674.jpeg","IMG_4695.jpeg","IMG_6277.jpeg"];
+
+function renderInspiration(){
+  var d=new Date();
+  var start=new Date(d.getFullYear(),0,0);
+  var dayOfYear=Math.floor((d-start)/86400000);
+  var photo=INSPIRATION[dayOfYear%INSPIRATION.length];
+  document.getElementById('inspiration').innerHTML=
+    '<div class="insp-card"><img class="insp-img" src="inspiration/'+encodeURIComponent(photo)+'" alt="">'
+    +'<div class="insp-label">Jaguar Warrior King</div></div>';
+}
+
 const PILLARS = [
   { id:'morning', label:'Morning Wake-up', color:'gold', from:0, to:10, items:[
     { id:'m1', label:'Supplements' },
@@ -305,6 +325,8 @@ const PILLARS = [
     { id:'m3', label:'Sunshine', sub:'10 min' },
     { id:'m4', label:'Cold Plunge', sub:'2–3 min' },
     { id:'m5', label:'Reading: Wisdom', sub:'Seneca · Meditations · Tao' },
+    { id:'m6', label:'Meditation', sub:'10 min' },
+    { id:'m7', label:'Journal', sub:'10 questions' },
   ]},
   { id:'rehab', label:'Rehab / Swim', color:'ember', from:10, to:12, items:[
     { id:'rh1', label:'The Daily Blueprint', sub:'Unlock · Align · Build — ~54 min', workout:true, sess:'DB' },
@@ -526,10 +548,15 @@ function renderPillars(){
   var c=document.getElementById('pillars');
   c.innerHTML='';
   var nowId=currentPillarId();
+  // Morning Gate: other pillars stay locked until morning is ≥80% complete
+  var morning=PILLARS[0];
+  var morningDone=morning.items.filter(function(it){return loadDailyBool(it.id);}).length;
+  var gateOpen=morningDone/morning.items.length>=0.8;
   PILLARS.forEach(function(pillar){
+    var locked=pillar.id!=='morning'&&!gateOpen;
     var done=pillar.items.filter(function(it){return loadDailyBool(it.id);}).length;
     var track=document.createElement('div');
-    track.className='track'+(done===pillar.items.length?' complete':'');
+    track.className='track'+(done===pillar.items.length?' complete':'')+(locked?' locked':'');
     var label=document.createElement('div');
     label.className='track-label';
     label.style.color='var(--'+pillar.color+')';
@@ -546,12 +573,12 @@ function renderPillars(){
       el.innerHTML='<div class="check-box'+(checked?' on-'+pillar.color:'')+'"><span class="check-tick">✓</span></div>'
         +'<div class="check-text">'+item.label
         +(item.sub?'<div class="check-sub">'+item.sub+'</div>':'')+'</div>';
-      el.onclick=function(){
+      el.onclick=locked?null:function(){
         saveDailyBool(item.id,!loadDailyBool(item.id));
         renderPillars();
       };
       track.appendChild(el);
-      if(item.workout){
+      if(item.workout&&!locked){
         var btn=document.createElement('div');
         btn.className='view-btn';
         btn.textContent=(item.sess==='F'?'Open cardio →':'Open the hour →');
@@ -560,6 +587,12 @@ function renderPillars(){
       }
     });
     c.appendChild(track);
+    if(pillar.id==='morning'&&!gateOpen){
+      var note=document.createElement('div');
+      note.className='gate-note';
+      note.textContent='Gate closed — '+(Math.ceil(morning.items.length*0.8)-morningDone)+' more to unlock the day';
+      c.appendChild(note);
+    }
   });
   updateDayLine();
 }
@@ -719,6 +752,7 @@ function startRest(btn,secs){
 renderHeader();
 updateClock();
 setInterval(updateClock,1000);
+renderInspiration();
 renderPillars();
 </script>
 </body>
