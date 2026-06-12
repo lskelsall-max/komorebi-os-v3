@@ -190,6 +190,10 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 .sess-tab.active .sess-tab-name{color:var(--ember);}
 
 .wo-rules{display:flex;flex-wrap:wrap;gap:5px;padding:0 24px 14px;}
+.wo-goals{padding:0 24px 14px;}
+.wo-goals summary{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold,#d4af37);cursor:pointer;padding:4px 0;}
+.wo-goals ol{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.6;opacity:0.85;}
+.wo-goals li{margin-bottom:6px;}
 .wo-rule{
   font-family:var(--mn);font-size:7px;letter-spacing:0.1em;text-transform:uppercase;
   padding:3px 9px;border-radius:1px;background:var(--s1);border:1px solid var(--border);color:var(--gold);
@@ -296,6 +300,7 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   </div>
   <div class="sess-tabs" id="sess-tabs"></div>
   <div class="wo-rules" id="wo-rules"></div>
+  <div id="wo-goals"></div>
   <div id="wo-counter" style="display:none"></div>
   <div class="wo-section" style="padding-bottom:48px">
     <div class="wo-section-label" id="wo-ex-label">Exercises</div>
@@ -351,6 +356,19 @@ const PILLARS = [
 const SESSIONS = [
   { id:'DB', label:'Daily Blueprint', type:'Unlock · Align · Build', day:'Daily', blueprint:true,
     rules:['POSITION BEFORE LOAD','STOP AT 4 OF 5 — REPS IN RESERVE','RIGHT LEADS AND GOES FIRST','SAME SHAPE DAILY'],
+    goals:[
+      'Flatten midfoot and stabilise base standing',
+      'Open up ankle and calf mobility',
+      'Open hamstring + adductors',
+      'Strengthen glute min, med and max — noticeable size increase to mirror left',
+      'Gain independent movement in right upper body: pec, shoulder, neck, lat, bicep — independent of QL/psoas/rib muscles',
+      'Sit/drive with less "grip" in same area + groin/adductor',
+      'Throw a tennis ball right-handed',
+      'Rotate right for golf with more flex at the hip joint',
+      'Swim 4x freestyle, breathing on the right with more opening',
+      'Complete 100 press-ups in sets of 10 with limited or only temporary grip at QL/hip',
+      'Activate glute independently in various positions',
+    ],
     exercises:[
       // Block 1 — Unlock · Pliability
       {id:'DBu1',name:'Pliability — Right Guard Chain', block:'unlock', subBlock:'Pliability', info:true,
@@ -629,6 +647,11 @@ function renderWorkout(){
   var isCardio=sess.cardio===true;
 
   document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
+  var gEl=document.getElementById('wo-goals');
+  if(sess.goals){
+    gEl.innerHTML='<details class="wo-goals"><summary>Goals — what this is all for</summary><ol>'
+      +sess.goals.map(function(g){return '<li>'+g+'</li>';}).join('')+'</ol></details>';
+  }else{gEl.innerHTML='';}
 
   var counterEl=document.getElementById('wo-counter');
   if(isCardio){
