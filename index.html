@@ -189,6 +189,32 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 .sess-tab-type{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--muted);margin-top:1px;}
 .sess-tab.active .sess-tab-name{color:var(--ember);}
 
+/* ── JOURNAL OVERLAY ── */
+.j-tabs{display:flex;gap:6px;padding:16px 24px;}
+.j-tab{flex:1;padding:10px 6px;background:none;border:1px solid var(--border);cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;font-family:var(--mn);font-size:9px;letter-spacing:0.15em;color:var(--muted);}
+.j-tab.active{background:var(--goldF);border-color:rgba(200,164,85,0.35);color:var(--gold);}
+.j-body{padding:0 24px 48px;}
+.j-q{padding:16px 0;border-bottom:1px solid var(--border);}
+.j-q-num{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:8px;}
+.j-q-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);margin-bottom:10px;line-height:1.35;}
+.j-textarea{width:100%;min-height:52px;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:11px;padding:10px 12px;resize:none;outline:none;line-height:1.6;border-radius:1px;}
+.j-affirm{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:14px;}
+.j-affirm-num{font-family:var(--mn);font-size:9px;color:var(--gold);min-width:16px;padding-top:3px;}
+.j-affirm-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);line-height:1.4;}
+.j-mantra{padding:20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);text-align:center;border-radius:1px;}
+.j-mantra-label{font-family:var(--mn);font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.j-mantra-text{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--text);line-height:1.6;}
+.affirm-btn{display:block;width:100%;margin-top:24px;padding:12px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
+.affirm-btn.done{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+
+/* ── TIMER ── */
+.timer-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 24px;background:var(--bg,#000);border-bottom:1px solid var(--border);}
+.timer-display{font-family:var(--mn);font-size:22px;color:var(--text);min-width:64px;}
+.timer-display.running{color:var(--gold);}
+.timer-display.zero{color:var(--sage);}
+.timer-btn{padding:6px 10px;background:var(--s1);border:1px solid var(--border);color:var(--muted);font-family:var(--mn);font-size:9px;letter-spacing:0.1em;cursor:pointer;border-radius:1px;}
+.timer-btn.active{color:var(--gold);border-color:rgba(200,164,85,0.35);}
+
 .wo-rules{display:flex;flex-wrap:wrap;gap:5px;padding:0 24px 14px;}
 .wo-goals{padding:0 24px 14px;}
 .wo-goals summary{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold,#d4af37);cursor:pointer;padding:4px 0;}
@@ -292,11 +318,33 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 
 </div>
 
+<!-- ── JOURNAL OVERLAY ── -->
+<div class="overlay" id="journal-overlay">
+  <div class="ov-header">
+    <div class="ov-title">Journal</div>
+    <button class="ov-close" onclick="closeJournal()">Close</button>
+  </div>
+  <div class="j-tabs">
+    <button class="j-tab active" id="j-opening-btn" onclick="setJournalTab('opening')">OPENING</button>
+    <button class="j-tab" id="j-closing-btn" onclick="setJournalTab('closing')">CLOSING</button>
+  </div>
+  <div class="j-body" id="j-body"></div>
+</div>
+
 <!-- ── WORKOUT OVERLAY ── -->
 <div class="overlay" id="workout-overlay">
   <div class="ov-header">
     <div class="ov-title">Training</div>
     <button class="ov-close" onclick="closeWorkout()">Close</button>
+  </div>
+  <div class="timer-bar">
+    <div class="timer-display" id="timer-display">0:00</div>
+    <button class="timer-btn" onclick="timerStart(10)">10s</button>
+    <button class="timer-btn" onclick="timerStart(20)">20s</button>
+    <button class="timer-btn" onclick="timerStart(30)">30s</button>
+    <button class="timer-btn" onclick="timerStart(60)">60s</button>
+    <button class="timer-btn" onclick="timerStart(90)">90s</button>
+    <button class="timer-btn" onclick="timerStop()">Stop</button>
   </div>
   <div class="sess-tabs" id="sess-tabs"></div>
   <div class="wo-rules" id="wo-rules"></div>
@@ -331,7 +379,7 @@ const PILLARS = [
     { id:'m4', label:'Cold Plunge', sub:'2–3 min' },
     { id:'m5', label:'Reading: Wisdom', sub:'Seneca · Meditations · Tao' },
     { id:'m6', label:'Meditation', sub:'10 min' },
-    { id:'m7', label:'Journal', sub:'10 questions' },
+    { id:'m7', label:'Journal', sub:'Opening questions · Closing affirmations', journal:true },
   ]},
   { id:'rehab', label:'Rehab / Swim', color:'ember', from:10, to:12, items:[
     { id:'rh1', label:'The Daily Blueprint', sub:'Unlock · Align · Build — ~54 min', workout:true, sess:'DB' },
@@ -596,6 +644,13 @@ function renderPillars(){
         renderPillars();
       };
       track.appendChild(el);
+      if(item.journal){
+        var jbtn=document.createElement('div');
+        jbtn.className='view-btn';
+        jbtn.textContent='Open journal →';
+        jbtn.onclick=function(){openJournal();};
+        track.appendChild(jbtn);
+      }
       if(item.workout&&!locked){
         var btn=document.createElement('div');
         btn.className='view-btn';
@@ -620,6 +675,96 @@ function updateDayLine(){
   PILLARS.forEach(function(p){p.items.forEach(function(it){total++;if(loadDailyBool(it.id))done++;});});
   document.getElementById('day-fill').style.width=(done/total*100)+'%';
   document.getElementById('mantra').classList.toggle('lit',done===total);
+}
+
+// ── JOURNAL ──────────────────────────────────────────────────────────────────
+
+var OPENING_QUESTIONS=[
+  'What am I grateful for today?',
+  'What are my intentions for today?',
+  'What mood do I want to create?',
+  'What are my three priorities?',
+  'What are my key actions?',
+  'What obstacles might arise — and how will I meet them?',
+  'Who can I appreciate or connect with today?',
+  'What is the one thing to focus on above all else?'
+];
+var CLOSING_AFFIRMATIONS=[
+  'I am a business builder, investor, adventurer and lifelong learner.',
+  'I have designed two highly successful businesses in 12 years.',
+  'I create positive outcomes for my business partners.',
+  'I move freely — climb, surf, lift, swing, run and swim.',
+  'I have a magnetic personality — confidence, intelligence, kindness.',
+  'I am exactly where I\'m meant to be.'
+];
+
+var journalTab='opening';
+
+function openJournal(){renderJournal();document.getElementById('journal-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeJournal(){document.getElementById('journal-overlay').classList.remove('open');document.body.style.overflow='';}
+function setJournalTab(t){journalTab=t;renderJournal();}
+
+function renderJournal(){
+  document.getElementById('j-opening-btn').classList.toggle('active',journalTab==='opening');
+  document.getElementById('j-closing-btn').classList.toggle('active',journalTab==='closing');
+  var dk=todayStr();
+  var h='';
+  if(journalTab==='opening'){
+    OPENING_QUESTIONS.forEach(function(q,i){
+      var key='kos3_jq_'+i+'_'+dk;var saved='';
+      try{saved=localStorage.getItem(key)||'';}catch(e){}
+      h+='<div class="j-q">'
+        +'<div class="j-q-num">0'+(i+1)+'</div>'
+        +'<div class="j-q-text">'+q+'</div>'
+        +'<textarea class="j-textarea" data-key="'+key+'" oninput="saveJQ(this)" placeholder="...">'
+        +saved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+        +'</div>';
+    });
+  } else {
+    var affirmKey='kos3_affirm_'+dk;var affirmed=false;
+    try{affirmed=localStorage.getItem(affirmKey)==='1';}catch(e){}
+    h+='<div class="j-mantra"><div class="j-mantra-label">Daily Mantra</div>'
+      +'<div class="j-mantra-text">I am relentless, disciplined and focused.<br>Every day, I move closer to my potential.</div></div>';
+    CLOSING_AFFIRMATIONS.forEach(function(a,i){
+      h+='<div class="j-affirm">'
+        +'<div class="j-affirm-num">'+(i+1)+'</div>'
+        +'<div class="j-affirm-text">'+a+'</div>'
+        +'</div>';
+    });
+    h+='<button class="affirm-btn'+(affirmed?' done':'')+'" onclick="toggleAffirm(\''+affirmKey+'\')">'
+      +(affirmed?'✓ Affirmed today':'Affirm')+'</button>';
+  }
+  document.getElementById('j-body').innerHTML=h;
+}
+
+function saveJQ(el){var key=el.getAttribute('data-key');if(key)try{localStorage.setItem(key,el.value);}catch(e){}}
+function toggleAffirm(key){var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
+
+// ── TIMER ────────────────────────────────────────────────────────────────────
+
+var timerInt=null,timerEnd=0;
+function timerStart(secs){
+  timerStop();
+  timerEnd=Date.now()+secs*1000;
+  timerTick();
+  timerInt=setInterval(timerTick,250);
+}
+function timerStop(){
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
+  var el=document.getElementById('timer-display');
+  el.textContent='0:00';el.className='timer-display';
+}
+function timerTick(){
+  var el=document.getElementById('timer-display');
+  var left=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));
+  el.textContent=Math.floor(left/60)+':'+('0'+left%60).slice(-2);
+  if(left<=0){
+    clearInterval(timerInt);timerInt=null;
+    el.className='timer-display zero';
+    if(navigator.vibrate)navigator.vibrate([200,100,200]);
+  }else{
+    el.className='timer-display running';
+  }
 }
 
 // ── WORKOUT OVERLAY ──────────────────────────────────────────────────────────
