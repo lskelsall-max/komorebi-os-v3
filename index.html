@@ -208,7 +208,7 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 .affirm-btn.done{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
 
 /* ── TIMER ── */
-.timer-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 24px;background:var(--bg,#000);border-bottom:1px solid var(--border);}
+.timer-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 24px;background:var(--bg,#000);border-bottom:1px solid var(--border);}
 .timer-display{font-family:var(--mn);font-size:22px;color:var(--text);min-width:64px;}
 .timer-display.running{color:var(--gold);}
 .timer-display.zero{color:var(--sage);}
@@ -344,6 +344,9 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
     <button class="timer-btn" onclick="timerStart(30)">30s</button>
     <button class="timer-btn" onclick="timerStart(60)">60s</button>
     <button class="timer-btn" onclick="timerStart(90)">90s</button>
+    <button class="timer-btn" onclick="timerStart(120)">2m</button>
+    <button class="timer-btn" onclick="timerStart(300)">5m</button>
+    <button class="timer-btn" onclick="timerAdd(30)">+30</button>
     <button class="timer-btn" onclick="timerStop()">Stop</button>
   </div>
   <div class="sess-tabs" id="sess-tabs"></div>
@@ -748,6 +751,10 @@ function timerStart(secs){
   timerEnd=Date.now()+secs*1000;
   timerTick();
   timerInt=setInterval(timerTick,250);
+}
+function timerAdd(secs){
+  if(timerInt){timerEnd+=secs*1000;timerTick();}
+  else timerStart(secs);
 }
 function timerStop(){
   if(timerInt){clearInterval(timerInt);timerInt=null;}
