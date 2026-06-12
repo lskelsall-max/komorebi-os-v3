@@ -307,6 +307,18 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   <!-- DAY PROGRESS -->
   <div class="day-line"><div class="day-line-fill" id="day-fill"></div></div>
 
+  <!-- GLOBAL TIMER -->
+  <div class="timer-bar">
+    <div class="timer-display">0:00</div>
+    <button class="timer-btn" onclick="timerStart(30)">30s</button>
+    <button class="timer-btn" onclick="timerStart(60)">1m</button>
+    <button class="timer-btn" onclick="timerStart(120)">2m</button>
+    <button class="timer-btn" onclick="timerStart(300)">5m</button>
+    <button class="timer-btn" onclick="timerStart(1500)">25m</button>
+    <button class="timer-btn" onclick="timerAdd(30)">+30</button>
+    <button class="timer-btn" onclick="timerStop()">Stop</button>
+  </div>
+
   <!-- DAILY INSPIRATION -->
   <div id="inspiration"></div>
 
@@ -338,7 +350,7 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
     <button class="ov-close" onclick="closeWorkout()">Close</button>
   </div>
   <div class="timer-bar">
-    <div class="timer-display" id="timer-display">0:00</div>
+    <div class="timer-display">0:00</div>
     <button class="timer-btn" onclick="timerStart(10)">10s</button>
     <button class="timer-btn" onclick="timerStart(20)">20s</button>
     <button class="timer-btn" onclick="timerStart(30)">30s</button>
@@ -756,21 +768,19 @@ function timerAdd(secs){
   if(timerInt){timerEnd+=secs*1000;timerTick();}
   else timerStart(secs);
 }
+function timerEls(){return document.querySelectorAll('.timer-display');}
 function timerStop(){
   if(timerInt){clearInterval(timerInt);timerInt=null;}
-  var el=document.getElementById('timer-display');
-  el.textContent='0:00';el.className='timer-display';
+  timerEls().forEach(function(el){el.textContent='0:00';el.className='timer-display';});
 }
 function timerTick(){
-  var el=document.getElementById('timer-display');
   var left=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));
-  el.textContent=Math.floor(left/60)+':'+('0'+left%60).slice(-2);
+  var txt=Math.floor(left/60)+':'+('0'+left%60).slice(-2);
+  var cls='timer-display '+(left<=0?'zero':'running');
+  timerEls().forEach(function(el){el.textContent=txt;el.className=cls;});
   if(left<=0){
     clearInterval(timerInt);timerInt=null;
-    el.className='timer-display zero';
     if(navigator.vibrate)navigator.vibrate([200,100,200]);
-  }else{
-    el.className='timer-display running';
   }
 }
 
