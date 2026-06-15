@@ -82,8 +82,6 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 
 /* ── PILLAR ── */
 .track{padding:26px 24px 18px;border-bottom:1px solid var(--border);transition:opacity 0.6s;}
-.track.locked{opacity:0.3;pointer-events:none;}
-.gate-note{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold,#d4af37);padding:0 24px 14px;border-bottom:1px solid var(--border);}
 .insp-card{padding:18px 24px 0;}
 .insp-img{width:100%;max-height:300px;object-fit:cover;border-radius:12px;display:block;}
 .insp-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0.5;padding:8px 2px 0;}
@@ -629,15 +627,10 @@ function renderPillars(){
   var c=document.getElementById('pillars');
   c.innerHTML='';
   var nowId=currentPillarId();
-  // Morning Gate: other pillars stay locked until morning is ≥80% complete
-  var morning=PILLARS[0];
-  var morningDone=morning.items.filter(function(it){return loadDailyBool(it.id);}).length;
-  var gateOpen=morningDone/morning.items.length>=0.8;
   PILLARS.forEach(function(pillar){
-    var locked=pillar.id!=='morning'&&!gateOpen;
     var done=pillar.items.filter(function(it){return loadDailyBool(it.id);}).length;
     var track=document.createElement('div');
-    track.className='track'+(done===pillar.items.length?' complete':'')+(locked?' locked':'');
+    track.className='track'+(done===pillar.items.length?' complete':'');
     var label=document.createElement('div');
     label.className='track-label';
     label.style.color='var(--'+pillar.color+')';
@@ -654,7 +647,7 @@ function renderPillars(){
       el.innerHTML='<div class="check-box'+(checked?' on-'+pillar.color:'')+'"><span class="check-tick">✓</span></div>'
         +'<div class="check-text">'+item.label
         +(item.sub?'<div class="check-sub">'+item.sub+'</div>':'')+'</div>';
-      el.onclick=locked?null:function(){
+      el.onclick=function(){
         saveDailyBool(item.id,!loadDailyBool(item.id));
         renderPillars();
       };
@@ -666,7 +659,7 @@ function renderPillars(){
         jbtn.onclick=function(){openJournal();};
         track.appendChild(jbtn);
       }
-      if(item.workout&&!locked){
+      if(item.workout){
         var btn=document.createElement('div');
         btn.className='view-btn';
         btn.textContent=(item.sess==='F'?'Open cardio →':'Open the hour →');
@@ -675,12 +668,6 @@ function renderPillars(){
       }
     });
     c.appendChild(track);
-    if(pillar.id==='morning'&&!gateOpen){
-      var note=document.createElement('div');
-      note.className='gate-note';
-      note.textContent='Gate closed — '+(Math.ceil(morning.items.length*0.8)-morningDone)+' more to unlock the day';
-      c.appendChild(note);
-    }
   });
   updateDayLine();
 }
@@ -706,9 +693,9 @@ var OPENING_QUESTIONS=[
 ];
 var CLOSING_AFFIRMATIONS=[
   'I am a business builder, investor, adventurer and lifelong learner.',
-  'I have designed two highly successful businesses in 12 years.',
-  'I create positive outcomes for my business partners.',
-  'I move freely — climb, surf, lift, swing, run and swim.',
+  'I have designed two highly successful businesses in 12 years. I am becoming the investor and builder I was always capable of being.',
+  'I show up fully for Susie, Hector and Bella.',
+  'I am rebuilding a body that moves freely — climbs, surfs, lifts, swings, runs and swims.',
   'I have a magnetic personality — confidence, intelligence, kindness.',
   'I am exactly where I\'m meant to be.'
 ];
@@ -739,7 +726,7 @@ function renderJournal(){
     var affirmKey='kos3_affirm_'+dk;var affirmed=false;
     try{affirmed=localStorage.getItem(affirmKey)==='1';}catch(e){}
     h+='<div class="j-mantra"><div class="j-mantra-label">Daily Mantra</div>'
-      +'<div class="j-mantra-text">I am relentless, disciplined and focused.<br>Every day, I move closer to my potential.</div></div>';
+      +'<div class="j-mantra-text">I am a Jaguar Warrior King. I am relentless, disciplined and focused.<br>Every day, I move closer to my potential.</div></div>';
     CLOSING_AFFIRMATIONS.forEach(function(a,i){
       h+='<div class="j-affirm">'
         +'<div class="j-affirm-num">'+(i+1)+'</div>'
