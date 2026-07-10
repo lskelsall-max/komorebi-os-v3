@@ -283,6 +283,20 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 .counter-val{font-family:var(--mn);font-size:22px;font-weight:500;color:var(--ember);text-align:center;min-width:44px;}
 .counter-unit{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;color:var(--muted);text-align:center;margin-top:1px;}
 
+/* ── PERSISTENCE LOG ── */
+.pl-field{margin-bottom:10px;}
+.pl-label{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.pl-input{width:100%;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:12px;padding:9px 10px;border-radius:1px;outline:none;}
+.pl-input:focus{border-color:var(--gold);}
+.pl-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pl-save{width:100%;margin-top:12px;padding:11px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
+.pl-save:active{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+.pl-table{width:100%;margin-top:20px;border-collapse:collapse;}
+.pl-table th{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 4px;border-bottom:1px solid var(--border);}
+.pl-table td{font-family:var(--mn);font-size:11px;color:var(--text);padding:8px 4px;border-bottom:1px solid var(--border);vertical-align:top;}
+.pl-del{background:none;border:none;color:var(--ember);font-family:var(--mn);font-size:9px;cursor:pointer;padding:2px 6px;}
+.pl-del:active{opacity:0.5;}
+
 </style>
 </head>
 <body>
@@ -326,6 +340,11 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   <!-- MANTRA -->
   <div class="mantra" id="mantra">Surf &middot; Code &middot; Eat &middot; Sleep &middot; Repeat</div>
 
+  <!-- NAV -->
+  <div style="padding:18px 24px 0;text-align:center;">
+    <button class="view-btn" onclick="openPersistence()">Persistence Log →</button>
+  </div>
+
 </div>
 
 <!-- ── JOURNAL OVERLAY ── -->
@@ -366,6 +385,20 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   <div class="wo-section" style="padding-bottom:48px">
     <div class="wo-section-label" id="wo-ex-label">Exercises</div>
     <div id="wo-exercises"></div>
+  </div>
+</div>
+
+<!-- ── PERSISTENCE LOG OVERLAY ── -->
+<div class="overlay" id="persist-overlay">
+  <div class="ov-header">
+    <div class="ov-title">Persistence Log</div>
+    <button class="ov-close" onclick="closePersistence()">Close</button>
+  </div>
+  <div style="padding:0 24px 48px;">
+    <canvas id="persist-chart" height="160" style="width:100%;margin:16px 0;"></canvas>
+    <div id="persist-form"></div>
+    <div id="persist-error" style="display:none;color:#b06030;font-size:11px;margin:8px 0;"></div>
+    <div id="persist-table"></div>
   </div>
 </div>
 
@@ -917,6 +950,128 @@ function startRest(btn,secs){
     if(rem<=0){clearInterval(btn._r);btn._r=null;fill.style.width='100%';label.textContent='Done ✓';
       setTimeout(function(){fill.style.width='0%';label.textContent='Start '+secs+'s rest';},2000);}
   },1000);
+}
+
+// ── PERSISTENCE LOG ─────────────────────────────────────────────────────────
+
+function plKey(){return 'kos3_persist_log';}
+function plLoad(){try{return JSON.parse(localStorage.getItem(plKey()))||[];}catch(e){return [];}}
+function plSave(data){try{localStorage.setItem(plKey(),JSON.stringify(data));return true;}catch(e){return false;}}
+
+function openPersistence(){
+  renderPersistence();
+  document.getElementById('persist-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closePersistence(){
+  document.getElementById('persist-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function renderPersistence(){
+  var data=plLoad();
+  data.sort(function(a,b){return b.date.localeCompare(a.date);});
+  renderPersistChart(data);
+  renderPersistForm();
+  renderPersistTable(data);
+}
+
+function renderPersistChart(data){
+  var canvas=document.getElementById('persist-chart');
+  var ctx=canvas.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;
+  canvas.height=160*dpr;
+  ctx.scale(dpr,dpr);
+  var w=canvas.offsetWidth,h=160;
+  ctx.clearRect(0,0,w,h);
+
+  var recent=data.slice().sort(function(a,b){return a.date.localeCompare(b.date);}).slice(-14);
+  if(!recent.length){
+    ctx.fillStyle='#706c65';ctx.font='11px "DM Mono",monospace';
+    ctx.fillText('No sessions yet',w/2-45,h/2);
+    return;
+  }
+  var maxH=Math.max.apply(null,recent.map(function(r){return r.held||0;}))||1;
+  var barW=Math.floor((w-20)/(recent.length))-4;
+  var topPad=22,botPad=28;
+  var chartH=h-topPad-botPad;
+
+  ctx.fillStyle='#706c65';ctx.font='7px "DM Mono",monospace';
+  ctx.fillText('HOURS HELD — LAST '+recent.length,4,12);
+
+  recent.forEach(function(r,i){
+    var x=10+i*(barW+4);
+    var barH=((r.held||0)/maxH)*chartH;
+    var y=topPad+chartH-barH;
+    ctx.fillStyle='rgba(200,164,85,0.7)';
+    ctx.fillRect(x,y,barW,barH);
+    // date label
+    ctx.fillStyle='#706c65';ctx.font='7px "DM Mono",monospace';
+    var lbl=r.date.slice(5);
+    ctx.fillText(lbl,x,h-8);
+    // value on top
+    ctx.fillStyle='#e4e0d4';ctx.font='9px "DM Mono",monospace';
+    ctx.fillText(String(r.held),x,y-4);
+  });
+}
+
+function renderPersistForm(){
+  var h='<div class="pl-field"><div class="pl-label">Date</div><input class="pl-input" type="date" id="pl-date" value="'+todayStr()+'"></div>'
+    +'<div class="pl-row">'
+    +'<div class="pl-field"><div class="pl-label">Held (hours)</div><input class="pl-input" type="number" id="pl-held" min="0" step="0.5" placeholder="e.g. 6"></div>'
+    +'<div class="pl-field"><div class="pl-label">Slept (hours)</div><input class="pl-input" type="number" id="pl-slept" min="0" step="0.5" placeholder="e.g. 7"></div>'
+    +'</div>'
+    +'<div class="pl-row">'
+    +'<div class="pl-field"><div class="pl-label">Mood (1–10)</div><input class="pl-input" type="number" id="pl-mood" min="1" max="10" placeholder="e.g. 7"></div>'
+    +'<div class="pl-field"><div class="pl-label">Car (minutes)</div><input class="pl-input" type="number" id="pl-car" min="0" placeholder="e.g. 20"></div>'
+    +'</div>'
+    +'<div class="pl-field"><div class="pl-label">Plate (mm)</div><input class="pl-input" type="number" id="pl-plate" min="0" step="0.1" placeholder="e.g. 3"></div>'
+    +'<div class="pl-field"><div class="pl-label">Note</div><input class="pl-input" type="text" id="pl-note" placeholder="Optional"></div>'
+    +'<button class="pl-save" onclick="savePersistEntry()">Save entry</button>';
+  document.getElementById('persist-form').innerHTML=h;
+}
+
+function savePersistEntry(){
+  var errEl=document.getElementById('persist-error');
+  errEl.style.display='none';
+  var date=document.getElementById('pl-date').value;
+  var held=parseFloat(document.getElementById('pl-held').value);
+  var slept=parseFloat(document.getElementById('pl-slept').value);
+  var mood=parseInt(document.getElementById('pl-mood').value);
+  var car=parseInt(document.getElementById('pl-car').value)||0;
+  var plate=parseFloat(document.getElementById('pl-plate').value)||0;
+  var note=document.getElementById('pl-note').value.trim();
+  if(!date||isNaN(held)||isNaN(slept)||isNaN(mood)){
+    errEl.textContent='Date, held, slept and mood are required.';errEl.style.display='block';return;
+  }
+  if(mood<1||mood>10){errEl.textContent='Mood must be 1–10.';errEl.style.display='block';return;}
+  var data=plLoad();
+  var idx=data.findIndex(function(r){return r.date===date;});
+  var entry={date:date,held:held,slept:slept,mood:mood,car:car,plate:plate,note:note};
+  if(idx>=0)data[idx]=entry;else data.push(entry);
+  if(!plSave(data)){
+    errEl.textContent='Save failed — localStorage may be full.';errEl.style.display='block';return;
+  }
+  renderPersistence();
+}
+
+function deletePersistEntry(date){
+  var data=plLoad().filter(function(r){return r.date!==date;});
+  plSave(data);
+  renderPersistence();
+}
+
+function renderPersistTable(data){
+  if(!data.length){document.getElementById('persist-table').innerHTML='';return;}
+  var h='<table class="pl-table"><thead><tr><th>Date</th><th>Held</th><th>Slept</th><th>Mood</th><th>Car</th><th>Plate</th><th>Note</th><th></th></tr></thead><tbody>';
+  data.forEach(function(r){
+    h+='<tr><td>'+r.date.slice(5)+'</td><td>'+r.held+'h</td><td>'+r.slept+'h</td><td>'+r.mood+'</td><td>'+r.car+'m</td><td>'+r.plate+'</td>'
+      +'<td style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.note||'—')+'</td>'
+      +'<td><button class="pl-del" onclick="deletePersistEntry(\''+r.date+'\')">✕</button></td></tr>';
+  });
+  h+='</tbody></table>';
+  document.getElementById('persist-table').innerHTML=h;
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
