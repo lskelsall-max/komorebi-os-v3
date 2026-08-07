@@ -6,36 +6,28 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Komorebi OS">
-<meta name="theme-color" content="#080806">
+<meta name="theme-color" content="#0E1410">
 <title>Komorebi OS</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:     #080806;
-  --s1:     #0d0d0a;
-  --s2:     #111110;
-  --border: #1c1c18;
-  --borderM:#2a2a25;
-  --text:   #e4e0d4;
-  --muted:  #706c65;
-  --dim:    #3a3a35;
-  --gold:   #c8a455;
-  --ember:  #b06030;
-  --sage:   #5a7858;
-  --goldF:  rgba(200,164,85,0.08);
-  --emberF: rgba(176,96,48,0.08);
-  --sageF:  rgba(90,120,88,0.08);
-  --purple: #9B8EC4;
-  --purpleF:rgba(155,142,196,0.10);
-  --sf: 'Cormorant Garamond', serif;
-  --mn: 'DM Mono', monospace;
+  --bg:    #0E1410;
+  --panel: #151F18;
+  --lines: #26332B;
+  --text:  #E7EDE4;
+  --muted: #8FA396;
+  --gold:  #E3C878;
+  --moss:  #7FA37A;
+  --sf:    'Zen Old Mincho', serif;
+  --mn:    'IBM Plex Mono', monospace;
+  --body:  'IBM Plex Sans', sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{
   background:var(--bg);color:var(--text);
-  font-family:var(--mn);
+  font-family:var(--body);
   min-height:100vh;min-height:-webkit-fill-available;
   overscroll-behavior:none;
 }
@@ -45,116 +37,252 @@ html,body{
   padding:max(env(safe-area-inset-top),28px) 0 max(env(safe-area-inset-bottom),48px);
 }
 
+/* ── CANOPY EFFECT ── */
+.canopy{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 20%, rgba(127,163,122,0.12) 0%, transparent 70%),
+             radial-gradient(ellipse 50% 40% at 70% 40%, rgba(227,200,120,0.06) 0%, transparent 60%),
+             radial-gradient(ellipse 40% 50% at 30% 60%, rgba(127,163,122,0.08) 0%, transparent 60%);
+  opacity:0.05;
+  transition:opacity 1.5s ease;
+}
+
 /* ── HEADER ── */
-.header{padding:0 24px 24px;}
+.header{padding:0 24px 24px;position:relative;z-index:1;}
 .header-row{display:flex;justify-content:space-between;align-items:flex-start;}
 .header-date{
-  font-family:var(--sf);font-size:38px;font-weight:300;
+  font-family:var(--sf);font-size:36px;font-weight:400;
   letter-spacing:-0.01em;line-height:1;
-  transition:color 1s;
+  color:var(--text);
 }
 .header-day{
   font-family:var(--mn);font-size:8px;letter-spacing:0.2em;
   color:var(--muted);text-transform:uppercase;margin-top:7px;
 }
 .clock{
-  font-family:var(--mn);font-size:11px;color:var(--dim);
+  font-family:var(--mn);font-size:11px;color:var(--muted);
   letter-spacing:0.06em;padding-top:6px;text-align:right;
 }
 .phase{
   font-family:var(--mn);font-size:7px;letter-spacing:0.25em;
-  text-transform:uppercase;color:var(--dim);margin-top:5px;text-align:right;
-  transition:color 1s;
+  text-transform:uppercase;color:var(--muted);margin-top:5px;text-align:right;
 }
 
-/* Dawn / dusk / night tints */
-body.ph-dawn  .header-date,body.ph-dawn  .phase{color:var(--gold);}
-body.ph-dusk  .header-date,body.ph-dusk  .phase{color:var(--ember);}
-body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
-
 /* ── DAY PROGRESS HAIRLINE ── */
-.day-line{height:1px;background:var(--border);position:relative;overflow:hidden;}
+.day-line{height:1px;background:var(--lines);position:relative;overflow:hidden;z-index:1;}
 .day-line-fill{
   position:absolute;left:0;top:0;height:100%;width:0%;
-  background:linear-gradient(90deg,var(--gold),var(--ember));
+  background:linear-gradient(90deg,var(--moss),var(--gold));
   transition:width 0.4s ease;
 }
 
-/* ── PILLAR ── */
-.track{padding:26px 24px 18px;border-bottom:1px solid var(--border);transition:opacity 0.6s;}
-.insp-card{padding:18px 24px 0;}
-.insp-img{width:100%;max-height:300px;object-fit:cover;border-radius:12px;display:block;}
-.insp-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:0.5;padding:8px 2px 0;}
-.track:last-of-type{border-bottom:none;}
-.track-label{
-  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
-  text-transform:uppercase;margin-bottom:12px;
-  display:flex;align-items:center;gap:12px;
+/* ── IDENTITY BANNER ── */
+.identity{
+  text-align:center;padding:28px 24px 20px;position:relative;z-index:1;
 }
-.track-label::after{content:'';flex:1;height:1px;background:var(--border);}
-.track-count{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--dim);}
-.track-now{
-  font-size:7px;letter-spacing:0.2em;color:inherit;
-  border:1px solid currentColor;border-radius:1px;padding:2px 7px;opacity:0.85;
+.identity-kanji{
+  font-family:var(--sf);font-size:28px;color:var(--text);letter-spacing:0.05em;
 }
-.track.complete{opacity:0.55;}
+.identity-text{
+  font-family:var(--body);font-size:12px;color:var(--muted);margin-top:6px;
+  font-style:italic;
+}
+.identity-mantra{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--gold);margin-top:10px;
+}
 
-/* ── MANTRA ── */
-.mantra{
-  padding:34px 24px 4px;text-align:center;
-  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
-  color:var(--dim);text-transform:uppercase;transition:color 0.8s;
+/* ── FRIDAY BANNER ── */
+.friday-banner{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.1em;
+  color:var(--gold);background:rgba(227,200,120,0.08);
+  border:1px solid rgba(227,200,120,0.2);
+  padding:10px 16px;margin:0 24px 16px;border-radius:4px;
+  text-align:center;display:none;position:relative;z-index:1;
 }
-.mantra.lit{color:var(--gold);}
+.friday-banner.show{display:block;}
 
-/* ── CHECKLIST ── */
-.check-item{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:12px 0;border-bottom:1px solid var(--border);
+/* ── DELIVERABLE CARD ── */
+.deliverable-card{
+  margin:0 24px 20px;padding:16px;
+  background:var(--panel);border:1px solid var(--lines);border-radius:4px;
+  position:relative;z-index:1;
+}
+.deliverable-label{
+  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:10px;
+}
+.deliverable-input{
+  width:100%;background:var(--bg);border:1px solid var(--lines);
+  color:var(--text);font-family:var(--body);font-size:14px;
+  padding:10px 12px;border-radius:4px;outline:none;
+}
+.deliverable-input:focus{border-color:var(--gold);}
+.deliverable-row{
+  display:flex;align-items:center;justify-content:space-between;margin-top:12px;
+}
+.ship-btn{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
+  padding:8px 16px;background:none;border:1px solid var(--lines);
+  color:var(--muted);cursor:pointer;border-radius:4px;transition:all 0.2s;
+}
+.ship-btn.shipped{background:rgba(127,163,122,0.15);border-color:var(--moss);color:var(--moss);}
+.streak{
+  font-family:var(--mn);font-size:11px;color:var(--gold);letter-spacing:0.05em;
+}
+
+/* ── BLOCKS ── */
+.blocks{position:relative;z-index:1;}
+.block-card{
+  margin:0 24px 8px;background:var(--panel);border:1px solid var(--lines);
+  border-radius:4px;overflow:hidden;transition:opacity 0.4s;
+}
+.block-card.complete{opacity:0.55;}
+.block-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;cursor:pointer;-webkit-user-select:none;user-select:none;
+}
+.block-header:active{opacity:0.7;}
+.block-time{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.08em;color:var(--muted);
+  min-width:90px;
+}
+.block-label{
+  font-family:var(--body);font-size:14px;font-weight:400;color:var(--text);flex:1;
+}
+.block-label-gold{color:var(--gold);}
+.block-label-moss{color:var(--moss);}
+.block-label-muted{color:var(--muted);}
+.block-count{
+  font-family:var(--mn);font-size:9px;color:var(--muted);margin-left:8px;
+}
+.block-now{
+  font-family:var(--mn);font-size:7px;letter-spacing:0.15em;
+  color:var(--moss);border:1px solid var(--moss);border-radius:2px;
+  padding:2px 6px;margin-left:8px;text-transform:uppercase;
+}
+.block-items{display:none;padding:0 16px 12px;border-top:1px solid var(--lines);}
+.block-card.expanded .block-items{display:block;}
+
+.block-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;border-bottom:1px solid rgba(38,51,43,0.5);
   cursor:pointer;-webkit-user-select:none;user-select:none;
 }
-.check-item:last-child{border-bottom:none;}
-.check-item:active{opacity:0.55;}
+.block-item:last-child{border-bottom:none;}
+.block-item:active{opacity:0.6;}
 
-.check-box{
-  width:20px;height:20px;flex-shrink:0;margin-top:2px;
-  border:1px solid var(--borderM);border-radius:2px;
+.block-check{
+  width:18px;height:18px;flex-shrink:0;margin-top:2px;
+  border:1px solid var(--lines);border-radius:2px;
   display:flex;align-items:center;justify-content:center;
   transition:all 0.2s;
 }
-.check-box.on-gold{background:var(--gold);border-color:var(--gold);}
-.check-box.on-ember{background:var(--ember);border-color:var(--ember);}
-.check-box.on-sage{background:var(--sage);border-color:var(--sage);}
-.check-box.on-purple{background:var(--purple);border-color:var(--purple);}
-.check-tick{font-size:10px;color:var(--bg);font-weight:700;opacity:0;transition:opacity 0.15s;}
-.check-box.on-gold .check-tick,
-.check-box.on-ember .check-tick,
-.check-box.on-sage .check-tick,
-.check-box.on-purple .check-tick{opacity:1;}
+.block-check.on{border-color:var(--moss);background:var(--moss);}
+.block-check.on-gold{border-color:var(--gold);background:var(--gold);}
+.block-check-tick{font-size:10px;color:var(--bg);font-weight:700;opacity:0;transition:opacity 0.15s;}
+.block-check.on .block-check-tick,
+.block-check.on-gold .block-check-tick{opacity:1;}
 
-.check-text{
-  font-family:var(--sf);font-size:17px;font-weight:300;
-  color:var(--text);line-height:1.25;transition:color 0.2s;flex:1;
+.block-item-text{
+  font-family:var(--body);font-size:13px;color:var(--text);line-height:1.3;flex:1;
 }
-.check-sub{
-  font-family:var(--mn);font-size:9px;color:var(--muted);
-  letter-spacing:0.06em;margin-top:3px;
+.block-item-sub{
+  font-family:var(--mn);font-size:9px;color:var(--muted);margin-top:3px;
 }
-.check-item.done .check-text{color:var(--dim);}
-.check-item.done .check-sub{color:var(--dim);}
+.block-item.done .block-item-text{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--lines);}
+.block-item.done .block-item-sub{color:rgba(143,163,150,0.4);}
 
-/* ── VIEW BTN ── */
-.view-btn{
+.block-action{
+  display:inline-block;font-family:var(--mn);font-size:8px;
+  letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--moss);background:rgba(127,163,122,0.08);
+  border:1px solid rgba(127,163,122,0.25);
+  padding:6px 12px;cursor:pointer;border-radius:4px;
+  margin:4px 0 4px 30px;transition:opacity 0.2s;
+}
+.block-action-gold{
+  color:var(--gold);background:rgba(227,200,120,0.08);
+  border-color:rgba(227,200,120,0.25);
+}
+.block-action:active{opacity:0.6;}
+
+/* ── DAILY PROTOCOL STRIP ── */
+.protocol-strip{
+  margin:16px 24px;padding:14px 16px;
+  background:var(--panel);border:1px solid var(--lines);border-radius:4px;
+  position:relative;z-index:1;
+}
+.protocol-label{
+  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px;
+}
+.protocol-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.protocol-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 10px;background:var(--bg);border:1px solid var(--lines);
+  border-radius:4px;cursor:pointer;-webkit-user-select:none;user-select:none;
+  transition:all 0.2s;
+}
+.protocol-chip:active{opacity:0.6;}
+.protocol-chip.on{border-color:var(--moss);background:rgba(127,163,122,0.1);}
+.protocol-chip-check{
+  width:12px;height:12px;border:1px solid var(--lines);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all 0.2s;
+}
+.protocol-chip.on .protocol-chip-check{background:var(--moss);border-color:var(--moss);}
+.protocol-chip-tick{font-size:7px;color:var(--bg);opacity:0;font-weight:700;}
+.protocol-chip.on .protocol-chip-tick{opacity:1;}
+.protocol-chip-label{font-family:var(--mn);font-size:9px;color:var(--text);letter-spacing:0.05em;}
+.protocol-chip.on .protocol-chip-label{color:var(--moss);}
+
+/* ── CONTEXT CHIPS ── */
+.context-strip{
+  margin:0 24px 16px;display:flex;flex-wrap:wrap;gap:6px;
+  position:relative;z-index:1;
+}
+.context-chip{
+  padding:6px 10px;background:var(--panel);border:1px solid var(--lines);
+  border-radius:4px;font-family:var(--mn);font-size:9px;color:var(--muted);
+}
+.context-chip b{color:var(--text);font-weight:400;}
+
+/* ── MANTRA ── */
+.mantra{
+  padding:24px 24px 4px;text-align:center;
+  font-family:var(--mn);font-size:9px;letter-spacing:0.18em;
+  color:var(--muted);text-transform:uppercase;transition:color 0.8s;
+  position:relative;z-index:1;
+}
+.mantra.lit{color:var(--moss);}
+
+/* ── DAILY INSPIRATION ── */
+.insp-card{padding:18px 24px 0;position:relative;z-index:1;}
+.insp-img{width:100%;max-height:300px;object-fit:cover;border-radius:8px;display:block;}
+.insp-label{font-family:var(--mn);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);opacity:0.6;padding:8px 2px 0;}
+
+/* ── NAV ── */
+.nav-row{padding:18px 24px 0;text-align:center;position:relative;z-index:1;}
+.nav-btn{
   display:inline-block;font-family:var(--mn);font-size:8px;
   letter-spacing:0.18em;text-transform:uppercase;
-  color:var(--ember);background:var(--emberF);
-  border:1px solid rgba(176,96,48,0.28);
-  padding:7px 14px;cursor:pointer;border-radius:1px;
-  margin:0 0 4px 34px;transition:opacity 0.2s;
+  color:var(--moss);background:rgba(127,163,122,0.08);
+  border:1px solid rgba(127,163,122,0.25);
+  padding:7px 14px;cursor:pointer;border-radius:4px;
+  transition:opacity 0.2s;
 }
-.view-btn:active{opacity:0.6;}
+.nav-btn:active{opacity:0.6;}
 
-/* ── WORKOUT OVERLAY ── */
+/* ── TIMER ── */
+.timer-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 24px;background:rgba(14,20,16,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--lines);}
+.timer-display{font-family:var(--mn);font-size:22px;color:var(--text);min-width:64px;}
+.timer-display.running{color:var(--gold);}
+.timer-display.zero{color:var(--moss);}
+.timer-btn{padding:6px 10px;background:var(--panel);border:1px solid var(--lines);color:var(--muted);font-family:var(--mn);font-size:9px;letter-spacing:0.1em;cursor:pointer;border-radius:4px;}
+.timer-btn.active{color:var(--gold);border-color:rgba(227,200,120,0.35);}
+
+/* ── OVERLAY (shared) ── */
 .overlay{
   display:none;position:fixed;inset:0;background:var(--bg);
   z-index:200;overflow-y:auto;-webkit-overflow-scrolling:touch;
@@ -162,156 +290,154 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
 .overlay.open{display:block;}
 .ov-header{
   position:sticky;top:0;
-  background:rgba(8,8,6,0.97);
+  background:rgba(14,20,16,0.97);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--lines);
   padding:max(env(safe-area-inset-top),16px) 24px 16px;
   display:flex;align-items:center;justify-content:space-between;
 }
 .ov-title{font-family:var(--sf);font-size:20px;font-weight:400;letter-spacing:0.02em;}
 .ov-close{
   font-family:var(--mn);font-size:8px;letter-spacing:0.18em;
-  color:var(--muted);background:none;border:1px solid var(--border);
-  padding:6px 14px;cursor:pointer;border-radius:1px;
+  color:var(--muted);background:none;border:1px solid var(--lines);
+  padding:6px 14px;cursor:pointer;border-radius:4px;
 }
-
-.sess-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px;padding:16px 24px;}
-.sess-tabs::-webkit-scrollbar{display:none;}
-.sess-tab{
-  flex-shrink:0;min-width:80px;padding:12px 8px;background:none;border:1px solid var(--border);
-  cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;
-}
-.sess-tab.active{background:var(--emberF);border-color:rgba(176,96,48,0.35);}
-.sess-tab-day{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;color:var(--muted);}
-.sess-tab-name{font-family:var(--sf);font-size:16px;font-weight:400;color:var(--text);margin-top:2px;}
-.sess-tab-type{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--muted);margin-top:1px;}
-.sess-tab.active .sess-tab-name{color:var(--ember);}
 
 /* ── JOURNAL OVERLAY ── */
 .j-tabs{display:flex;gap:6px;padding:16px 24px;}
-.j-tab{flex:1;padding:10px 6px;background:none;border:1px solid var(--border);cursor:pointer;text-align:center;border-radius:1px;transition:all 0.2s;font-family:var(--mn);font-size:9px;letter-spacing:0.15em;color:var(--muted);}
-.j-tab.active{background:var(--goldF);border-color:rgba(200,164,85,0.35);color:var(--gold);}
+.j-tab{flex:1;padding:10px 6px;background:none;border:1px solid var(--lines);cursor:pointer;text-align:center;border-radius:4px;transition:all 0.2s;font-family:var(--mn);font-size:9px;letter-spacing:0.15em;color:var(--muted);}
+.j-tab.active{background:rgba(227,200,120,0.08);border-color:rgba(227,200,120,0.35);color:var(--gold);}
 .j-body{padding:0 24px 48px;}
-.j-q{padding:16px 0;border-bottom:1px solid var(--border);}
+.j-q{padding:16px 0;border-bottom:1px solid var(--lines);}
 .j-q-num{font-family:var(--mn);font-size:8px;letter-spacing:0.2em;color:var(--gold);margin-bottom:8px;}
-.j-q-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);margin-bottom:10px;line-height:1.35;}
-.j-textarea{width:100%;min-height:52px;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:11px;padding:10px 12px;resize:none;outline:none;line-height:1.6;border-radius:1px;}
-.j-affirm{padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:14px;}
+.j-q-text{font-family:var(--sf);font-size:17px;font-weight:400;color:var(--text);margin-bottom:10px;line-height:1.35;}
+.j-textarea{width:100%;min-height:52px;background:var(--bg);border:1px solid var(--lines);color:var(--text);font-family:var(--mn);font-size:11px;padding:10px 12px;resize:none;outline:none;line-height:1.6;border-radius:4px;}
+.j-textarea:focus{border-color:var(--gold);}
+.j-affirm{padding:14px 0;border-bottom:1px solid var(--lines);display:flex;gap:14px;}
 .j-affirm-num{font-family:var(--mn);font-size:9px;color:var(--gold);min-width:16px;padding-top:3px;}
-.j-affirm-text{font-family:var(--sf);font-size:17px;font-weight:300;color:var(--text);line-height:1.4;}
-.j-mantra{padding:20px;margin:16px 0;background:var(--s1);border:1px solid var(--border);text-align:center;border-radius:1px;}
+.j-affirm-text{font-family:var(--sf);font-size:17px;font-weight:400;color:var(--text);line-height:1.4;}
+.j-mantra{padding:20px;margin:16px 0;background:var(--panel);border:1px solid var(--lines);text-align:center;border-radius:4px;}
 .j-mantra-label{font-family:var(--mn);font-size:7px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-.j-mantra-text{font-family:var(--sf);font-size:16px;font-weight:300;font-style:italic;color:var(--text);line-height:1.6;}
-.affirm-btn{display:block;width:100%;margin-top:24px;padding:12px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
-.affirm-btn.done{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+.j-mantra-text{font-family:var(--sf);font-size:16px;font-weight:400;font-style:italic;color:var(--text);line-height:1.6;}
+.affirm-btn{display:block;width:100%;margin-top:24px;padding:12px;background:none;border:1px solid var(--lines);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:4px;transition:all 0.2s;}
+.affirm-btn.done{background:rgba(127,163,122,0.1);border-color:var(--moss);color:var(--moss);}
 
-/* ── TIMER ── */
-.timer-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:10px 24px;background:var(--bg,#000);border-bottom:1px solid var(--border);}
-.timer-display{font-family:var(--mn);font-size:22px;color:var(--text);min-width:64px;}
-.timer-display.running{color:var(--gold);}
-.timer-display.zero{color:var(--sage);}
-.timer-btn{padding:6px 10px;background:var(--s1);border:1px solid var(--border);color:var(--muted);font-family:var(--mn);font-size:9px;letter-spacing:0.1em;cursor:pointer;border-radius:1px;}
-.timer-btn.active{color:var(--gold);border-color:rgba(200,164,85,0.35);}
+/* ── WORKOUT OVERLAY ── */
+.sess-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px;padding:16px 24px;}
+.sess-tabs::-webkit-scrollbar{display:none;}
+.sess-tab{
+  flex-shrink:0;min-width:80px;padding:12px 8px;background:none;border:1px solid var(--lines);
+  cursor:pointer;text-align:center;border-radius:4px;transition:all 0.2s;
+}
+.sess-tab.active{background:rgba(127,163,122,0.08);border-color:rgba(127,163,122,0.35);}
+.sess-tab-day{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;color:var(--muted);}
+.sess-tab-name{font-family:var(--sf);font-size:16px;font-weight:400;color:var(--text);margin-top:2px;}
+.sess-tab-type{font-family:var(--mn);font-size:8px;letter-spacing:0.1em;color:var(--muted);margin-top:1px;}
+.sess-tab.active .sess-tab-name{color:var(--moss);}
 
 .wo-rules{display:flex;flex-wrap:wrap;gap:5px;padding:0 24px 14px;}
 .wo-goals{padding:0 24px 14px;}
-.wo-goals summary{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold,#d4af37);cursor:pointer;padding:4px 0;}
+.wo-goals summary{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);cursor:pointer;padding:4px 0;}
 .wo-goals ol{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.6;opacity:0.85;}
 .wo-goals li{margin-bottom:6px;}
 .wo-rule{
   font-family:var(--mn);font-size:7px;letter-spacing:0.1em;text-transform:uppercase;
-  padding:3px 9px;border-radius:1px;background:var(--s1);border:1px solid var(--border);color:var(--gold);
+  padding:3px 9px;border-radius:4px;background:var(--panel);border:1px solid var(--lines);color:var(--gold);
 }
 
 .wo-section{padding:0 24px;margin-bottom:6px;}
 .wo-section-label{
   font-family:var(--mn);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);
+  color:var(--muted);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--lines);
 }
 
-.ex-card{border:1px solid var(--border);border-radius:1px;margin-bottom:5px;overflow:hidden;}
+.ex-card{border:1px solid var(--lines);border-radius:4px;margin-bottom:5px;overflow:hidden;}
 .ex-block-hdr{font-family:var(--mn);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);padding:18px 0 8px;opacity:0.85;}
 .ex-sub-hdr{font-family:var(--mn);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:12px 0 4px;opacity:0.7;}
 .ex-head{
   display:flex;align-items:center;padding:13px 14px;
-  background:var(--s1);cursor:pointer;gap:10px;
+  background:var(--panel);cursor:pointer;gap:10px;
 }
 .ex-id{font-family:var(--mn);font-size:9px;color:var(--gold);font-weight:500;flex-shrink:0;}
 .ex-name{font-family:var(--sf);font-size:17px;font-weight:400;color:var(--text);flex:1;}
 .ex-load{font-family:var(--mn);font-size:9px;color:var(--muted);}
-.ex-ss{font-family:var(--mn);font-size:8px;padding:2px 6px;background:rgba(155,142,196,0.12);color:#9B8EC4;letter-spacing:0.5px;}
-.ex-body{display:none;background:var(--s2);padding:14px;border-top:1px solid var(--border);}
+.ex-ss{font-family:var(--mn);font-size:8px;padding:2px 6px;background:rgba(127,163,122,0.12);color:var(--moss);letter-spacing:0.5px;}
+.ex-body{display:none;background:var(--bg);padding:14px;border-top:1px solid var(--lines);}
 .ex-card.open .ex-body{display:block;}
 
 .ex-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px;}
-.ex-stat{background:var(--s1);border-radius:1px;padding:7px;text-align:center;}
+.ex-stat{background:var(--panel);border-radius:4px;padding:7px;text-align:center;}
 .ex-stat-l{font-family:var(--mn);font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
 .ex-stat-v{font-family:var(--mn);font-size:13px;color:var(--text);margin-top:3px;}
 
-.ex-cue{font-family:var(--sf);font-size:13px;color:var(--muted);line-height:1.6;padding:2px 0 2px 14px;position:relative;}
-.ex-cue::before{content:'→';position:absolute;left:0;color:var(--gold);}
+.ex-cue{font-family:var(--body);font-size:13px;color:var(--muted);line-height:1.6;padding:2px 0 2px 14px;position:relative;}
+.ex-cue::before{content:'\2192';position:absolute;left:0;color:var(--gold);}
 
 .ex-sets{display:flex;gap:5px;margin:12px 0;}
 .set-box{
-  width:34px;height:34px;border-radius:1px;
-  background:var(--s1);border:1px solid var(--border);
+  width:34px;height:34px;border-radius:4px;
+  background:var(--panel);border:1px solid var(--lines);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
   font-family:var(--mn);font-size:11px;color:var(--muted);
   transition:all 0.15s;
 }
-.set-box.done{background:var(--ember);border-color:var(--ember);color:var(--bg);}
+.set-box.done{background:var(--moss);border-color:var(--moss);color:var(--bg);}
 .set-box:active{transform:scale(0.9);}
 
 .rest-btn{
-  width:100%;padding:11px;background:var(--s1);border:1px solid var(--border);
-  border-radius:1px;cursor:pointer;color:var(--muted);
+  width:100%;padding:11px;background:var(--panel);border:1px solid var(--lines);
+  border-radius:4px;cursor:pointer;color:var(--muted);
   font-family:var(--mn);font-size:10px;letter-spacing:0.1em;
   position:relative;overflow:hidden;
 }
-.rest-fill{position:absolute;left:0;top:0;height:100%;background:var(--emberF);transition:width 0.1s linear;}
+.rest-fill{position:absolute;left:0;top:0;height:100%;background:rgba(127,163,122,0.12);transition:width 0.1s linear;}
 
-.ex-subs{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.ex-subs{margin-top:10px;padding-top:10px;border-top:1px solid var(--lines);}
 .ex-subs-title{font-family:var(--mn);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-.ex-sub{font-family:var(--sf);font-size:12px;color:var(--muted);margin-bottom:3px;line-height:1.5;}
+.ex-sub{font-family:var(--body);font-size:12px;color:var(--muted);margin-bottom:3px;line-height:1.5;}
 
 /* ── COUNTER UI ── */
 .counter-row{display:flex;align-items:center;justify-content:space-between;padding:12px 24px 4px;}
 .counter-info .counter-label{font-family:var(--mn);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
-.counter-info .counter-sub{font-family:var(--sf);font-size:13px;color:var(--muted);margin-top:3px;}
+.counter-info .counter-sub{font-family:var(--body);font-size:13px;color:var(--muted);margin-top:3px;}
 .counter-ctrl{display:flex;align-items:center;gap:10px;}
-.counter-btn{width:30px;height:30px;border:1px solid var(--border);background:var(--s1);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:1px;}
-.counter-val{font-family:var(--mn);font-size:22px;font-weight:500;color:var(--ember);text-align:center;min-width:44px;}
+.counter-btn{width:30px;height:30px;border:1px solid var(--lines);background:var(--panel);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;}
+.counter-val{font-family:var(--mn);font-size:22px;font-weight:500;color:var(--moss);text-align:center;min-width:44px;}
 .counter-unit{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;color:var(--muted);text-align:center;margin-top:1px;}
 
 /* ── PERSISTENCE LOG ── */
 .pl-field{margin-bottom:10px;}
 .pl-label{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.pl-input{width:100%;background:var(--s1);border:1px solid var(--border);color:var(--text);font-family:var(--mn);font-size:12px;padding:9px 10px;border-radius:1px;outline:none;}
+.pl-input{width:100%;background:var(--bg);border:1px solid var(--lines);color:var(--text);font-family:var(--mn);font-size:12px;padding:9px 10px;border-radius:4px;outline:none;}
 .pl-input:focus{border-color:var(--gold);}
 .pl-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.pl-save{width:100%;margin-top:12px;padding:11px;background:none;border:1px solid var(--border);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:1px;transition:all 0.2s;}
-.pl-save:active{background:var(--sageF);border-color:var(--sage);color:var(--sage);}
+.pl-save{width:100%;margin-top:12px;padding:11px;background:none;border:1px solid var(--lines);font-family:var(--mn);font-size:9px;letter-spacing:0.2em;color:var(--muted);cursor:pointer;border-radius:4px;transition:all 0.2s;}
+.pl-save:active{background:rgba(127,163,122,0.1);border-color:var(--moss);color:var(--moss);}
 .pl-table{width:100%;margin-top:20px;border-collapse:collapse;}
-.pl-table th{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 4px;border-bottom:1px solid var(--border);}
-.pl-table td{font-family:var(--mn);font-size:11px;color:var(--text);padding:8px 4px;border-bottom:1px solid var(--border);vertical-align:top;}
-.pl-del{background:none;border:none;color:var(--ember);font-family:var(--mn);font-size:9px;cursor:pointer;padding:2px 6px;}
+.pl-table th{font-family:var(--mn);font-size:7px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 4px;border-bottom:1px solid var(--lines);}
+.pl-table td{font-family:var(--mn);font-size:11px;color:var(--text);padding:8px 4px;border-bottom:1px solid var(--lines);vertical-align:top;}
+.pl-del{background:none;border:none;color:var(--gold);font-family:var(--mn);font-size:9px;cursor:pointer;padding:2px 6px;}
 .pl-del:active{opacity:0.5;}
 
 </style>
 </head>
 <body>
+
+<!-- CANOPY OVERLAY -->
+<div class="canopy" id="canopy"></div>
+
 <div class="app">
 
   <!-- HEADER -->
   <div class="header">
     <div class="header-row">
       <div>
-        <div class="header-date" id="hDate">—</div>
-        <div class="header-day" id="hDay">—</div>
+        <div class="header-date" id="hDate"></div>
+        <div class="header-day" id="hDay"></div>
       </div>
       <div>
-        <div class="clock" id="clock">—:—</div>
-        <div class="phase" id="phase">—</div>
+        <div class="clock" id="clock"></div>
+        <div class="phase" id="phase"></div>
       </div>
     </div>
   </div>
@@ -331,18 +457,51 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
     <button class="timer-btn" onclick="timerStop()">Stop</button>
   </div>
 
+  <!-- IDENTITY BANNER -->
+  <div class="identity">
+    <div class="identity-kanji">怠惰 → 勤勉</div>
+    <div class="identity-text">Was: indolent. Becoming: assiduous.</div>
+    <div class="identity-mantra">Sit until it's done.</div>
+  </div>
+
+  <!-- FRIDAY BANNER -->
+  <div class="friday-banner" id="friday-banner">Capital decisions live inside the Golden Block today.</div>
+
+  <!-- TODAY'S DELIVERABLE -->
+  <div class="deliverable-card">
+    <div class="deliverable-label">TODAY'S DELIVERABLE</div>
+    <input class="deliverable-input" id="deliverable" placeholder="What must ship today?" oninput="saveDeliverable()">
+    <div class="deliverable-row">
+      <button class="ship-btn" id="ship-btn" onclick="markShipped()">Mark shipped</button>
+      <div class="streak" id="streak">0 day streak</div>
+    </div>
+  </div>
+
+  <!-- DAILY BLOCKS -->
+  <div class="blocks" id="blocks"></div>
+
+  <!-- DAILY PROTOCOL STRIP -->
+  <div class="protocol-strip">
+    <div class="protocol-label">Daily Protocol</div>
+    <div class="protocol-grid" id="protocol-grid"></div>
+  </div>
+
+  <!-- CONTEXT CHIPS -->
+  <div class="context-strip">
+    <div class="context-chip">Book: <b>Munger speeches → Vol 1</b></div>
+    <div class="context-chip">Company: <b>&mdash;</b></div>
+    <div class="context-chip">Superinvestor: <b>Nick Sleep</b></div>
+  </div>
+
   <!-- DAILY INSPIRATION -->
   <div id="inspiration"></div>
 
-  <!-- ── PILLARS ── -->
-  <div id="pillars"></div>
-
   <!-- MANTRA -->
-  <div class="mantra" id="mantra">Surf &middot; Code &middot; Eat &middot; Sleep &middot; Repeat</div>
+  <div class="mantra" id="mantra">One book &middot; One company &middot; One deliverable</div>
 
   <!-- NAV -->
-  <div style="padding:18px 24px 0;text-align:center;">
-    <button class="view-btn" onclick="openPersistence()">Persistence Log →</button>
+  <div class="nav-row">
+    <button class="nav-btn" onclick="openPersistence()">Persistence Log &rarr;</button>
   </div>
 
 </div>
@@ -397,7 +556,7 @@ body.ph-night .header-date,body.ph-night .phase{color:var(--purple);}
   <div style="padding:0 24px 48px;">
     <canvas id="persist-chart" height="160" style="width:100%;margin:16px 0;"></canvas>
     <div id="persist-form"></div>
-    <div id="persist-error" style="display:none;color:#b06030;font-size:11px;margin:8px 0;"></div>
+    <div id="persist-error" style="display:none;color:var(--gold);font-size:11px;margin:8px 0;"></div>
     <div id="persist-table"></div>
   </div>
 </div>
@@ -417,45 +576,61 @@ function renderInspiration(){
     +'<div class="insp-label">Jaguar Warrior King</div></div>';
 }
 
-const PILLARS = [
-  { id:'morning', label:'Morning Wake-up', color:'gold', from:0, to:10, items:[
-    { id:'m1', label:'Supplements' },
-    { id:'m2', label:'Smoothie' },
-    { id:'m3', label:'Sunshine', sub:'10 min' },
-    { id:'m4', label:'Cold Plunge', sub:'2–3 min' },
-    { id:'m5', label:'Reading: Wisdom', sub:'Seneca · Meditations · Tao' },
-    { id:'m6', label:'Meditation', sub:'10 min' },
-    { id:'m7', label:'Journal', sub:'Opening questions · Closing affirmations', journal:true },
-  ]},
-  { id:'rehab', label:'Rehab / Swim', color:'ember', from:10, to:12, items:[
-    { id:'rh1', label:'The Daily Blueprint', sub:'Unlock · Align · Build — ~54 min', workout:true, sess:'DB' },
-    { id:'rh2', label:'Cardio', sub:'Swim · Hike — polarised', workout:true, sess:'F' },
-  ]},
-  { id:'veraxus', label:'Veraxus', color:'sage', from:12, to:16, items:[
-    { id:'v1', label:'Schema / Build', sub:'One deep session' },
-    { id:'v2', label:'Demo / Sell', sub:'One outward step' },
-  ]},
-  { id:'admin', label:'Admin', color:'gold', from:16, to:18, items:[
-    { id:'a1', label:'KDA Exit', sub:'One concrete step' },
-    { id:'a2', label:'SARS', sub:'One concrete step' },
-  ]},
-  { id:'evening', label:'Evening Wind-down', color:'purple', from:18, to:24, items:[
-    { id:'e1', label:'Food cut-off', sub:'6 pm' },
-    { id:'e2', label:'Devices away', sub:'6:30 pm' },
-    { id:'e3', label:'Hot shower / bath' },
-    { id:'e4', label:'Reading: Fiction', sub:'The Odyssey' },
-  ]},
+const BLOCKS = [
+  { id: 'golden', label: 'Golden Block \u2014 Investing', time: '08:00\u201310:00', color: 'gold', from: 8, to: 10,
+    items: [
+      { id: 'gb1', label: 'Setup \u2014 read yesterday\'s log', sub: '08:00', journal: true },
+      { id: 'gb2', label: 'Book \u2014 45 min', sub: '08:05', timer: 2700 },
+      { id: 'gb3', label: 'Desk \u2014 write deliverable', sub: '08:50' },
+      { id: 'gb4', label: 'Close \u2014 name tomorrow\'s deliverable', sub: '09:50' },
+    ]
+  },
+  { id: 'periodicals', label: 'Periodicals', time: '10:00\u201310:20', color: 'gold', from: 10, to: 10.33,
+    items: [{ id: 'per1', label: 'Read periodicals', sub: 'Hard stop at 10:20' }]
+  },
+  { id: 'workout', label: 'Workout \u2014 hip rehab + swim', time: '10:20\u201311:30', color: 'moss', from: 10.33, to: 11.5,
+    items: [
+      { id: 'wo1', label: 'The Daily Blueprint', sub: 'Unlock \u00b7 Align \u00b7 Build', workout: true, sess: 'DB' },
+      { id: 'wo2', label: 'Cardio', sub: 'Swim \u00b7 Hike', workout: true, sess: 'F' },
+      { id: 'wo3', label: 'Cold plunge', sub: 'Pool' },
+      { id: 'wo4', label: 'Sunshine', sub: '10 min daylight' },
+    ]
+  },
+  { id: 'lunch', label: 'Lunch', time: '11:30\u201312:00', color: 'muted', from: 11.5, to: 12,
+    items: [{ id: 'lu1', label: 'Lunch break' }]
+  },
+  { id: 'veraxus', label: 'Veraxus build block', time: '12:00\u201314:00', color: 'moss', from: 12, to: 14,
+    items: [{ id: 'vx1', label: 'Deep session', sub: 'One focused build' }]
+  },
+  { id: 'admin', label: 'Admin \u2014 KDA, SARS, email', time: '14:00\u201314:45', color: 'muted', from: 14, to: 14.75,
+    items: [{ id: 'ad1', label: 'Admin complete' }]
+  },
+  { id: 'shutdown', label: 'Shutdown', time: '14:45\u201315:00', color: 'muted', from: 14.75, to: 15,
+    items: [{ id: 'sd1', label: 'Shutdown routine complete' }]
+  },
+];
+
+const PROTOCOL = [
+  { id: 'sup1', label: 'Electrolytes' },
+  { id: 'sup2', label: 'Creatine' },
+  { id: 'sup3', label: 'NMN+' },
+  { id: 'sup4', label: 'Alpha GPC' },
+  { id: 'sup5', label: 'Fish Oil' },
+  { id: 'sup6', label: 'Bone Revolution' },
+  { id: 'sup7', label: 'Tongkat Ali' },
+  { id: 'pro1', label: '160g protein' },
+  { id: 'phi1', label: '1 page: Tao Te Ching' },
 ];
 
 const SESSIONS = [
-  { id:'DB', label:'Daily Blueprint', type:'Unlock · Align · Build', day:'Daily', blueprint:true,
-    rules:['POSITION BEFORE LOAD','STOP AT 4 OF 5 — REPS IN RESERVE','RIGHT LEADS AND GOES FIRST','SAME SHAPE DAILY'],
+  { id:'DB', label:'Daily Blueprint', type:'Unlock \u00b7 Align \u00b7 Build', day:'Daily', blueprint:true,
+    rules:['POSITION BEFORE LOAD','STOP AT 4 OF 5 \u2014 REPS IN RESERVE','RIGHT LEADS AND GOES FIRST','SAME SHAPE DAILY'],
     goals:[
       'Flatten midfoot and stabilise base standing',
       'Open up ankle and calf mobility',
       'Open hamstring + adductors',
-      'Strengthen glute min, med and max — noticeable size increase to mirror left',
-      'Gain independent movement in right upper body: pec, shoulder, neck, lat, bicep — independent of QL/psoas/rib muscles',
+      'Strengthen glute min, med and max \u2014 noticeable size increase to mirror left',
+      'Gain independent movement in right upper body: pec, shoulder, neck, lat, bicep \u2014 independent of QL/psoas/rib muscles',
       'Sit/drive with less "grip" in same area + groin/adductor',
       'Throw a tennis ball right-handed',
       'Rotate right for golf with more flex at the hip joint',
@@ -465,148 +640,148 @@ const SESSIONS = [
     ],
     exercises:[
       // Block 1 — Unlock · Pliability
-      {id:'DBu1',name:'Pliability — Right Guard Chain', block:'unlock', subBlock:'Pliability', info:true,
-       reps:'4–5 min', tempo:'Soft tool · 3–4/10',
-       cues:['Order: adductors → lat/pec → calf → accessible psoas/QL','Soft tool, lateral, off the soft flank — never direct','3–4/10 pressure only — downregulate, don\'t dig','Soft tissue before the rehab work, not after'],
+      {id:'DBu1',name:'Pliability \u2014 Right Guard Chain', block:'unlock', subBlock:'Pliability', info:true,
+       reps:'4\u20135 min', tempo:'Soft tool \u00b7 3\u20134/10',
+       cues:['Order: adductors \u2192 lat/pec \u2192 calf \u2192 accessible psoas/QL','Soft tool, lateral, off the soft flank \u2014 never direct','3\u20134/10 pressure only \u2014 downregulate, don\'t dig','Soft tissue before the rehab work, not after'],
        subs:[]},
       // Block 1 — Unlock · Stretch / Open
-      {id:'DBu2',name:'Adductor Stretch — Standing', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Right side first — right side leads','Posterior pelvic tilt — don\'t let lumbar extend','Breathe slowly into the inner thigh','First sensation only — not the deepest point'],
+      {id:'DBu2',name:'Adductor Stretch \u2014 Standing', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right side first \u2014 right side leads','Posterior pelvic tilt \u2014 don\'t let lumbar extend','Breathe slowly into the inner thigh','First sensation only \u2014 not the deepest point'],
        subs:[]},
-      {id:'DBu3',name:'Adductor Stretch — Half-Kneeling', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['R leg out, heel in line with L knee','Upright torso — no forward lean','Breathe into the right inner thigh','Right side first'],
+      {id:'DBu3',name:'Adductor Stretch \u2014 Half-Kneeling', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['R leg out, heel in line with L knee','Upright torso \u2014 no forward lean','Breathe into the right inner thigh','Right side first'],
        subs:[]},
-      {id:'DBu4',name:'Hip Flexor / Psoas Stretch — Kneeling Lunge', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Right leg back, left knee forward','Posterior pelvic tilt — tuck tailbone','Feel the right hip flexor under length','Neutral spine throughout — no lumbar extension'],
+      {id:'DBu4',name:'Hip Flexor / Psoas Stretch \u2014 Kneeling Lunge', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right leg back, left knee forward','Posterior pelvic tilt \u2014 tuck tailbone','Feel the right hip flexor under length','Neutral spine throughout \u2014 no lumbar extension'],
        subs:[]},
-      {id:'DBu5',name:'Hip Flexor Stretch — Arms Up', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Right side first when prescribed','Maintain posterior pelvic tilt throughout','Breathe into the hip flexor — no lumbar extension'],
+      {id:'DBu5',name:'Hip Flexor Stretch \u2014 Arms Up', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right side first when prescribed','Maintain posterior pelvic tilt throughout','Breathe into the hip flexor \u2014 no lumbar extension'],
        subs:[]},
-      {id:'DBu6',name:'Mermaid Stretch — R Leg Off Table', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Right leg off table — right side leads','Maintain spinal position per Lamberti instruction','Breathe slowly into the lateral chain'],
+      {id:'DBu6',name:'Mermaid Stretch \u2014 R Leg Off Table', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right leg off table \u2014 right side leads','Maintain spinal position per Lamberti instruction','Breathe slowly into the lateral chain'],
        subs:[]},
-      {id:'DBu7',name:'Gastrocnemius Stretch — Single Leg', block:'unlock', subBlock:'Stretch · Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Right leg first','Heel flat on floor — no rolling out','Knee straight — gastroc, not soleus','Ankle mobility directly feeds hip mobility'],
+      {id:'DBu7',name:'Gastrocnemius Stretch \u2014 Single Leg', block:'unlock', subBlock:'Stretch \u00b7 Open', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Right leg first','Heel flat on floor \u2014 no rolling out','Knee straight \u2014 gastroc, not soleus','Ankle mobility directly feeds hip mobility'],
        subs:[]},
       // Block 1 — Unlock · Activate / Strengthen
-      {id:'DBu8',name:'Hip External Rotation — Sitting with Band', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'6', tempo:'2-1-2', load:'Band', rest:30,
-       cues:['Sitting — band around knees','Drive knee out against band — feel glute med','Right side first','Controlled return — don\'t let band snap back'],
+      {id:'DBu8',name:'Hip External Rotation \u2014 Sitting with Band', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:4, reps:'6', tempo:'2-1-2', load:'Band', rest:30,
+       cues:['Sitting \u2014 band around knees','Drive knee out against band \u2014 feel glute med','Right side first','Controlled return \u2014 don\'t let band snap back'],
        subs:[]},
-      {id:'DBu9',name:'Donkey Kick — Hands and Knees', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'5', tempo:'2-1-2', load:'BW', rest:30,
-       cues:['Right leg first','Spine neutral — no rotation, no QL compensation','Kick to hip height — no higher','Squeeze glute at top, not the lower back'],
+      {id:'DBu9',name:'Donkey Kick \u2014 Hands and Knees', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:4, reps:'5', tempo:'2-1-2', load:'BW', rest:30,
+       cues:['Right leg first','Spine neutral \u2014 no rotation, no QL compensation','Kick to hip height \u2014 no higher','Squeeze glute at top, not the lower back'],
        subs:[]},
-      {id:'DBu10',name:'Staggered Stand-to-Sit', block:'unlock', subBlock:'Activate · Strengthen', sets:3, reps:'6', tempo:'Controlled', load:'BW', rest:30,
-       cues:['Press toes down through the movement','Right leg leads — right side gets more demand','Control the descent — eccentric is the work','No collapsing into the seat'],
+      {id:'DBu10',name:'Staggered Stand-to-Sit', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:3, reps:'6', tempo:'Controlled', load:'BW', rest:30,
+       cues:['Press toes down through the movement','Right leg leads \u2014 right side gets more demand','Control the descent \u2014 eccentric is the work','No collapsing into the seat'],
        subs:[]},
-      {id:'DBu11',name:'Towel Calf Heel Raises — R Foot on Towel', block:'unlock', subBlock:'Activate · Strengthen', sets:5, reps:'10s', tempo:'Isometric', load:'BW', rest:20, isDuration:true,
-       cues:['Right foot on towel — creates asymmetry for right-side adaptation','Press through forefoot — full calf contraction','10s hold per rep','Links calf loading to right-side LLD compensation'],
+      {id:'DBu11',name:'Towel Calf Heel Raises \u2014 R Foot on Towel', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:5, reps:'10s', tempo:'Isometric', load:'BW', rest:20, isDuration:true,
+       cues:['Right foot on towel \u2014 creates asymmetry for right-side adaptation','Press through forefoot \u2014 full calf contraction','10s hold per rep','Links calf loading to right-side LLD compensation'],
        subs:[]},
-      {id:'DBu15',name:'Banded Ankle Work', block:'unlock', subBlock:'Activate · Strengthen', sets:3, reps:'8', tempo:'2-1-2', load:'Band', rest:30,
-       cues:['Right ankle first','Band around forefoot — work through dorsiflexion and eversion','Controlled return — don\'t let band snap back','Ankle mobility feeds hip mobility'],
+      {id:'DBu15',name:'Banded Ankle Work', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:3, reps:'8', tempo:'2-1-2', load:'Band', rest:30,
+       cues:['Right ankle first','Band around forefoot \u2014 work through dorsiflexion and eversion','Controlled return \u2014 don\'t let band snap back','Ankle mobility feeds hip mobility'],
        subs:[]},
-      {id:'DBu12',name:'Calf Heel Raise — Single Leg', block:'unlock', subBlock:'Activate · Strengthen', sets:4, reps:'4', tempo:'3-1-3', load:'BW', rest:30,
-       cues:['Right leg first','3s up — 1s hold — 3s down','Full range: heel below platform level','Ankle mobility feeds hip mobility'],
+      {id:'DBu12',name:'Calf Heel Raise \u2014 Single Leg', block:'unlock', subBlock:'Activate \u00b7 Strengthen', sets:4, reps:'4', tempo:'3-1-3', load:'BW', rest:30,
+       cues:['Right leg first','3s up \u2014 1s hold \u2014 3s down','Full range: heel below platform level','Ankle mobility feeds hip mobility'],
        subs:[]},
       // Block 1 — Unlock · Trunk / Scapula
-      {id:'DBu13',name:'Push-Up Plus — On Knees', block:'unlock', subBlock:'Trunk · Scapula', sets:4, reps:'4', tempo:'2-1-2', load:'BW', rest:30,
-       cues:['At top of push-up: push extra — protract scapula fully','Feel serratus anterior engaging','Elbows stay slightly bent at "plus" position','Spine neutral — no sag or pike'],
+      {id:'DBu13',name:'Push-Up Plus \u2014 On Knees', block:'unlock', subBlock:'Trunk \u00b7 Scapula', sets:4, reps:'4', tempo:'2-1-2', load:'BW', rest:30,
+       cues:['At top of push-up: push extra \u2014 protract scapula fully','Feel serratus anterior engaging','Elbows stay slightly bent at "plus" position','Spine neutral \u2014 no sag or pike'],
        subs:[]},
-      {id:'DBu14',name:'Plank with Pelvic Rotations', block:'unlock', subBlock:'Trunk · Scapula', sets:4, reps:'4', tempo:'Controlled', load:'BW', rest:30,
-       cues:['R pelvis back to neutral only — not past neutral','Do not rotate into extension on the right side','Feel right glute and right oblique working together','Anterior/posterior tilt: right side to neutral is the target'],
+      {id:'DBu14',name:'Plank with Pelvic Rotations', block:'unlock', subBlock:'Trunk \u00b7 Scapula', sets:4, reps:'4', tempo:'Controlled', load:'BW', rest:30,
+       cues:['R pelvis back to neutral only \u2014 not past neutral','Do not rotate into extension on the right side','Feel right glute and right oblique working together','Anterior/posterior tilt: right side to neutral is the target'],
        subs:[]},
-      {id:'DBu16',name:'Pec Stretch — Door Frame', block:'unlock', subBlock:'Trunk · Scapula', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
-       cues:['Forearm on door frame — elbow at shoulder height','Step through gently until first sensation in the pec','Right side first','Ribs down — stretch the pec, don\'t arch the lumbar'],
+      {id:'DBu16',name:'Pec Stretch \u2014 Door Frame', block:'unlock', subBlock:'Trunk \u00b7 Scapula', sets:4, reps:'20s', tempo:'Passive', load:'BW', rest:15, isDuration:true,
+       cues:['Forearm on door frame \u2014 elbow at shoulder height','Step through gently until first sensation in the pec','Right side first','Ribs down \u2014 stretch the pec, don\'t arch the lumbar'],
        subs:[]},
-      {id:'DBu17',name:'Seated Wall Angel', block:'unlock', subBlock:'Trunk · Scapula', sets:3, reps:'6', tempo:'Controlled', load:'BW', rest:30,
-       cues:['Focus on isolating the right scapula','Move from the shoulder joint — not the QL or right fascia','Keep ribs down, lower back against the wall','Slow — quality of scapular glide over range'],
+      {id:'DBu17',name:'Seated Wall Angel', block:'unlock', subBlock:'Trunk \u00b7 Scapula', sets:3, reps:'6', tempo:'Controlled', load:'BW', rest:30,
+       cues:['Focus on isolating the right scapula','Move from the shoulder joint \u2014 not the QL or right fascia','Keep ribs down, lower back against the wall','Slow \u2014 quality of scapular glide over range'],
        subs:[]},
       // Block 2 — Align
-      {id:'DB4',name:'Dead Hang — Iso', block:'align', sets:3, reps:'20s', tempo:'Passive', load:'BW', rest:30, isDuration:true,
-       cues:['Full passive decompression — let everything go','Shoulders pack naturally — no active pull','Breathe slowly, feel right spine lengthening','Not grip training — structural reset'],
+      {id:'DB4',name:'Dead Hang \u2014 Iso', block:'align', sets:3, reps:'20s', tempo:'Passive', load:'BW', rest:30, isDuration:true,
+       cues:['Full passive decompression \u2014 let everything go','Shoulders pack naturally \u2014 no active pull','Breathe slowly, feel right spine lengthening','Not grip training \u2014 structural reset'],
        subs:[{n:'Supported Hang',d:'Slight knee bend for reduced load'}]},
-      {id:'DB5',name:'Hip Thrust — Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
-       cues:['Right glute fires first — if not, reset and try again','Full hip extension at top before beginning hold','Posterior pelvic tilt maintained throughout','Feel anterior hip opening on each breath'],
+      {id:'DB5',name:'Hip Thrust \u2014 Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
+       cues:['Right glute fires first \u2014 if not, reset and try again','Full hip extension at top before beginning hold','Posterior pelvic tilt maintained throughout','Feel anterior hip opening on each breath'],
        subs:[{n:'Single-Leg Glute Bridge Iso',d:'Right side leads'}]},
-      {id:'DB6',name:'Split-Squat — Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
-       cues:['Right leg forward — always','Knee above ankle, upright torso, level hips','Feel hip flexor of rear leg under mild stretch','Stay still — alignment is the work'],
+      {id:'DB6',name:'Split-Squat \u2014 Iso Hold', block:'align', sets:3, reps:'10s', tempo:'Isometric', load:'BW', rest:30, isDuration:true,
+       cues:['Right leg forward \u2014 always','Knee above ankle, upright torso, level hips','Feel hip flexor of rear leg under mild stretch','Stay still \u2014 alignment is the work'],
        subs:[{n:'Wall-Supported Split-Squat',d:'Fingertips on wall for balance only'}]},
       {id:'DB7',name:'Pallof Hold', block:'align', sets:3, reps:'10s each', tempo:'Isometric', load:'Light band', rest:30, isDuration:true,
-       cues:['Band anchored at chest height — arms fully extended','Resist rotation: do not let the band win','Right side first','Breathe slowly — no bracing collapse at end of hold'],
-       subs:[{n:'Dead Bug Hold',d:'No band required — same anti-rotation demand'}]},
+       cues:['Band anchored at chest height \u2014 arms fully extended','Resist rotation: do not let the band win','Right side first','Breathe slowly \u2014 no bracing collapse at end of hold'],
+       subs:[{n:'Dead Bug Hold',d:'No band required \u2014 same anti-rotation demand'}]},
       {id:'DB20',name:'Incline Push-Up', block:'align', sets:3, reps:'8', tempo:'2-1-2', load:'BW', rest:60,
-       cues:['Hands on bench or counter — body in one line','Scapula moves freely — protract fully at top','Right side: equal pressing demand, no rotation','Lower the incline as strength builds'],
+       cues:['Hands on bench or counter \u2014 body in one line','Scapula moves freely \u2014 protract fully at top','Right side: equal pressing demand, no rotation','Lower the incline as strength builds'],
        subs:[]},
       // Block 3 — Build Rotation A (Lower)
-      {id:'DB8',name:'Hip Thrust — Bilateral', block:'build', buildBlock:'A', sets:3, reps:'8', tempo:'3-1-2', load:'BW → Loaded', rest:90,
-       cues:['Right glute fires first — every rep','Full hip extension — 1s pause at top','3s eccentric — own the descent','Progress to barbell when form is consistent'],
+      {id:'DB8',name:'Hip Thrust \u2014 Bilateral', block:'build', buildBlock:'A', sets:3, reps:'8', tempo:'3-1-2', load:'BW \u2192 Loaded', rest:90,
+       cues:['Right glute fires first \u2014 every rep','Full hip extension \u2014 1s pause at top','3s eccentric \u2014 own the descent','Progress to barbell when form is consistent'],
        subs:[{n:'Glute Bridge',d:'Floor-based, same cues'}]},
       {id:'DB9',name:'Seated Leg Curl', block:'build', buildBlock:'A', sets:3, reps:'8', tempo:'3-1-3', load:'Machine', rest:90,
-       cues:['3s eccentric — non-negotiable','Right leg: match full range of motion of left','No swinging — control the load completely','Feel hamstring at full length at top of each rep'],
-       subs:[{n:'Nordic Curl',d:'High demand — only if accessible'},{n:'Band Leg Curl',d:'Lying, band at ankle'}]},
+       cues:['3s eccentric \u2014 non-negotiable','Right leg: match full range of motion of left','No swinging \u2014 control the load completely','Feel hamstring at full length at top of each rep'],
+       subs:[{n:'Nordic Curl',d:'High demand \u2014 only if accessible'},{n:'Band Leg Curl',d:'Lying, band at ankle'}]},
       {id:'DB10',name:'Leg Extension', block:'build', buildBlock:'A', sets:3, reps:'10', tempo:'2-1-3', load:'Machine', rest:90,
-       cues:['Full extension — 1s pause at top','3s eccentric','Reduce load before sacrificing range','Right leg: ensure equal extension to left'],
+       cues:['Full extension \u2014 1s pause at top','3s eccentric','Reduce load before sacrificing range','Right leg: ensure equal extension to left'],
        subs:[{n:'Sissy Squat',d:'BW anterior chain loading, same knee-over-toe demand'}]},
-      {id:'DB11',name:'Cossack Squat — Quarter Depth', block:'build', buildBlock:'A', sets:3, reps:'6 each', tempo:'3-1-2', load:'BW', rest:60,
-       cues:['Right leads','Quarter depth only — hip mobility governs range, not ego','Heel planted on working leg — no rolling','Deepen gradually across sessions as adductor lengthens'],
-       subs:[{n:'Lateral Lunge',d:'Lower range demand — same adductor target'}]},
+      {id:'DB11',name:'Cossack Squat \u2014 Quarter Depth', block:'build', buildBlock:'A', sets:3, reps:'6 each', tempo:'3-1-2', load:'BW', rest:60,
+       cues:['Right leads','Quarter depth only \u2014 hip mobility governs range, not ego','Heel planted on working leg \u2014 no rolling','Deepen gradually across sessions as adductor lengthens'],
+       subs:[{n:'Lateral Lunge',d:'Lower range demand \u2014 same adductor target'}]},
       // Block 3 — Build Rotation B (Push + Arms)
       {id:'DB12',name:'Single-Arm Chest Press', block:'build', buildBlock:'B', sets:3, reps:'8', tempo:'3-1-2', load:'DB', rest:90,
-       cues:['Right arm leads each set','Pack lats into bench before pressing','Pause at bottom — own the position','Stop at first grinding rep'],
+       cues:['Right arm leads each set','Pack lats into bench before pressing','Pause at bottom \u2014 own the position','Stop at first grinding rep'],
        subs:[{n:'Floor Press',d:'Knees bent, triceps touch floor between reps'},{n:'Band Press',d:'Standing or seated'}]},
       {id:'DB13',name:'Triceps Pushdown', block:'build', buildBlock:'B', sets:3, reps:'10', tempo:'2-1-2', load:'Band / Cable', rest:90,
-       cues:['Elbows pinned to sides — never drift','Full extension at bottom — 1s hold','Slow eccentric','Right arm first if unilateral'],
+       cues:['Elbows pinned to sides \u2014 never drift','Full extension at bottom \u2014 1s hold','Slow eccentric','Right arm first if unilateral'],
        subs:[{n:'Close-Grip Floor Press',d:'Loads triceps significantly'},{n:'Diamond Push-Up',d:'Bodyweight, no equipment'}]},
       {id:'DB14',name:'Supported SL Stance Curl', block:'build', buildBlock:'B', sets:3, reps:'8 each', tempo:'2-1-3', load:'DB', rest:90,
-       cues:['Single-leg stance — right leg first','Support arm lightly on wall — balance not assist','3s eccentric — own the descent','Shoulder pinned — no swing'],
+       cues:['Single-leg stance \u2014 right leg first','Support arm lightly on wall \u2014 balance not assist','3s eccentric \u2014 own the descent','Shoulder pinned \u2014 no swing'],
        subs:[{n:'Standing DB Curl',d:'Bilateral stance, strict form'}]},
       {id:'DB15',name:'Face Pull', block:'build', buildBlock:'B', sets:3, reps:'10', tempo:'2-2-2', load:'Band / Cable', rest:90,
-       cues:['Anchor at upper chest height','Thumbs behind ears at end position','External rotation emphasis','Right rear delt must work — if not, reset load'],
+       cues:['Anchor at upper chest height','Thumbs behind ears at end position','External rotation emphasis','Right rear delt must work \u2014 if not, reset load'],
        subs:[{n:'Band Pull-Apart',d:'Arms straight throughout'}]},
       // Block 3 — Build Rotation C (Pull + Posterior)
       {id:'DB16',name:'Chest-Supported Row', block:'build', buildBlock:'C', sets:4, reps:'6', tempo:'2-1-3', load:'DB', rest:120,
-       cues:['Chest on incline bench — removes lower back from the equation','Elbow to hip — not hand to shoulder','Right arm leads','Own the contraction — pause at top'],
-       subs:[{n:'Band Row',d:'Same cues apply — anchor low'}]},
+       cues:['Chest on incline bench \u2014 removes lower back from the equation','Elbow to hip \u2014 not hand to shoulder','Right arm leads','Own the contraction \u2014 pause at top'],
+       subs:[{n:'Band Row',d:'Same cues apply \u2014 anchor low'}]},
       {id:'DB17',name:'Lat Pulldown', block:'build', buildBlock:'C', sets:3, reps:'8', tempo:'2-1-2', load:'Cable / Band', rest:90,
-       cues:['Pack lats before pulling','Lead with elbows','Feel full lat stretch at top — don\'t rush the return','Right side: ensure equal range of motion'],
+       cues:['Pack lats before pulling','Lead with elbows','Feel full lat stretch at top \u2014 don\'t rush the return','Right side: ensure equal range of motion'],
        subs:[{n:'Band Pulldown',d:'Anchored overhead'},{n:'Assisted Pull-up',d:'Band assist, same cues'}]},
       {id:'DB18',name:'Rear Delt Raise', block:'build', buildBlock:'C', sets:3, reps:'10', tempo:'2-1-2', load:'DB / Band', rest:90,
-       cues:['Lead with elbow — not wrist','2s eccentric','No shrug throughout','Right rear delt must contract — not just right arm moving'],
+       cues:['Lead with elbow \u2014 not wrist','2s eccentric','No shrug throughout','Right rear delt must contract \u2014 not just right arm moving'],
        subs:[{n:'Band Face Pull',d:'External rotation emphasis'},{n:'Prone Rear Delt',d:'Face down on incline'}]},
       {id:'DB19',name:'Hammer Curl', block:'build', buildBlock:'C', sets:3, reps:'8 each', tempo:'2-1-3', load:'DB', rest:90,
-       cues:['Right arm leads','Neutral grip throughout — no supination','3s eccentric','Shoulder pinned — no swing'],
+       cues:['Right arm leads','Neutral grip throughout \u2014 no supination','3s eccentric','Shoulder pinned \u2014 no swing'],
        subs:[{n:'Band Hammer Curl',d:'Using looped band at side'}]},
     ]
   },
-  { id:'F', label:'Cardio', type:'Swim · Hike', day:'Weekly', cardio:true,
-    rules:['Z1-2 = NASAL BREATHING TEST','POLARISED — NEVER Z3','NORWEGIAN = FULL EFFORT','HIKE = ACTIVE RECOVERY'],
+  { id:'F', label:'Cardio', type:'Swim \u00b7 Hike', day:'Weekly', cardio:true,
+    rules:['Z1-2 = NASAL BREATHING TEST','POLARISED \u2014 NEVER Z3','NORWEGIAN = FULL EFFORT','HIKE = ACTIVE RECOVERY'],
     exercises:[
       // Session A — Z1-2 Swim
       {id:'F1',name:'Zone 1-2 Aerobic Swim', cardioBlock:'A', info:true,
-       reps:'45 min', tempo:'Z1-2 · Easy',
-       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout — no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns — let HR drop fully'],
-       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags — keep moving, keep Z1-2'}]},
+       reps:'45 min', tempo:'Z1-2 \u00b7 Easy',
+       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout \u2014 no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns \u2014 let HR drop fully'],
+       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags \u2014 keep moving, keep Z1-2'}]},
       // Session B — Norwegian 4×4
       {id:'F2a',name:'Warm-Up Swim', cardioBlock:'B', info:true,
-       reps:'10 min', tempo:'Z1 · Easy',
-       cues:['Continuous easy swim — get warm before loading','Drills if available: catch-up, fingertip drag','HR below 65% max — genuinely easy'],
+       reps:'10 min', tempo:'Z1 \u00b7 Easy',
+       cues:['Continuous easy swim \u2014 get warm before loading','Drills if available: catch-up, fingertip drag','HR below 65% max \u2014 genuinely easy'],
        subs:[]},
-      {id:'F2',name:'4×4 Norwegian Intervals', cardioBlock:'B', sets:4, reps:'4 min', tempo:'Z4 · Hard', load:'Max sustainable', rest:180, isDuration:true,
-       cues:['Full effort for 4 minutes — controlled, not chaotic','3 min passive rest / easy swim between each interval','HR: at or just below lactate threshold — Z4','Right shoulder: watch position under fatigue — form first'],
-       subs:[{n:'4×3 min',d:'Reduce to 3 min if stroke degrades'},{n:'3×4 min',d:'First session — build into the protocol'}]},
+      {id:'F2',name:'4\u00d74 Norwegian Intervals', cardioBlock:'B', sets:4, reps:'4 min', tempo:'Z4 \u00b7 Hard', load:'Max sustainable', rest:180, isDuration:true,
+       cues:['Full effort for 4 minutes \u2014 controlled, not chaotic','3 min passive rest / easy swim between each interval','HR: at or just below lactate threshold \u2014 Z4','Right shoulder: watch position under fatigue \u2014 form first'],
+       subs:[{n:'4\u00d73 min',d:'Reduce to 3 min if stroke degrades'},{n:'3\u00d74 min',d:'First session \u2014 build into the protocol'}]},
       {id:'F2b',name:'Cool-Down Swim', cardioBlock:'B', info:true,
-       reps:'5 min', tempo:'Z1 · Easy',
-       cues:['Easy continuous swim — HR back below 60%','Shoulder: roll and shrug gently through cool-down','No flip turns — open turn, breathe fully'],
+       reps:'5 min', tempo:'Z1 \u00b7 Easy',
+       cues:['Easy continuous swim \u2014 HR back below 60%','Shoulder: roll and shrug gently through cool-down','No flip turns \u2014 open turn, breathe fully'],
        subs:[]},
       // Session C — Z1-2 Swim
       {id:'F3',name:'Zone 1-2 Aerobic Swim', cardioBlock:'C', info:true,
-       reps:'45 min', tempo:'Z1-2 · Easy',
-       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout — no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns — let HR drop fully'],
-       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags — keep moving, keep Z1-2'}]},
+       reps:'45 min', tempo:'Z1-2 \u00b7 Easy',
+       cues:['Nasal breathing test: if you can\'t nasal breathe, you\'re too fast','Conversational pace throughout \u2014 no burning','Focus on stroke efficiency, not speed','Last 5 min: easy, no flip turns \u2014 let HR drop fully'],
+       subs:[{n:'Pool walk / easy kick',d:'If shoulder flags \u2014 keep moving, keep Z1-2'}]},
       // Session D — Hike
       {id:'F4',name:'3-Hour Hike', cardioBlock:'D', info:true,
-       reps:'3 hours', tempo:'Z1-2 · Easy',
-       cues:['Active recovery — this is not a hard effort','Z1-2 pace: sustainable for the full duration without HR spike','Right hip: watch loading on steep descents — no grinding','Hike doubles as mental decompression — minimal phone'],
-       subs:[{n:'2-Hour Hike',d:'If 3 hours not available — still full credit'}]},
+       reps:'3 hours', tempo:'Z1-2 \u00b7 Easy',
+       cues:['Active recovery \u2014 this is not a hard effort','Z1-2 pace: sustainable for the full duration without HR spike','Right hip: watch loading on steep descents \u2014 no grinding','Hike doubles as mental decompression \u2014 minimal phone'],
+       subs:[{n:'2-Hour Hike',d:'If 3 hours not available \u2014 still full credit'}]},
     ]
   },
 ];
@@ -646,70 +821,193 @@ function updateClock(){
   document.getElementById('phase').textContent=p.name;
 }
 
-// ── PILLARS ──────────────────────────────────────────────────────────────────
+// ── DELIVERABLE + STREAK ────────────────────────────────────────────────────
 
-function currentPillarId(){
-  var h=new Date().getHours();
-  for(var i=0;i<PILLARS.length;i++){
-    if(h>=PILLARS[i].from&&h<PILLARS[i].to)return PILLARS[i].id;
+function loadDeliverable(){
+  var dk=todayStr();
+  var input=document.getElementById('deliverable');
+  var saved=load('deliverable_'+dk);
+  if(!saved){
+    // Try to load from yesterday's closing journal (tomorrow's deliverable)
+    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+    var yk=yesterday.toISOString().slice(0,10);
+    saved=load('deliverable_'+dk)||'';
   }
-  return PILLARS[PILLARS.length-1].id;
+  input.value=saved;
+  updateShipBtn();
+  updateStreak();
 }
 
-function renderPillars(){
-  var c=document.getElementById('pillars');
+function saveDeliverable(){
+  var dk=todayStr();
+  save('deliverable_'+dk,document.getElementById('deliverable').value);
+}
+
+function markShipped(){
+  var dk=todayStr();
+  var current=load('shipped_'+dk)==='1';
+  save('shipped_'+dk,current?'0':'1');
+  updateShipBtn();
+  updateStreak();
+}
+
+function updateShipBtn(){
+  var dk=todayStr();
+  var shipped=load('shipped_'+dk)==='1';
+  var btn=document.getElementById('ship-btn');
+  btn.classList.toggle('shipped',shipped);
+  btn.textContent=shipped?'\u2713 Shipped':'Mark shipped';
+}
+
+function updateStreak(){
+  var streak=0;
+  var d=new Date();
+  d.setDate(d.getDate()-1); // start from yesterday
+  for(var i=0;i<365;i++){
+    var day=d.getDay(); // 0=Sun, 6=Sat
+    if(day===0||day===6){
+      // Weekend — skip, don't break streak
+      d.setDate(d.getDate()-1);
+      continue;
+    }
+    var dk=d.toISOString().slice(0,10);
+    if(load('shipped_'+dk)==='1'){
+      streak++;
+      d.setDate(d.getDate()-1);
+    } else {
+      break;
+    }
+  }
+  document.getElementById('streak').textContent=streak+' day streak';
+}
+
+// ── BLOCKS ──────────────────────────────────────────────────────────────────
+
+function currentBlockId(){
+  var h=new Date().getHours()+(new Date().getMinutes()/60);
+  for(var i=0;i<BLOCKS.length;i++){
+    if(h>=BLOCKS[i].from&&h<BLOCKS[i].to)return BLOCKS[i].id;
+  }
+  return null;
+}
+
+function renderBlocks(){
+  var c=document.getElementById('blocks');
   c.innerHTML='';
-  var nowId=currentPillarId();
-  PILLARS.forEach(function(pillar){
-    var done=pillar.items.filter(function(it){return loadDailyBool(it.id);}).length;
-    var track=document.createElement('div');
-    track.className='track'+(done===pillar.items.length?' complete':'');
-    var label=document.createElement('div');
-    label.className='track-label';
-    label.style.color='var(--'+pillar.color+')';
-    label.innerHTML=pillar.label+(pillar.id===nowId?'<span class="track-now">now</span>':'');
-    var count=document.createElement('span');
-    count.className='track-count';
-    count.textContent=done+' / '+pillar.items.length;
-    label.appendChild(count);
-    track.appendChild(label);
-    pillar.items.forEach(function(item){
+  var nowId=currentBlockId();
+  var isFriday=new Date().getDay()===5;
+  if(isFriday){document.getElementById('friday-banner').classList.add('show');}
+
+  var totalItems=0, doneItems=0;
+
+  BLOCKS.forEach(function(block){
+    var done=block.items.filter(function(it){return loadDailyBool(it.id);}).length;
+    var allDone=done===block.items.length;
+    totalItems+=block.items.length;
+    doneItems+=done;
+
+    var card=document.createElement('div');
+    card.className='block-card'+(allDone?' complete':'')+(block.id===nowId?' expanded':'');
+    card.id='block-'+block.id;
+
+    var colorClass='block-label-'+block.color;
+
+    var header=document.createElement('div');
+    header.className='block-header';
+    header.innerHTML=
+      '<span class="block-time">'+block.time+'</span>'
+      +'<span class="block-label '+colorClass+'">'+block.label+'</span>'
+      +(block.id===nowId?'<span class="block-now">now</span>':'')
+      +'<span class="block-count">'+done+'/'+block.items.length+'</span>';
+    header.onclick=function(){card.classList.toggle('expanded');};
+    card.appendChild(header);
+
+    var items=document.createElement('div');
+    items.className='block-items';
+
+    block.items.forEach(function(item){
       var checked=loadDailyBool(item.id);
       var el=document.createElement('div');
-      el.className='check-item'+(checked?' done':'');
-      el.innerHTML='<div class="check-box'+(checked?' on-'+pillar.color:'')+'"><span class="check-tick">✓</span></div>'
-        +'<div class="check-text">'+item.label
-        +(item.sub?'<div class="check-sub">'+item.sub+'</div>':'')+'</div>';
-      el.onclick=function(){
+      el.className='block-item'+(checked?' done':'');
+
+      var checkClass='block-check'+(checked?(block.color==='gold'?' on-gold':' on'):'');
+      el.innerHTML=
+        '<div class="'+checkClass+'"><span class="block-check-tick">\u2713</span></div>'
+        +'<div class="block-item-text">'+item.label
+        +(item.sub?'<div class="block-item-sub">'+item.sub+'</div>':'')+'</div>';
+
+      el.onclick=function(e){
+        // If this item has a timer, start it on check
+        if(item.timer&&!loadDailyBool(item.id)){
+          timerStart(item.timer);
+        }
         saveDailyBool(item.id,!loadDailyBool(item.id));
-        renderPillars();
+        renderBlocks();
       };
-      track.appendChild(el);
+      items.appendChild(el);
+
+      // Action buttons
       if(item.journal){
         var jbtn=document.createElement('div');
-        jbtn.className='view-btn';
-        jbtn.textContent='Open journal →';
-        jbtn.onclick=function(){openJournal();};
-        track.appendChild(jbtn);
+        jbtn.className='block-action block-action-gold';
+        jbtn.textContent='Open journal \u2192';
+        jbtn.onclick=function(e){e.stopPropagation();openJournal();};
+        items.appendChild(jbtn);
       }
       if(item.workout){
         var btn=document.createElement('div');
-        btn.className='view-btn';
-        btn.textContent=(item.sess==='F'?'Open cardio →':'Open the hour →');
-        btn.onclick=function(){openWorkout(item.sess);};
-        track.appendChild(btn);
+        btn.className='block-action';
+        btn.textContent=(item.sess==='F'?'Open cardio \u2192':'Open the hour \u2192');
+        btn.onclick=function(e){e.stopPropagation();openWorkout(item.sess);};
+        items.appendChild(btn);
       }
     });
-    c.appendChild(track);
+
+    card.appendChild(items);
+    c.appendChild(card);
   });
-  updateDayLine();
+
+  updateProgress(totalItems,doneItems);
 }
 
-function updateDayLine(){
-  var total=0,done=0;
-  PILLARS.forEach(function(p){p.items.forEach(function(it){total++;if(loadDailyBool(it.id))done++;});});
-  document.getElementById('day-fill').style.width=(done/total*100)+'%';
-  document.getElementById('mantra').classList.toggle('lit',done===total);
+function updateProgress(totalItems,doneItems){
+  // Day line
+  var blockDone=doneItems/totalItems;
+  document.getElementById('day-fill').style.width=(blockDone*100)+'%';
+
+  // Protocol items
+  var protocolDone=0, protocolTotal=PROTOCOL.length;
+  PROTOCOL.forEach(function(p){if(loadDailyBool(p.id))protocolDone++;});
+
+  var allDone=(doneItems===totalItems)&&(protocolDone===protocolTotal);
+  document.getElementById('mantra').classList.toggle('lit',allDone);
+
+  // Canopy effect
+  var totalAll=totalItems+protocolTotal;
+  var doneAll=doneItems+protocolDone;
+  var pct=doneAll/totalAll;
+  var canopyOpacity=0.05+pct*0.35; // 5% to 40%
+  document.getElementById('canopy').style.opacity=canopyOpacity;
+}
+
+// ── PROTOCOL STRIP ──────────────────────────────────────────────────────────
+
+function renderProtocol(){
+  var grid=document.getElementById('protocol-grid');
+  grid.innerHTML='';
+  PROTOCOL.forEach(function(p){
+    var checked=loadDailyBool(p.id);
+    var chip=document.createElement('div');
+    chip.className='protocol-chip'+(checked?' on':'');
+    chip.innerHTML='<div class="protocol-chip-check"><span class="protocol-chip-tick">\u2713</span></div>'
+      +'<span class="protocol-chip-label">'+p.label+'</span>';
+    chip.onclick=function(){
+      saveDailyBool(p.id,!loadDailyBool(p.id));
+      renderProtocol();
+      renderBlocks(); // to update canopy + mantra
+    };
+    grid.appendChild(chip);
+  });
 }
 
 // ── JOURNAL ──────────────────────────────────────────────────────────────────
@@ -720,7 +1018,7 @@ var OPENING_QUESTIONS=[
   'What mood do I want to create?',
   'What are my three priorities?',
   'What are my key actions?',
-  'What obstacles might arise — and how will I meet them?',
+  'What obstacles might arise \u2014 and how will I meet them?',
   'Who can I appreciate or connect with today?',
   'What is the one thing to focus on above all else?'
 ];
@@ -728,8 +1026,8 @@ var CLOSING_AFFIRMATIONS=[
   'I am a business builder, investor, adventurer and lifelong learner.',
   'I have designed two highly successful businesses in 12 years. I am becoming the investor and builder I was always capable of being.',
   'I show up fully for Susie, Hector and Bella.',
-  'I am rebuilding a body that moves freely — climbs, surfs, lifts, swings, runs and swims.',
-  'I have a magnetic personality — confidence, intelligence, kindness.',
+  'I am rebuilding a body that moves freely \u2014 climbs, surfs, lifts, swings, runs and swims.',
+  'I have a magnetic personality \u2014 confidence, intelligence, kindness.',
   'I am exactly where I\'m meant to be.'
 ];
 
@@ -766,8 +1064,33 @@ function renderJournal(){
         +'<div class="j-affirm-text">'+a+'</div>'
         +'</div>';
     });
+
+    // Wins & gratitude
+    var winsKey='kos3_jq_wins_'+dk;
+    var winsSaved='';
+    try{winsSaved=localStorage.getItem(winsKey)||'';}catch(e){}
+    h+='<div class="j-q" style="margin-top:16px">'
+      +'<div class="j-q-num">WINS</div>'
+      +'<div class="j-q-text">Wins &amp; gratitude</div>'
+      +'<textarea class="j-textarea" data-key="'+winsKey+'" oninput="saveJQ(this)" placeholder="What went well today?">'
+      +winsSaved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+      +'</div>';
+
+    // Tomorrow's deliverable
+    var tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+    var tmrStr=tomorrow.toISOString().slice(0,10);
+    var tmrKey='kos3_deliverable_'+tmrStr;
+    var tmrSaved='';
+    try{tmrSaved=localStorage.getItem(tmrKey)||'';}catch(e){}
+    h+='<div class="j-q">'
+      +'<div class="j-q-num">NEXT</div>'
+      +'<div class="j-q-text">Tomorrow\'s deliverable</div>'
+      +'<textarea class="j-textarea" data-key="'+tmrKey+'" oninput="saveJQ(this)" placeholder="What must ship tomorrow?">'
+      +tmrSaved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+      +'</div>';
+
     h+='<button class="affirm-btn'+(affirmed?' done':'')+'" onclick="toggleAffirm(\''+affirmKey+'\')">'
-      +(affirmed?'✓ Affirmed today':'Affirm')+'</button>';
+      +(affirmed?'\u2713 Affirmed today':'Affirm')+'</button>';
   }
   document.getElementById('j-body').innerHTML=h;
 }
@@ -831,35 +1154,35 @@ function renderWorkout(){
   document.getElementById('wo-rules').innerHTML=sess.rules.map(function(r){return '<div class="wo-rule">'+r+'</div>';}).join('');
   var gEl=document.getElementById('wo-goals');
   if(sess.goals){
-    gEl.innerHTML='<details class="wo-goals"><summary>Goals — what this is all for</summary><ol>'
+    gEl.innerHTML='<details class="wo-goals"><summary>Goals \u2014 what this is all for</summary><ol>'
       +sess.goals.map(function(g){return '<li>'+g+'</li>';}).join('')+'</ol></details>';
   }else{gEl.innerHTML='';}
 
   var counterEl=document.getElementById('wo-counter');
   if(isCardio){
     var cRot=parseInt(load('cardio_session')||'1');
-    var cardioLabels=['','A · Z1-2 Swim · 45 min','B · Norwegian 4×4 · ~40 min','C · Z1-2 Swim · 45 min','D · Hike · 3 hours'];
+    var cardioLabels=['','A \u00b7 Z1-2 Swim \u00b7 45 min','B \u00b7 Norwegian 4\u00d74 \u00b7 ~40 min','C \u00b7 Z1-2 Swim \u00b7 45 min','D \u00b7 Hike \u00b7 3 hours'];
     counterEl.style.display='block';
     counterEl.innerHTML='<div class="counter-row">'
-      +'<div class="counter-info"><div class="counter-label">Weekly Cardio · Polarised</div><div class="counter-sub">'+cardioLabels[cRot]+'</div></div>'
+      +'<div class="counter-info"><div class="counter-label">Weekly Cardio \u00b7 Polarised</div><div class="counter-sub">'+cardioLabels[cRot]+'</div></div>'
       +'<div class="counter-ctrl">'
-      +'<button class="counter-btn" onclick="adjCardioSession(-1)">−</button>'
+      +'<button class="counter-btn" onclick="adjCardioSession(-1)">\u2212</button>'
       +'<div><div class="counter-val">'+['','A','B','C','D'][cRot]+'</div><div class="counter-unit">session</div></div>'
       +'<button class="counter-btn" onclick="adjCardioSession(1)">+</button>'
       +'</div></div>';
-    document.getElementById('wo-ex-label').textContent='Cardio · '+cardioLabels[cRot];
+    document.getElementById('wo-ex-label').textContent='Cardio \u00b7 '+cardioLabels[cRot];
   } else if(isBlueprint){
     var dbRot=parseInt(load('db_rotation')||'1');
-    var dbBuildLabels=['','Build A — Lower','Build B — Push + Arms','Build C — Pull + Posterior'];
+    var dbBuildLabels=['','Build A \u2014 Lower','Build B \u2014 Push + Arms','Build C \u2014 Pull + Posterior'];
     counterEl.style.display='block';
     counterEl.innerHTML='<div class="counter-row">'
-      +'<div class="counter-info"><div class="counter-label">~54 min · 3 Blocks</div><div class="counter-sub">'+dbBuildLabels[dbRot]+'</div></div>'
+      +'<div class="counter-info"><div class="counter-label">~54 min \u00b7 3 Blocks</div><div class="counter-sub">'+dbBuildLabels[dbRot]+'</div></div>'
       +'<div class="counter-ctrl">'
-      +'<button class="counter-btn" onclick="adjDBRotation(-1)">−</button>'
+      +'<button class="counter-btn" onclick="adjDBRotation(-1)">\u2212</button>'
       +'<div><div class="counter-val">'+dbRot+'</div><div class="counter-unit">of 3</div></div>'
       +'<button class="counter-btn" onclick="adjDBRotation(1)">+</button>'
       +'</div></div>';
-    document.getElementById('wo-ex-label').textContent='Daily Blueprint · Unlock · Align · '+dbBuildLabels[dbRot];
+    document.getElementById('wo-ex-label').textContent='Daily Blueprint \u00b7 Unlock \u00b7 Align \u00b7 '+dbBuildLabels[dbRot];
   }
 
   var dk=todayStr();
@@ -881,7 +1204,7 @@ function renderWorkout(){
     if(isBlueprint&&ex.block!==lastBlock){
       lastBlock=ex.block;
       lastSubBlock='';
-      var bhdrs={unlock:'Block 1 — Unlock · ~18 min · Daily',align:'Block 2 — Align · ~14 min · Daily',build:'Block 3 — Build · ~22 min'};
+      var bhdrs={unlock:'Block 1 \u2014 Unlock \u00b7 ~18 min \u00b7 Daily',align:'Block 2 \u2014 Align \u00b7 ~14 min \u00b7 Daily',build:'Block 3 \u2014 Build \u00b7 ~22 min'};
       eh+='<div class="ex-block-hdr">'+(bhdrs[ex.block]||ex.block)+'</div>';
     }
     // Blueprint: insert sub-block headers on transition
@@ -900,13 +1223,13 @@ function renderWorkout(){
     if(isInfo){
       eh+='<div class="ex-stats" style="grid-template-columns:1fr 1fr">'
         +'<div class="ex-stat"><div class="ex-stat-l">Duration</div><div class="ex-stat-v">'+ex.reps+'</div></div>'
-        +'<div class="ex-stat"><div class="ex-stat-l">Effort</div><div class="ex-stat-v">'+(ex.tempo||'—')+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Effort</div><div class="ex-stat-v">'+(ex.tempo||'\u2014')+'</div></div>'
         +'</div>';
     } else {
       eh+='<div class="ex-stats">'
-        +'<div class="ex-stat"><div class="ex-stat-l">Load</div><div class="ex-stat-v">'+(ex.load||'—')+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Load</div><div class="ex-stat-v">'+(ex.load||'\u2014')+'</div></div>'
         +'<div class="ex-stat"><div class="ex-stat-l">Reps</div><div class="ex-stat-v">'+ex.reps+'</div></div>'
-        +'<div class="ex-stat"><div class="ex-stat-l">Tempo</div><div class="ex-stat-v">'+(ex.tempo||'—')+'</div></div>'
+        +'<div class="ex-stat"><div class="ex-stat-l">Tempo</div><div class="ex-stat-v">'+(ex.tempo||'\u2014')+'</div></div>'
         +'<div class="ex-stat"><div class="ex-stat-l">Rest</div><div class="ex-stat-v">'+ex.rest+'s</div></div>'
         +'</div>';
     }
@@ -925,7 +1248,7 @@ function renderWorkout(){
     }
     if(ex.subs&&ex.subs.length){
       eh+='<div class="ex-subs"><div class="ex-subs-title">Substitutions</div>';
-      ex.subs.forEach(function(s){eh+='<div class="ex-sub"><strong style="color:var(--text)">'+s.n+'</strong> — '+s.d+'</div>';});
+      ex.subs.forEach(function(s){eh+='<div class="ex-sub"><strong style="color:var(--text)">'+s.n+'</strong> \u2014 '+s.d+'</div>';});
       eh+='</div>';
     }
     eh+='</div></div>';
@@ -947,7 +1270,7 @@ function startRest(btn,secs){
   var rem=secs;label.textContent=rem+'s';
   btn._r=setInterval(function(){
     rem--;fill.style.width=((secs-rem)/secs*100)+'%';label.textContent=rem+'s';
-    if(rem<=0){clearInterval(btn._r);btn._r=null;fill.style.width='100%';label.textContent='Done ✓';
+    if(rem<=0){clearInterval(btn._r);btn._r=null;fill.style.width='100%';label.textContent='Done \u2713';
       setTimeout(function(){fill.style.width='0%';label.textContent='Start '+secs+'s rest';},2000);}
   },1000);
 }
@@ -988,7 +1311,7 @@ function renderPersistChart(data){
 
   var recent=data.slice().sort(function(a,b){return a.date.localeCompare(b.date);}).slice(-14);
   if(!recent.length){
-    ctx.fillStyle='#706c65';ctx.font='11px "DM Mono",monospace';
+    ctx.fillStyle='#8FA396';ctx.font='11px "IBM Plex Mono",monospace';
     ctx.fillText('No sessions yet',w/2-45,h/2);
     return;
   }
@@ -997,21 +1320,21 @@ function renderPersistChart(data){
   var topPad=22,botPad=28;
   var chartH=h-topPad-botPad;
 
-  ctx.fillStyle='#706c65';ctx.font='7px "DM Mono",monospace';
-  ctx.fillText('HOURS HELD — LAST '+recent.length,4,12);
+  ctx.fillStyle='#8FA396';ctx.font='7px "IBM Plex Mono",monospace';
+  ctx.fillText('HOURS HELD \u2014 LAST '+recent.length,4,12);
 
   recent.forEach(function(r,i){
     var x=10+i*(barW+4);
     var barH=((r.held||0)/maxH)*chartH;
     var y=topPad+chartH-barH;
-    ctx.fillStyle='rgba(200,164,85,0.7)';
+    ctx.fillStyle='rgba(227,200,120,0.7)';
     ctx.fillRect(x,y,barW,barH);
     // date label
-    ctx.fillStyle='#706c65';ctx.font='7px "DM Mono",monospace';
+    ctx.fillStyle='#8FA396';ctx.font='7px "IBM Plex Mono",monospace';
     var lbl=r.date.slice(5);
     ctx.fillText(lbl,x,h-8);
     // value on top
-    ctx.fillStyle='#e4e0d4';ctx.font='9px "DM Mono",monospace';
+    ctx.fillStyle='#E7EDE4';ctx.font='9px "IBM Plex Mono",monospace';
     ctx.fillText(String(r.held),x,y-4);
   });
 }
@@ -1023,7 +1346,7 @@ function renderPersistForm(){
     +'<div class="pl-field"><div class="pl-label">Slept (hours)</div><input class="pl-input" type="number" id="pl-slept" min="0" step="0.5" placeholder="e.g. 7"></div>'
     +'</div>'
     +'<div class="pl-row">'
-    +'<div class="pl-field"><div class="pl-label">Mood (1–10)</div><input class="pl-input" type="number" id="pl-mood" min="1" max="10" placeholder="e.g. 7"></div>'
+    +'<div class="pl-field"><div class="pl-label">Mood (1\u201310)</div><input class="pl-input" type="number" id="pl-mood" min="1" max="10" placeholder="e.g. 7"></div>'
     +'<div class="pl-field"><div class="pl-label">Car (minutes)</div><input class="pl-input" type="number" id="pl-car" min="0" placeholder="e.g. 20"></div>'
     +'</div>'
     +'<div class="pl-field"><div class="pl-label">Plate (mm)</div><input class="pl-input" type="number" id="pl-plate" min="0" step="0.1" placeholder="e.g. 3"></div>'
@@ -1045,13 +1368,13 @@ function savePersistEntry(){
   if(!date||isNaN(held)||isNaN(slept)||isNaN(mood)){
     errEl.textContent='Date, held, slept and mood are required.';errEl.style.display='block';return;
   }
-  if(mood<1||mood>10){errEl.textContent='Mood must be 1–10.';errEl.style.display='block';return;}
+  if(mood<1||mood>10){errEl.textContent='Mood must be 1\u201310.';errEl.style.display='block';return;}
   var data=plLoad();
   var idx=data.findIndex(function(r){return r.date===date;});
   var entry={date:date,held:held,slept:slept,mood:mood,car:car,plate:plate,note:note};
   if(idx>=0)data[idx]=entry;else data.push(entry);
   if(!plSave(data)){
-    errEl.textContent='Save failed — localStorage may be full.';errEl.style.display='block';return;
+    errEl.textContent='Save failed \u2014 localStorage may be full.';errEl.style.display='block';return;
   }
   renderPersistence();
 }
@@ -1067,8 +1390,8 @@ function renderPersistTable(data){
   var h='<table class="pl-table"><thead><tr><th>Date</th><th>Held</th><th>Slept</th><th>Mood</th><th>Car</th><th>Plate</th><th>Note</th><th></th></tr></thead><tbody>';
   data.forEach(function(r){
     h+='<tr><td>'+r.date.slice(5)+'</td><td>'+r.held+'h</td><td>'+r.slept+'h</td><td>'+r.mood+'</td><td>'+r.car+'m</td><td>'+r.plate+'</td>'
-      +'<td style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.note||'—')+'</td>'
-      +'<td><button class="pl-del" onclick="deletePersistEntry(\''+r.date+'\')">✕</button></td></tr>';
+      +'<td style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(r.note||'\u2014')+'</td>'
+      +'<td><button class="pl-del" onclick="deletePersistEntry(\''+r.date+'\')">\u2715</button></td></tr>';
   });
   h+='</tbody></table>';
   document.getElementById('persist-table').innerHTML=h;
@@ -1080,7 +1403,9 @@ renderHeader();
 updateClock();
 setInterval(updateClock,1000);
 renderInspiration();
-renderPillars();
+loadDeliverable();
+renderBlocks();
+renderProtocol();
 </script>
 </body>
 </html>
