@@ -591,7 +591,7 @@ html,body{
   </div>
 
   <!-- FRIDAY BANNER -->
-  <div class="friday-banner" id="friday-banner">Capital decisions live inside the Golden Block today.</div>
+  <div class="friday-banner" id="friday-banner">Capital decisions live inside the Investing Block today.</div>
 
   <!-- TODAY'S DELIVERABLE -->
   <div class="deliverable-card">
@@ -719,36 +719,43 @@ function renderInspiration(){
 }
 
 const BLOCKS = [
-  { id: 'golden', label: 'Golden Block \u2014 Investing', time: '08:00\u201310:00', color: 'gold', from: 8, to: 10,
+  { id: 'golden', label: 'Golden Hour', time: '08:00\u201309:00', color: 'gold', from: 8, to: 9,
     items: [
-      { id: 'gb1', label: 'Setup \u2014 read yesterday\'s log', sub: '08:00', journal: true },
-      { id: 'gb2', label: 'Book \u2014 45 min', sub: '08:05', timer: 2700 },
-      { id: 'gb3', label: 'Desk \u2014 write deliverable', sub: '08:50' },
-      { id: 'gb4', label: 'Close \u2014 name tomorrow\'s deliverable', sub: '09:50' },
+      { id: 'gh1', label: 'Meditate (20 min)', sub: 'Sunshine \u00b7 Outside' },
+      { id: 'gh2', label: 'Mental model', sub: 'Shane Parrish / Farnam Street' },
+      { id: 'gh3', label: 'Productivity Game page', sub: '1-pager summary' },
+      { id: 'gh4', label: 'Tao Te Ching passage', sub: 'Stephen Mitchell' },
     ]
   },
-  { id: 'periodicals', label: 'Periodicals', time: '10:00\u201310:20', color: 'gold', from: 10, to: 10.33,
-    items: [{ id: 'per1', label: 'Read periodicals', sub: 'Hard stop at 10:20' }]
+  { id: 'drive', label: 'Drive', time: '09:00\u201309:30', color: 'muted', from: 9, to: 9.5,
+    items: [{ id: 'dr1', label: 'Drive to gym / golf range' }]
   },
-  { id: 'workout', label: 'Workout \u2014 hip rehab + swim', time: '10:20\u201311:30', color: 'moss', from: 10.33, to: 11.5,
+  { id: 'exercise', label: 'Exercise / Practice', time: '09:30\u201311:00', color: 'moss', from: 9.5, to: 11,
     items: [
-      { id: 'wo1', label: 'The Daily Blueprint', sub: 'Unlock \u00b7 Align \u00b7 Build', workout: true, sess: 'DB' },
-      { id: 'wo2', label: 'Cardio', sub: 'Swim \u00b7 Hike', workout: true, sess: 'F' },
-      { id: 'wo3', label: 'Cold plunge', sub: 'Pool' },
-      { id: 'wo4', label: 'Sunshine', sub: '10 min daylight' },
+      { id: 'ex1', label: 'The Daily Blueprint', sub: 'Unlock \u00b7 Align \u00b7 Build', workout: true, sess: 'DB' },
+      { id: 'ex2', label: 'Cardio', sub: 'Swim \u00b7 Hike', workout: true, sess: 'F' },
+      { id: 'ex3', label: 'Cold plunge + sauna', sub: 'Exercise days' },
     ]
   },
-  { id: 'lunch', label: 'Lunch', time: '11:30\u201312:00', color: 'muted', from: 11.5, to: 12,
-    items: [{ id: 'lu1', label: 'Lunch break' }]
+  { id: 'invest1', label: 'Investing Block 1', time: '11:00\u201313:00', color: 'gold', from: 11, to: 13,
+    items: [
+      { id: 'iv1', label: 'Setup \u2014 read yesterday\'s log', sub: '11:00', journal: true },
+      { id: 'iv2', label: 'Read + write', sub: 'Deliverable produced here' },
+      { id: 'iv3', label: 'Close \u2014 name tomorrow\'s deliverable', sub: '12:50' },
+    ]
   },
-  { id: 'veraxus', label: 'Veraxus build block', time: '12:00\u201314:00', color: 'moss', from: 12, to: 14,
-    items: [{ id: 'vx1', label: 'Deep session', sub: 'One focused build' }]
+  { id: 'lunch', label: 'Lunch', time: '13:00\u201313:30', color: 'muted', from: 13, to: 13.5,
+    items: [{ id: 'lu1', label: 'Lunch \u2014 no devices' }]
   },
-  { id: 'admin', label: 'Admin \u2014 KDA, SARS, email', time: '14:00\u201314:45', color: 'muted', from: 14, to: 14.75,
-    items: [{ id: 'ad1', label: 'Admin complete' }]
+  { id: 'invest2', label: 'Investing Block 2', time: '13:30\u201315:00', color: 'gold', from: 13.5, to: 15,
+    items: [
+      { id: 'iv4', label: 'Company study + periodicals', sub: 'No second deliverable' },
+    ]
   },
-  { id: 'shutdown', label: 'Shutdown', time: '14:45\u201315:00', color: 'muted', from: 14.75, to: 15,
-    items: [{ id: 'sd1', label: 'Shutdown routine complete' }]
+  { id: 'flex', label: 'Flex', time: '15:00\u201317:00', color: 'moss', from: 15, to: 17,
+    items: [
+      { id: 'fl1', label: 'Veraxus / consulting / admin', sub: 'Alternating on demand' },
+    ]
   },
 ];
 
@@ -1204,6 +1211,19 @@ function renderJournal(){
         +'</div>';
     });
 
+    // Amendment 02: Golden Hour checklist (not scored)
+    var ghItems=['Meditate (20)','Mental model','Productivity Game page','Tao passage'];
+    h+='<div class="goal-slots" style="padding-bottom:12px">'
+      +'<div class="goal-slot-hdr" style="margin-bottom:8px"><span class="goal-slot-num">\u2600</span><span class="goal-slot-name">Golden Hour</span></div>';
+    ghItems.forEach(function(item,i){
+      var key='kos3_gh_'+i+'_'+dk;var done=false;
+      try{done=localStorage.getItem(key)==='1';}catch(e){}
+      h+='<div class="goal-check-row" onclick="toggleGH('+i+')">'
+        +'<div class="goal-check-box'+(done?' checked':'')+'"><span class="goal-check-tick">\u2713</span></div>'
+        +'<div class="goal-check-text'+(done?' done':'')+'">'+item+'</div></div>';
+    });
+    h+='</div>';
+
     // Amendment 01: Three goal slots
     var g1=loadGoal(1)||'';var g2=loadGoal(2)||'';var g3=loadGoal(3)||'';
     var reservoir=loadReservoir();
@@ -1281,6 +1301,9 @@ function renderJournal(){
 
 function saveJQ(el){var key=el.getAttribute('data-key');if(key)try{localStorage.setItem(key,el.value);}catch(e){}}
 function toggleAffirm(key){var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
+
+// Amendment 02: Golden Hour checklist toggle (not scored)
+function toggleGH(i){var dk=todayStr();var key='kos3_gh_'+i+'_'+dk;var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
 
 // Amendment 01: Goal check + reservoir picker helpers
 function toggleGoalCheck(slot){setGoalDone(slot,!isGoalDone(slot));renderJournal();renderPointsStrip();}
@@ -1740,7 +1763,7 @@ function renderDashboard(){
   h+=metricCounter('rehab','Rehab sessions','Lead',wm.rehab,dates,wm);
   // 4. Golden blocks + deliverable (auto)
   var gbCount=0;dates.forEach(function(d){if(load('g1done_'+d)==='1')gbCount++;});
-  h+='<div class="dash-metric"><div><div class="dash-metric-name">Golden blocks + deliverable</div>'
+  h+='<div class="dash-metric"><div><div class="dash-metric-name">Investing block + deliverable</div>'
     +'<div class="dash-metric-type">Lead \u00b7 Auto</div></div>'
     +'<div class="dash-metric-val">'+gbCount+'/6</div></div>';
   // 5. Social rep with prediction
