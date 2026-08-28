@@ -419,6 +419,132 @@ html,body{
 .pl-del{background:none;border:none;color:var(--gold);font-family:var(--mn);font-size:9px;cursor:pointer;padding:2px 6px;}
 .pl-del:active{opacity:0.5;}
 
+/* ── GOAL SLOTS (Journal Amendment 01) ── */
+.goal-slots{padding:16px 0;border-bottom:1px solid var(--lines);}
+.goal-slot{margin-bottom:14px;}
+.goal-slot:last-child{margin-bottom:0;}
+.goal-slot-hdr{
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+}
+.goal-slot-num{font-family:var(--mn);font-size:8px;letter-spacing:0.15em;color:var(--gold);min-width:14px;}
+.goal-slot-name{font-family:var(--mn);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.goal-input{
+  width:100%;background:var(--bg);border:1px solid var(--lines);
+  color:var(--text);font-family:var(--mn);font-size:11px;
+  padding:10px 12px;border-radius:4px;outline:none;
+}
+.goal-input:focus{border-color:var(--gold);}
+.reservoir-picker{position:relative;}
+.reservoir-dropdown{
+  position:absolute;left:0;right:0;top:100%;
+  background:var(--panel);border:1px solid var(--lines);
+  border-radius:4px;max-height:200px;overflow-y:auto;z-index:10;display:none;
+}
+.reservoir-dropdown.open{display:block;}
+.reservoir-option{
+  padding:10px 12px;font-family:var(--mn);font-size:11px;
+  color:var(--text);cursor:pointer;border-bottom:1px solid var(--lines);
+}
+.reservoir-option:last-child{border-bottom:none;}
+.reservoir-option:active{background:rgba(127,163,122,0.1);}
+
+/* ── CLOSING CHECKBOXES ── */
+.goal-checks{padding:16px 0;border-bottom:1px solid var(--lines);}
+.goal-check-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;cursor:pointer;-webkit-user-select:none;user-select:none;
+}
+.goal-check-row:active{opacity:0.7;}
+.goal-check-box{
+  width:22px;height:22px;border:1px solid var(--lines);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.2s;
+}
+.goal-check-box.checked{background:var(--moss);border-color:var(--moss);}
+.goal-check-tick{font-size:12px;color:var(--bg);font-weight:700;opacity:0;transition:opacity 0.15s;}
+.goal-check-box.checked .goal-check-tick{opacity:1;}
+.goal-check-text{font-family:var(--body);font-size:13px;color:var(--text);flex:1;}
+.goal-check-text.done{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--lines);}
+.goal-pts{font-family:var(--mn);font-size:11px;color:var(--gold);margin-top:8px;}
+
+/* ── DASHBOARD OVERLAY ── */
+.dash-section{padding:0 24px;margin-bottom:20px;}
+.dash-section-label{
+  font-family:var(--mn);font-size:8px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--lines);
+}
+.dash-week-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:16px;}
+.dash-day{background:var(--panel);border:1px solid var(--lines);border-radius:4px;padding:8px 4px;text-align:center;}
+.dash-day.today{border-color:var(--gold);}
+.dash-day-name{font-family:var(--mn);font-size:7px;letter-spacing:0.1em;color:var(--muted);}
+.dash-day-pts{font-family:var(--mn);font-size:18px;color:var(--text);margin:4px 0 2px;}
+.dash-day-max{font-family:var(--mn);font-size:7px;color:var(--muted);}
+.dash-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+.dash-stat{background:var(--panel);border:1px solid var(--lines);border-radius:4px;padding:12px 8px;text-align:center;}
+.dash-stat-val{font-family:var(--mn);font-size:22px;color:var(--text);}
+.dash-stat-val.green{color:var(--moss);}
+.dash-stat-label{font-family:var(--mn);font-size:7px;letter-spacing:0.12em;color:var(--muted);margin-top:4px;}
+.dash-metric{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--lines);}
+.dash-metric:last-child{border-bottom:none;}
+.dash-metric-name{font-family:var(--body);font-size:13px;color:var(--text);}
+.dash-metric-type{font-family:var(--mn);font-size:8px;color:var(--muted);letter-spacing:0.08em;margin-top:2px;}
+.dash-metric-ctrl{display:flex;align-items:center;gap:6px;}
+.dash-metric-val{font-family:var(--mn);font-size:16px;color:var(--text);min-width:30px;text-align:center;}
+.dash-metric-btn{
+  width:26px;height:26px;border:1px solid var(--lines);background:var(--panel);
+  color:var(--text);font-size:14px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;border-radius:4px;
+}
+.dash-toggle{
+  width:36px;height:20px;border-radius:10px;background:var(--panel);
+  border:1px solid var(--lines);cursor:pointer;position:relative;transition:all 0.2s;
+}
+.dash-toggle.on{background:rgba(127,163,122,0.3);border-color:var(--moss);}
+.dash-toggle-dot{
+  width:14px;height:14px;border-radius:50%;background:var(--muted);
+  position:absolute;top:2px;left:2px;transition:all 0.2s;
+}
+.dash-toggle.on .dash-toggle-dot{left:18px;background:var(--moss);}
+.dash-green-banner{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.1em;
+  color:var(--moss);background:rgba(127,163,122,0.08);
+  border:1px solid rgba(127,163,122,0.2);
+  padding:10px 16px;margin:0 24px 16px;border-radius:4px;text-align:center;
+}
+.dash-reward-banner{
+  font-family:var(--mn);font-size:9px;letter-spacing:0.1em;
+  color:var(--gold);background:rgba(227,200,120,0.08);
+  border:1px solid rgba(227,200,120,0.2);
+  padding:10px 16px;margin:0 24px 16px;border-radius:4px;text-align:center;
+}
+.dash-pred-chart{margin:16px 0;}
+.dash-pred-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.dash-pred-label{font-family:var(--mn);font-size:8px;color:var(--muted);min-width:50px;}
+.dash-pred-bar{height:8px;border-radius:4px;transition:width 0.3s;}
+.reservoir-list{padding:0 24px;}
+.reservoir-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--lines);}
+.reservoir-item:last-child{border-bottom:none;}
+.reservoir-item-text{font-family:var(--body);font-size:13px;color:var(--text);flex:1;}
+.reservoir-item-del{background:none;border:none;color:var(--muted);font-family:var(--mn);font-size:10px;cursor:pointer;padding:4px 8px;}
+.reservoir-add{display:flex;gap:8px;padding:12px 24px;}
+.reservoir-add-input{
+  flex:1;background:var(--bg);border:1px solid var(--lines);
+  color:var(--text);font-family:var(--mn);font-size:11px;
+  padding:8px 10px;border-radius:4px;outline:none;
+}
+.reservoir-add-btn{
+  padding:8px 14px;background:none;border:1px solid var(--lines);
+  color:var(--muted);font-family:var(--mn);font-size:9px;
+  letter-spacing:0.1em;cursor:pointer;border-radius:4px;
+}
+.points-toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;margin-bottom:16px;
+}
+.points-toggle-label{font-family:var(--mn);font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;}
+.green-streak{font-family:var(--mn);font-size:11px;color:var(--moss);letter-spacing:0.05em;}
+
 </style>
 </head>
 <body>
@@ -473,7 +599,10 @@ html,body{
     <input class="deliverable-input" id="deliverable" placeholder="What must ship today?" oninput="saveDeliverable()">
     <div class="deliverable-row">
       <button class="ship-btn" id="ship-btn" onclick="markShipped()">Mark shipped</button>
-      <div class="streak" id="streak">0 day streak</div>
+      <div style="text-align:right">
+        <div class="streak" id="streak">0 day streak</div>
+        <div class="green-streak" id="green-streak"></div>
+      </div>
     </div>
   </div>
 
@@ -499,8 +628,12 @@ html,body{
   <!-- MANTRA -->
   <div class="mantra" id="mantra">One book &middot; One company &middot; One deliverable</div>
 
+  <!-- POINTS + GREEN STREAK -->
+  <div id="points-strip" style="text-align:center;padding:8px 24px;position:relative;z-index:1;"></div>
+
   <!-- NAV -->
-  <div class="nav-row">
+  <div class="nav-row" style="display:flex;gap:8px;justify-content:center;">
+    <button class="nav-btn" onclick="openDashboard()">Dashboard &rarr;</button>
     <button class="nav-btn" onclick="openPersistence()">Persistence Log &rarr;</button>
   </div>
 
@@ -561,6 +694,15 @@ html,body{
   </div>
 </div>
 
+<!-- ── DASHBOARD OVERLAY ── -->
+<div class="overlay" id="dash-overlay">
+  <div class="ov-header">
+    <div class="ov-title">Dashboard</div>
+    <button class="ov-close" onclick="closeDashboard()">Close</button>
+  </div>
+  <div id="dash-body" style="padding-bottom:48px;"></div>
+</div>
+
 <script>
 // ── DATA ──────────────────────────────────────────────────────────────────────
 
@@ -618,8 +760,10 @@ const PROTOCOL = [
   { id: 'sup5', label: 'Fish Oil' },
   { id: 'sup6', label: 'Bone Revolution' },
   { id: 'sup7', label: 'Tongkat Ali' },
-  { id: 'pro1', label: '160g protein' },
-  { id: 'phi1', label: '1 page: Tao Te Ching' },
+  { id: 'pro1', label: '40g protein + 10g collagen' },
+  { id: 'phi1', label: 'Tao Te Ching' },
+  { id: 'phi2', label: 'Productivity Game' },
+  { id: 'phi3', label: 'Mental model' },
 ];
 
 const SESSIONS = [
@@ -826,13 +970,8 @@ function updateClock(){
 function loadDeliverable(){
   var dk=todayStr();
   var input=document.getElementById('deliverable');
-  var saved=load('deliverable_'+dk);
-  if(!saved){
-    // Try to load from yesterday's closing journal (tomorrow's deliverable)
-    var yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
-    var yk=yesterday.toISOString().slice(0,10);
-    saved=load('deliverable_'+dk)||'';
-  }
+  // Sync with goal slot 1
+  var saved=load('goal1_'+dk)||load('deliverable_'+dk)||'';
   input.value=saved;
   updateShipBtn();
   updateStreak();
@@ -840,15 +979,19 @@ function loadDeliverable(){
 
 function saveDeliverable(){
   var dk=todayStr();
-  save('deliverable_'+dk,document.getElementById('deliverable').value);
+  var val=document.getElementById('deliverable').value;
+  save('deliverable_'+dk,val);
+  save('goal1_'+dk,val); // sync with goal slot 1
 }
 
 function markShipped(){
   var dk=todayStr();
   var current=load('shipped_'+dk)==='1';
   save('shipped_'+dk,current?'0':'1');
+  save('g1done_'+dk,current?'0':'1'); // sync with goal slot 1
   updateShipBtn();
   updateStreak();
+  renderPointsStrip();
 }
 
 function updateShipBtn(){
@@ -879,6 +1022,13 @@ function updateStreak(){
     }
   }
   document.getElementById('streak').textContent=streak+' day streak';
+  // Green week streak
+  var gws=greenWeekStreak();
+  var gwEl=document.getElementById('green-streak');
+  if(gwEl){
+    if(gws>0&&!isPointsHidden()) gwEl.textContent=gws+' green '+(gws===1?'week':'weeks');
+    else gwEl.textContent='';
+  }
 }
 
 // ── BLOCKS ──────────────────────────────────────────────────────────────────
@@ -1053,7 +1203,41 @@ function renderJournal(){
         +saved.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
         +'</div>';
     });
+
+    // Amendment 01: Three goal slots
+    var g1=loadGoal(1)||'';var g2=loadGoal(2)||'';var g3=loadGoal(3)||'';
+    var reservoir=loadReservoir();
+    h+='<div class="goal-slots">'
+      +'<div class="goal-slot-hdr" style="margin-bottom:12px"><span class="goal-slot-num">GOALS</span><span class="goal-slot-name">Three pre-set goals</span></div>'
+      // Slot 1: Deliverable
+      +'<div class="goal-slot"><div class="goal-slot-hdr"><span class="goal-slot-num">1</span><span class="goal-slot-name">Deliverable</span></div>'
+      +'<input class="goal-input" value="'+g1.replace(/"/g,'&quot;')+'" oninput="saveGoal(1,this.value)" placeholder="Today\u2019s one deliverable"></div>'
+      // Slot 2: Dashboard Action
+      +'<div class="goal-slot"><div class="goal-slot-hdr"><span class="goal-slot-num">2</span><span class="goal-slot-name">Dashboard Action</span></div>'
+      +'<input class="goal-input" value="'+g2.replace(/"/g,'&quot;')+'" oninput="saveGoal(2,this.value)" placeholder="One action feeding a weekly metric"></div>'
+      // Slot 3: Reservoir Draw
+      +'<div class="goal-slot"><div class="goal-slot-hdr"><span class="goal-slot-num">3</span><span class="goal-slot-name">Reservoir Draw</span></div>'
+      +'<div class="reservoir-picker">'
+      +'<input class="goal-input" id="goal3-input" value="'+g3.replace(/"/g,'&quot;')+'" oninput="saveGoal(3,this.value)" onfocus="openReservoirPicker()" placeholder="Pick from reservoir or type...">'
+      +'<div class="reservoir-dropdown" id="reservoir-dropdown">';
+    reservoir.forEach(function(item){
+      h+='<div class="reservoir-option" onclick="pickReservoir(\''+item.replace(/'/g,"\\'")+'\')">'+(item.replace(/</g,'&lt;'))+'</div>';
+    });
+    h+='</div></div></div>'
+      +'</div>';
   } else {
+    // Amendment 01: Closing checkboxes
+    var g1t=loadGoal(1)||'Deliverable';var g2t=loadGoal(2)||'Dashboard Action';var g3t=loadGoal(3)||'Reservoir Draw';
+    var g1d=isGoalDone(1);var g2d=isGoalDone(2);var g3d=isGoalDone(3);
+    var pts=dayPoints(dk);
+    h+='<div class="goal-checks">'
+      +'<div class="goal-slot-hdr" style="margin-bottom:8px"><span class="goal-slot-num">SCORE</span><span class="goal-slot-name">Did you deliver?</span></div>'
+      +'<div class="goal-check-row" onclick="toggleGoalCheck(1)"><div class="goal-check-box'+(g1d?' checked':'')+'"><span class="goal-check-tick">\u2713</span></div><div class="goal-check-text'+(g1d?' done':'')+'">'+g1t.replace(/</g,'&lt;')+'</div></div>'
+      +'<div class="goal-check-row" onclick="toggleGoalCheck(2)"><div class="goal-check-box'+(g2d?' checked':'')+'"><span class="goal-check-tick">\u2713</span></div><div class="goal-check-text'+(g2d?' done':'')+'">'+g2t.replace(/</g,'&lt;')+'</div></div>'
+      +'<div class="goal-check-row" onclick="toggleGoalCheck(3)"><div class="goal-check-box'+(g3d?' checked':'')+'"><span class="goal-check-tick">\u2713</span></div><div class="goal-check-text'+(g3d?' done':'')+'">'+g3t.replace(/</g,'&lt;')+'</div></div>';
+    if(!isPointsHidden()) h+='<div class="goal-pts">'+pts+'/3 points today</div>';
+    h+='</div>';
+
     var affirmKey='kos3_affirm_'+dk;var affirmed=false;
     try{affirmed=localStorage.getItem(affirmKey)==='1';}catch(e){}
     h+='<div class="j-mantra"><div class="j-mantra-label">Daily Mantra</div>'
@@ -1097,6 +1281,19 @@ function renderJournal(){
 
 function saveJQ(el){var key=el.getAttribute('data-key');if(key)try{localStorage.setItem(key,el.value);}catch(e){}}
 function toggleAffirm(key){var cur=false;try{cur=localStorage.getItem(key)==='1';}catch(e){}try{if(cur)localStorage.removeItem(key);else localStorage.setItem(key,'1');}catch(e){}renderJournal();}
+
+// Amendment 01: Goal check + reservoir picker helpers
+function toggleGoalCheck(slot){setGoalDone(slot,!isGoalDone(slot));renderJournal();renderPointsStrip();}
+function openReservoirPicker(){document.getElementById('reservoir-dropdown').classList.add('open');}
+function pickReservoir(item){
+  var input=document.getElementById('goal3-input');
+  input.value=item;saveGoal(3,item);
+  document.getElementById('reservoir-dropdown').classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  var dd=document.getElementById('reservoir-dropdown');
+  if(dd&&!e.target.closest('.reservoir-picker'))dd.classList.remove('open');
+});
 
 // ── TIMER ────────────────────────────────────────────────────────────────────
 
@@ -1397,6 +1594,320 @@ function renderPersistTable(data){
   document.getElementById('persist-table').innerHTML=h;
 }
 
+// ── AMENDMENT 01: RESERVOIR ──────────────────────────────────────────────────
+
+var RESERVOIR_SEED=[
+  'Surf lesson',
+  'Climbing intro course (CityROCK / Bloc 11)',
+  'UCT open night',
+  'Comedy club (Cape Town Comedy Club, Thu\u2013Sun)',
+  'Golf with someone new',
+  'Padel game',
+  'Benjamin Graham documentary',
+  'Zeitz MOCAA visit',
+];
+var RESERVOIR_REWARD='Night away with Susie';
+
+function loadReservoir(){var s=load('reservoir');if(s)try{return JSON.parse(s);}catch(e){}return RESERVOIR_SEED.slice();}
+function saveReservoir(list){save('reservoir',JSON.stringify(list));}
+
+// ── AMENDMENT 01: GOAL SLOTS ────────────────────────────────────────────────
+
+function loadGoal(slot,dateStr){return load('goal'+slot+'_'+(dateStr||todayStr()));}
+function saveGoal(slot,val){save('goal'+slot+'_'+todayStr(),val);}
+function isGoalDone(slot,dateStr){return load('g'+slot+'done_'+(dateStr||todayStr()))==='1';}
+function setGoalDone(slot,val){save('g'+slot+'done_'+todayStr(),val?'1':'0');}
+
+// ── AMENDMENT 01: SCORING ───────────────────────────────────────────────────
+
+function dayPoints(dateStr){
+  var pts=0;
+  for(var i=1;i<=3;i++){if(load('g'+i+'done_'+dateStr)==='1')pts++;}
+  return pts;
+}
+
+function getWeekDates(refDate){
+  var d=new Date(refDate||new Date());
+  var day=d.getDay();
+  var diff=day===0?-6:1-day;
+  var mon=new Date(d);mon.setDate(d.getDate()+diff);
+  var dates=[];
+  for(var i=0;i<6;i++){
+    var dd=new Date(mon);dd.setDate(mon.getDate()+i);
+    dates.push(dd.toISOString().slice(0,10));
+  }
+  return dates;
+}
+
+function weekPoints(dates){var t=0;dates.forEach(function(d){t+=dayPoints(d);});return t;}
+function isGreenWeek(dates){return weekPoints(dates)>=12;}
+
+function greenWeekStreak(){
+  var streak=0;
+  var d=new Date();
+  // Start from the most recent completed week (last Saturday)
+  var day=d.getDay();
+  var daysToLastSat=day===0?1:(day===6?0:day+1);
+  d.setDate(d.getDate()-daysToLastSat);
+  for(var i=0;i<52;i++){
+    var dates=getWeekDates(d);
+    if(isGreenWeek(dates)){streak++;d.setDate(d.getDate()-7);}
+    else break;
+  }
+  return streak;
+}
+
+function isPointsHidden(){return load('points_hidden')==='1';}
+
+// ── AMENDMENT 01: WEEKLY METRICS ────────────────────────────────────────────
+
+function weekMetricsKey(dates){return 'wm_'+dates[0];}
+function loadWeekMetrics(dates){
+  var s=load(weekMetricsKey(dates));
+  if(s)try{return JSON.parse(s);}catch(e){}
+  return{bids:0,coupleBlock:false,rehab:0,social:{done:false,predicted:0,actual:0},contacts:0};
+}
+function saveWeekMetrics(dates,data){save(weekMetricsKey(dates),JSON.stringify(data));}
+
+// ── AMENDMENT 01: POINTS STRIP ──────────────────────────────────────────────
+
+function renderPointsStrip(){
+  var el=document.getElementById('points-strip');
+  if(isPointsHidden()){el.innerHTML='';return;}
+  var pts=dayPoints(todayStr());
+  var dates=getWeekDates();
+  var wp=weekPoints(dates);
+  var gws=greenWeekStreak();
+  var h='<span style="font-family:var(--mn);font-size:11px;color:var(--gold);letter-spacing:0.05em;">'+pts+'/3 today \u00b7 '+wp+'/18 this week</span>';
+  if(gws>0) h+=' <span class="green-streak">\u00b7 '+gws+' green '+(gws===1?'week':'weeks')+'</span>';
+  if(gws>=4) h+='<br><span style="font-family:var(--mn);font-size:9px;color:var(--gold);letter-spacing:0.1em;">UNLOCKED: '+RESERVOIR_REWARD+'</span>';
+  el.innerHTML=h;
+}
+
+// ── AMENDMENT 01: DASHBOARD ─────────────────────────────────────────────────
+
+function openDashboard(){renderDashboard();document.getElementById('dash-overlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeDashboard(){document.getElementById('dash-overlay').classList.remove('open');document.body.style.overflow='';}
+
+function renderDashboard(){
+  var dates=getWeekDates();
+  var today=todayStr();
+  var wp=weekPoints(dates);
+  var green=isGreenWeek(dates);
+  var gws=greenWeekStreak();
+  var wm=loadWeekMetrics(dates);
+  var hidden=isPointsHidden();
+  var dayNames=['Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  var h='';
+
+  // Green week / streak banners
+  if(green) h+='<div class="dash-green-banner">\u2713 Green week \u2014 reward unlocked. Choose something small and immediate.</div>';
+  if(gws>=4) h+='<div class="dash-reward-banner">\u2605 '+gws+' consecutive green weeks \u2014 '+RESERVOIR_REWARD+' unlocked</div>';
+
+  // Week grid
+  h+='<div class="dash-section"><div class="dash-section-label">This Week \u2014 Mon\u2013Sat</div>';
+  h+='<div class="dash-week-grid">';
+  dates.forEach(function(d,i){
+    var pts=dayPoints(d);
+    var isToday=d===today;
+    var isFull=pts===3;
+    h+='<div class="dash-day'+(isToday?' today':'')+(isFull?' green':'')+'">'
+      +'<div class="dash-day-name">'+dayNames[i]+'</div>'
+      +'<div class="dash-day-pts">'+pts+'</div>'
+      +'<div class="dash-day-max">/3</div></div>';
+  });
+  h+='</div>';
+
+  // Summary
+  if(!hidden){
+    h+='<div class="dash-summary">'
+      +'<div class="dash-stat"><div class="dash-stat-val'+(green?' green':'')+'">'+wp+'</div><div class="dash-stat-label">/ 18 POINTS</div></div>'
+      +'<div class="dash-stat"><div class="dash-stat-val'+(green?' green':'')+'">'+(green?'\u2713':'\u2717')+'</div><div class="dash-stat-label">GREEN WEEK</div></div>'
+      +'<div class="dash-stat"><div class="dash-stat-val'+(gws>=4?' green':'')+'">'+gws+'</div><div class="dash-stat-label">GREEN STREAK</div></div>'
+      +'</div>';
+  }
+  h+='</div>';
+
+  // Weekly metrics
+  h+='<div class="dash-section"><div class="dash-section-label">Weekly Metrics</div>';
+
+  // 1. Bids initiated
+  h+=metricCounter('bids','Bids initiated (Susie)','Lead',wm.bids,dates,wm);
+  // 2. Couple-block held
+  h+=metricToggle('coupleBlock','Couple-block held','Lead',wm.coupleBlock,dates,wm);
+  // 3. Rehab sessions
+  h+=metricCounter('rehab','Rehab sessions','Lead',wm.rehab,dates,wm);
+  // 4. Golden blocks + deliverable (auto)
+  var gbCount=0;dates.forEach(function(d){if(load('g1done_'+d)==='1')gbCount++;});
+  h+='<div class="dash-metric"><div><div class="dash-metric-name">Golden blocks + deliverable</div>'
+    +'<div class="dash-metric-type">Lead \u00b7 Auto</div></div>'
+    +'<div class="dash-metric-val">'+gbCount+'/6</div></div>';
+  // 5. Social rep with prediction
+  h+=metricSocial(wm,dates);
+  // 6. Contacts initiated
+  h+=metricCounter('contacts','Contacts initiated','Lead',wm.contacts,dates,wm);
+  // 7. Points (auto)
+  if(!hidden){
+    h+='<div class="dash-metric"><div><div class="dash-metric-name">Points</div>'
+      +'<div class="dash-metric-type">Derived \u00b7 Auto</div></div>'
+      +'<div class="dash-metric-val">'+wp+'/18</div></div>';
+  }
+  h+='</div>';
+
+  // Prediction gap chart
+  h+='<div class="dash-section"><div class="dash-section-label">Prediction Gap</div>';
+  h+='<canvas id="pred-canvas" height="120" style="width:100%;"></canvas></div>';
+
+  // Reservoir
+  h+='<div class="dash-section"><div class="dash-section-label">Reservoir</div></div>';
+  var res=loadReservoir();
+  h+='<div class="reservoir-list">';
+  res.forEach(function(item,i){
+    h+='<div class="reservoir-item"><span class="reservoir-item-text">'+esc(item)+'</span>'
+      +'<button class="reservoir-item-del" onclick="removeReservoirItem('+i+')">\u2715</button></div>';
+  });
+  h+='</div>';
+  h+='<div class="reservoir-add"><input class="reservoir-add-input" id="res-add-input" placeholder="Add to reservoir...">'
+    +'<button class="reservoir-add-btn" onclick="addReservoirItem()">Add</button></div>';
+
+  // Points toggle (kill switch)
+  h+='<div class="points-toggle-row"><span class="points-toggle-label">Show points</span>'
+    +'<div class="dash-toggle'+(hidden?'':' on')+'" onclick="togglePointsKillSwitch()">'
+    +'<div class="dash-toggle-dot"></div></div></div>';
+
+  document.getElementById('dash-body').innerHTML=h;
+
+  // Draw prediction chart after DOM update
+  setTimeout(function(){renderPredChart();},50);
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function metricCounter(field,name,type,val,dates,wm){
+  return '<div class="dash-metric"><div><div class="dash-metric-name">'+name+'</div>'
+    +'<div class="dash-metric-type">'+type+'</div></div>'
+    +'<div class="dash-metric-ctrl">'
+    +'<button class="dash-metric-btn" onclick="adjMetric(\''+field+'\',-1)">\u2212</button>'
+    +'<div class="dash-metric-val">'+val+'</div>'
+    +'<button class="dash-metric-btn" onclick="adjMetric(\''+field+'\',1)">+</button>'
+    +'</div></div>';
+}
+
+function metricToggle(field,name,type,val,dates,wm){
+  return '<div class="dash-metric"><div><div class="dash-metric-name">'+name+'</div>'
+    +'<div class="dash-metric-type">'+type+'</div></div>'
+    +'<div class="dash-toggle'+(val?' on':'')+'" onclick="toggleMetric(\''+field+'\')">'
+    +'<div class="dash-toggle-dot"></div></div></div>';
+}
+
+function metricSocial(wm,dates){
+  var s=wm.social||{done:false,predicted:0,actual:0};
+  return '<div class="dash-metric" style="flex-wrap:wrap"><div style="width:100%;display:flex;align-items:center;justify-content:space-between;">'
+    +'<div><div class="dash-metric-name">Social rep with prediction</div>'
+    +'<div class="dash-metric-type">Lead</div></div>'
+    +'<div class="dash-toggle'+(s.done?' on':'')+'" onclick="toggleSocialDone()">'
+    +'<div class="dash-toggle-dot"></div></div></div>'
+    +(s.done?'<div style="width:100%;display:flex;gap:8px;margin-top:8px;">'
+    +'<div style="flex:1"><div class="pl-label">Predicted (1\u201310)</div>'
+    +'<input class="pl-input" type="number" min="1" max="10" value="'+(s.predicted||'')+'" onchange="setSocialScore(\'predicted\',this.value)" style="font-size:14px;"></div>'
+    +'<div style="flex:1"><div class="pl-label">Actual (1\u201310)</div>'
+    +'<input class="pl-input" type="number" min="1" max="10" value="'+(s.actual||'')+'" onchange="setSocialScore(\'actual\',this.value)" style="font-size:14px;"></div>'
+    +'</div>':'')
+    +'</div>';
+}
+
+function adjMetric(field,d){
+  var dates=getWeekDates();var wm=loadWeekMetrics(dates);
+  wm[field]=Math.max(0,(wm[field]||0)+d);
+  saveWeekMetrics(dates,wm);renderDashboard();
+}
+
+function toggleMetric(field){
+  var dates=getWeekDates();var wm=loadWeekMetrics(dates);
+  wm[field]=!wm[field];
+  saveWeekMetrics(dates,wm);renderDashboard();
+}
+
+function toggleSocialDone(){
+  var dates=getWeekDates();var wm=loadWeekMetrics(dates);
+  if(!wm.social)wm.social={done:false,predicted:0,actual:0};
+  wm.social.done=!wm.social.done;
+  saveWeekMetrics(dates,wm);renderDashboard();
+}
+
+function setSocialScore(field,val){
+  var dates=getWeekDates();var wm=loadWeekMetrics(dates);
+  if(!wm.social)wm.social={done:false,predicted:0,actual:0};
+  wm.social[field]=parseInt(val)||0;
+  saveWeekMetrics(dates,wm);
+}
+
+function togglePointsKillSwitch(){
+  save('points_hidden',isPointsHidden()?'0':'1');
+  renderDashboard();renderPointsStrip();
+}
+
+function removeReservoirItem(i){var r=loadReservoir();r.splice(i,1);saveReservoir(r);renderDashboard();}
+function addReservoirItem(){
+  var input=document.getElementById('res-add-input');
+  var val=input.value.trim();
+  if(!val)return;
+  var r=loadReservoir();r.push(val);saveReservoir(r);
+  renderDashboard();
+}
+
+// ── AMENDMENT 01: PREDICTION GAP CHART ──────────────────────────────────────
+
+function renderPredChart(){
+  var canvas=document.getElementById('pred-canvas');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;
+  canvas.height=120*dpr;
+  ctx.scale(dpr,dpr);
+  var w=canvas.offsetWidth,h=120;
+  ctx.clearRect(0,0,w,h);
+
+  // Collect social data from recent weeks
+  var points=[];
+  var d=new Date();
+  for(var i=0;i<12;i++){
+    var dates=getWeekDates(d);
+    var wm=loadWeekMetrics(dates);
+    if(wm.social&&wm.social.done&&wm.social.predicted>0&&wm.social.actual>0){
+      points.unshift({week:dates[0].slice(5),p:wm.social.predicted,a:wm.social.actual,gap:Math.abs(wm.social.predicted-wm.social.actual)});
+    }
+    d.setDate(d.getDate()-7);
+  }
+
+  if(points.length<2){
+    ctx.fillStyle='#8FA396';ctx.font='11px "IBM Plex Mono",monospace';
+    ctx.fillText('Need 2+ weeks of social data',w/2-90,h/2);
+    return;
+  }
+
+  var pad={t:20,b:24,l:4,r:4};
+  var cw=w-pad.l-pad.r,ch=h-pad.t-pad.b;
+  var barW=Math.floor(cw/points.length)-4;
+
+  ctx.fillStyle='#8FA396';ctx.font='7px "IBM Plex Mono",monospace';
+  ctx.fillText('PREDICTION GAP \u2014 NARROWING IS THE GOAL',pad.l,12);
+
+  points.forEach(function(pt,i){
+    var x=pad.l+i*(barW+4);
+    var barH=(pt.gap/10)*ch;
+    var y=pad.t+ch-barH;
+    ctx.fillStyle='rgba(227,200,120,0.5)';
+    ctx.fillRect(x,y,barW,barH);
+    ctx.fillStyle='#8FA396';ctx.font='7px "IBM Plex Mono",monospace';
+    ctx.fillText(pt.week,x,h-6);
+    ctx.fillStyle='#E7EDE4';ctx.font='9px "IBM Plex Mono",monospace';
+    ctx.fillText(String(pt.gap),x,y-4);
+  });
+}
+
 // ── INIT ─────────────────────────────────────────────────────────────────────
 
 renderHeader();
@@ -1406,6 +1917,7 @@ renderInspiration();
 loadDeliverable();
 renderBlocks();
 renderProtocol();
+renderPointsStrip();
 </script>
 </body>
 </html>
